@@ -1,5 +1,5 @@
 <!-- Title -->
-<title>Dashtic - Bootstrap Webapp Responsive Dashboard Simple Admin Panel Premium HTML5 Template</title>
+<title>PTS - Access System</title>
 <!--Favicon -->
 <link rel="icon" href="{{URL::asset('assets/images/brand/favicon.ico')}}" type="image/x-icon"/>
 <!-- Bootstrap css -->
