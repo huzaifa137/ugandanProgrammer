@@ -2,22 +2,25 @@
 <div class="horizontal-main hor-menu clearfix">
     <div class="horizontal-mainwrapper container clearfix">
 
+        <!-- Add Font Awesome CDN link in your <head> -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
         <nav class="horizontalMenu clearfix">
             <ul class="horizontalMenu-list">
 
                 <li aria-haspopup="true">
-					<a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
-						<!-- FontAwesome Icon for Dashboard -->
+                    <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
+                        <!-- FontAwesome Icon for Dashboard -->
                         <i class="fas fa-file-alt hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
-						Dashboard <i class="fa fa-angle-down horizontal-icon"></i>
-					</a>
-					<ul class="sub-menu">
-						<li><a href="{{ url('/' . ($page = 'phone-tracking-dashboard')) }}">Phone Tracking Overview</a></li>
-						<li><a href="{{ url('/' . ($page = 'active-trackers')) }}">Active Trackers</a></li>
-						<li><a href="{{ url('/' . ($page = 'notifications-sent')) }}">Notifications Sent</a></li>
-					</ul>
-				</li>				
+                        Dashboard <i class="fa fa-angle-down horizontal-icon"></i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li><a href="{{ url('/' . ($page = 'phone-tracking-dashboard')) }}">Phone Tracking Overview</a>
+                        </li>
+                        <li><a href="{{ url('/' . ($page = 'active-trackers')) }}">Active Trackers</a></li>
+                        <li><a href="{{ url('/' . ($page = 'notifications-sent')) }}">Notifications Sent</a></li>
+                    </ul>
+                </li>
 
                 <!-- Users Section -->
                 <li aria-haspopup="true">

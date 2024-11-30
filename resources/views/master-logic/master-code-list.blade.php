@@ -4,7 +4,6 @@
     <link href="{{ URL::asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
-   
 @endsection
 @section('page-header')
     <!--Page header-->
@@ -27,7 +26,6 @@
     <!--End Page header-->
 @endsection
 @section('content')
-    
     <?php
     use App\Http\Controllers\Helper;
     ?>
@@ -64,6 +62,8 @@
         <div class="col-lg-9">
             <div class="card">
                 <div class="col-md-12 p-4">
+                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
@@ -156,7 +156,7 @@
                         </thead>
                     </table>
 
-                    <input type="hidden" value="{{$mc_id}}" id="mc_id"/>
+                    <input type="hidden" value="{{ $mc_id }}" id="mc_id" />
 
                 </div>
 
@@ -170,10 +170,7 @@
     </div>
 @endsection
 @section('js')
-
-
-
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
@@ -182,33 +179,62 @@
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
 
 
-<script type="text/javascript">
-    $(document).ready(function() {
+    <script type="text/javascript">
+       
+
+        $(document).ready(function() {
+            var mcId = $('#mc_id').val();
+            if (!mcId) {
+                console.error('mc_id is empty or undefined');
+                return;
+            }
+
             $('#table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax:
-                    '{{ route("master-code-list", ["id"=>"__mc_id__"]) }}'.replace("__mc_id__", $('#mc_id').val())
-                ,
-                columns: [
-                    { data: 'md_code', name: 'md_code' },
-                    { data: 'md_name', name: 'md_name' },
-                    { data: 'md_description', name: 'md_description' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false}
+                ajax: {
+                    url: '{{ route('master-code-list', ['id' => '__mc_id__']) }}'.replace("__mc_id__", $(
+                        '#mc_id').val()),
+                    error: function(xhr, error, thrown) {
+                        // Log the error response to display it
+                        console.error('AJAX Error:', xhr.status, error, thrown);
+                        $('body').html(xhr.responseText); // Show the raw response from the server
+                    }
+                },
+                columns: [{
+                        data: 'md_code',
+                        name: 'md_code'
+                    },
+                    {
+                        data: 'md_name',
+                        name: 'md_name'
+                    },
+                    {
+                        data: 'md_description',
+                        name: 'md_description'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
                 ],
-
                 pageLength: 20,
                 lengthMenu: [10, 25, 50, 100],
-                order: [[0, 'asc']], 
-                searching: true, 
+                order: [
+                    [0, 'asc']
+                ],
+                searching: true,
                 ordering: true,
-
-                dom: 'Bfrtip', // Define the layout
+                dom: 'Bfrtip',
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ]
             });
+
         });
+
 
         $(document).ready(function() {
             $('#addCodeForm').hide();

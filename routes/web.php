@@ -56,7 +56,8 @@ Route::controller(MasterDataController::class)->group(function () {
         Route::get('supplier-prequalification-criteria', 'supplierPrequalificationEvaluationCriteria');
         Route::post('store-prequalification-criteria', 'storePrequalificationCriteria')->name('store-prequalification-criteria');
 
-        Route::get('edit-record/{mc_id}/{item_id}', 'editRecord');
+        Route::get('edit-record/{id}', 'editRecord');
+        // Route::get('edit-record/{mc_id}/{item_id}', 'editRecord');
         Route::get('add-record', 'addRecord')->name('add-record');
         Route::get('add-code', 'addMasterCode')->name('add-code');
         Route::get('edit-code/{id}', 'editMasterCode');

@@ -19,8 +19,7 @@
 @section('content')
     <!-- Row -->
 
-    <!-- Add Font Awesome CDN link in your <head> -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 
     <div class="row">
         <div class="col-xl-12 col-md-12 col-lg-12">

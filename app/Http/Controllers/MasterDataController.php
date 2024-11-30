@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Admin;
+use App\Models\User;
 use DB;
+use Yajra\DataTables\Facades\DataTables;
 use App\Models\master_code;
 use App\Models\master_data;
 use App\Http\Controllers\Controller;
@@ -19,83 +20,6 @@ class MasterDataController extends Controller
     public static $page = "MASTER DATA";
 
     public static $controls = array('V' => 'View', 'A' => 'ADD', 'E' => 'Edit / Modify', 'D' => 'Delete', 'P' => 'Print', 'I' => 'Import', 'X' => 'Export');
-
-    public static $pages = array(
-
-        // 'ASK' => array(
-        //     "shortcut" => "",
-        //     "dashboard_url" => "",
-        //     "menu" => array(
-        //         'START TENDER APPROVAL',
-        //         'BID REGISTER',
-        //         'PRICE COMPARISON',
-        //         'BID EVALUATION',
-        //         'BID OPENING',
-        //         'TENDERING',
-        //         'TENDER COMMUNICATION',
-        //         'CONTRACT AWARD LETTER',
-        //         'CONTRACT NEGOTIATION',
-        //         'REVIEW TERM OF REFERENCE',
-        //         'AWARD CONTRACT',
-        //         '',
-        //         'INITIATE ASSET DISPOSAL',
-        //         'CHANGE PROCUREMENT OFFICER',
-        //         'ASSETS TO BE DISPOSED',
-        //         'ASSETS DISPOSAL APPROVALS',
-        //         'ASSETS DISPOSAL APPROVALS LIST',
-        //         'FRAMEWORK CONTRACTS',
-        //     ),
-        // ),
-
-        
-
-        "Procurement Plan" => array(
-            "shortcut" => "",
-            "dashboard_url" => "procurement/procurement-dashboard",
-            "menu" => array(
-                'PROCUREMENT PLAN',
-            )
-        ),
-
-        "Users and System Configurations" => array(
-            "shortcut" => "",
-            "dashboard_url" => "users/users-dashboard",
-            "menu" => array(
-                'MASTER DATA',
-                'USERS',
-                'AUDIT TRAIL',
-                'ACCESS RIGHTS',
-                'APPROVAL WORKFLOWS',
-            )
-        ),
-
-        'Requisition' => array(
-            "shortcut" => "",
-            "dashboard_url" => "requisition/requisition-dashboard",
-            "menu" => array(
-                'REQUISITION',
-                'TRAVAL REQUISITION',
-            )
-        ),
-
-        'Suppliers' => array(
-            "shortcut" => "",
-            "dashboard_url" => "suppliers/supplier-dashboard",
-            "menu" => array(
-                'SUPPLIER PERFORMANCE ASSESMENT',
-                'SUPPLIERS',
-            )
-        ),
-        
-        'Suppliers' => array(
-            "shortcut" => "",
-            "dashboard_url" => "suppliers/supplier-dashboard",
-            "menu" => array(
-                'SUPPLIER PERFORMANCE ASSESMENT',
-                'SUPPLIERS',
-            )
-        ),
-    );
 
     public static function links()
     {
@@ -117,27 +41,6 @@ class MasterDataController extends Controller
                 "link_page" => self::$page,
                 "link_right" => "V",
             ),
-            array(
-                "link_name" => "Requisition Documents" . $pending,
-                "link_address" => "master-data/requisition-documents",
-                "link_icon" => "fa-paperclip",
-                "link_page" => self::$page,
-                "link_right" => "V",
-            ),
-            array(
-                "link_name" => "Travel Requisition Documents" . $pending,
-                "link_address" => "master-data/travel-requisition-documents",
-                "link_icon" => "fa-paperclip",
-                "link_page" => self::$page,
-                "link_right" => "V",
-            ),
-            array(
-                "link_name" => "Supplier Prequalification Evaluation Criteria" . $pending,
-                "link_address" => "master-data/supplier-prequalification-criteria",
-                "link_icon" => "fa-list",
-                "link_page" => self::$page,
-                "link_right" => "V",
-            ),
         );
     }
 
@@ -148,7 +51,7 @@ class MasterDataController extends Controller
         ->get();
         
 
-        $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
+        $data = ['LoggedUserAdmin' => User::where('id', '=', session('LoggedAdmin'))->first()];
 
         return view('master-logic.supplier-prequalification-criteria', $data)
             ->with('documents', $documents)
@@ -188,7 +91,7 @@ class MasterDataController extends Controller
             ->where('md_master_code_id', 30075)
             ->get();
 
-        $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
+        $data = ['LoggedUserAdmin' => User::where('id', '=', session('LoggedAdmin'))->first()];
 
         return view('master-logic.requisition-documents', $data)
             ->with('documents', $documents);
@@ -246,7 +149,7 @@ class MasterDataController extends Controller
         $controls = self::$controls;
         $pages = self::$pages;
 
-        $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
+        $data = ['LoggedUserAdmin' => User::where('id', '=', session('LoggedAdmin'))->first()];
 
         return view('master-logic.master-data', $data, compact(['mc_code']));
     }
@@ -255,7 +158,7 @@ class MasterDataController extends Controller
     public function master_code()
     {
         $all_data = DB::table('master_codes')->orderBy('mc_name', 'ASC')->get();
-        $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
+        $data = ['LoggedUserAdmin' => User::where('id', '=', session('LoggedAdmin'))->first()];
 
         return view('master-logic.master-code', $data, compact(['all_data']));
     }
@@ -282,7 +185,7 @@ class MasterDataController extends Controller
             ->where('md_code', 'TRA_DOC')
             ->get();
 
-        $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
+        $data = ['LoggedUserAdmin' => User::where('id', '=', session('LoggedAdmin'))->first()];
 
         return view('master-logic.travel-requisition-documents', $data)
             ->with('documents', $documents)
@@ -293,12 +196,12 @@ class MasterDataController extends Controller
     public function editRecord($md_id)
     {
 
-        $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
+        $data = ['LoggedUserAdmin' => User::where('id', '=', session('LoggedAdmin'))->first()];
 
         $tb_record = DB::table('master_datas')
             ->where('md_id', $md_id)
             ->get();
-
+            
         $md_master_code_id = DB::table('master_datas')->where('md_id', $md_id)->pluck('md_master_code_id');
         $md_master_code_id = $md_master_code_id[0];
 
@@ -343,7 +246,7 @@ class MasterDataController extends Controller
 
     public function addRecord(Request $request)
     {
-        $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
+        $data = ['LoggedUserAdmin' => User::where('id', '=', session('LoggedAdmin'))->first()];
         $selected = DB::select('select id, mc_name from master_codes');
 
         return view('master-logic.add-record', $data, compact(['selected']));
@@ -351,7 +254,7 @@ class MasterDataController extends Controller
 
     public function addMasterCode()
     {
-        $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
+        $data = ['LoggedUserAdmin' => User::where('id', '=', session('LoggedAdmin'))->first()];
         return view('master-logic.add-code', $data);
     }
 
@@ -364,7 +267,7 @@ class MasterDataController extends Controller
 
         $selected = DB::select('select id, mc_code from master_codes');
 
-        $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
+        $data = ['LoggedUserAdmin' => User::where('id', '=', session('LoggedAdmin'))->first()];
 
         return view('master-logic.edit-code', $data, compact(['record_code', 'selected']));
     }
@@ -372,58 +275,72 @@ class MasterDataController extends Controller
     public function masterCodeList(Request $request)
     {
         $id = $request->id;
-        
+
         $code_totals = DB::table('master_datas')
-        ->select('md_master_code_id', DB::raw('count(md_master_code_id) AS total'))
-        ->groupBy('md_master_code_id')
-        ->get()
-        ->keyBy('md_master_code_id')
-        ->toArray();
+            ->select('md_master_code_id', DB::raw('count(md_master_code_id) AS total'))
+            ->groupBy('md_master_code_id')
+            ->get()
+            ->keyBy('md_master_code_id')
+            ->toArray();
 
         $selected = DB::table('master_codes')->orderBy('mc_name', 'ASC')->get();
 
         $mc_name = "";
         $mc_code = array();
 
-        if(empty($id)){
+
+        if (empty($id)) {
             return view('master-logic.master-code-list-select')
-            ->with("selected", $selected)
-            ->with('mc_id', $id)
-            ->with('mc_name', $mc_name)
-            ->with('code_totals', $code_totals)
-            ;
+                ->with("selected", $selected)
+                ->with('mc_id', $id)
+                ->with('mc_name', $mc_name)
+                ->with('code_totals', $code_totals);
         }
+
 
         $mc_code = DB::table('master_datas')
             ->where("mc_id", $id)
             ->leftJoin('master_codes', 'md_master_code_id', '=', 'master_codes.id')
             ->orderBy('md_name', 'ASC')
             ->get();
-        
+
         $name = DB::table('master_codes')
-        ->where("mc_id", $id)
-        ->first();
+            ->where("mc_id", $id)
+            ->first();
         $mc_name = $name->mc_name;
 
-        if ($request->ajax()) 
-        {
-            return datatables()->of($mc_code) // Exclude sensitive columns
+
+        if ($request->ajax()) {
+            return DataTables::of($mc_code)
                 ->addColumn('action', function ($item) {
                     $links = array();
                     $links[] =  '<a class="dropdown-item" href="'.url('master-data/edit-record/'.$item->id).'"><i class="fa fa-fw fa-edit"></i> Edit</a>';
                     $links[] =  '<a onclick="return confirm(\'Are sure you want to delete '.$item->md_name.'?\'); " class="dropdown-item" href="'.url('delete-record/'.$item->id.'/'.$item->mc_id).'"><i class="fa fa-fw fa-times"></i> Delete</a>';
-                    return $this->dropDown($links);
+                    
+                    return $this->dropDown($links); 
                 })
                 ->make(true);
         }
 
-        
+
         return view('master-logic.master-code-list', compact(['mc_code']))
-        ->with("selected", $selected)
-        ->with('mc_id', $id)
-        ->with('mc_name', $mc_name)
-        ->with('code_totals', $code_totals)
-        ;
+            ->with("selected", $selected)
+            ->with('mc_id', $id)
+            ->with('mc_name', $mc_name)
+            ->with('code_totals', $code_totals);
+    }
+
+    // The dropDown() method to generate the HTML for the dropdown
+    public function dropDown($links)
+    {
+        return '<div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Actions
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        ' . implode(' ', $links) . '
+                    </div>
+                </div>';
     }
 
     public function editSupplierDocument($id)
@@ -432,7 +349,7 @@ class MasterDataController extends Controller
             ->where('md_id', '=', $id)
             ->first();
 
-        $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
+        $data = ['LoggedUserAdmin' => User::where('id', '=', session('LoggedAdmin'))->first()];
 
         return view('master-logic.edit-supplier-document', $data, compact(['user_data']));
     }
