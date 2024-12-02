@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuditTrailController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,8 +26,25 @@ Route::controller(UserController::class)->group(function () {
             Route::get('/', 'login');
             Route::post('auth-user-check', 'checkUser')->name('auth-user-check');
             Route::get('/users-profile', 'userProfile')->name('users-profile');
+            Route::get('/users-register', 'userRegister');
+            Route::get('/users-information', 'userInformation')->name('users.user-information');
+            Route::get('/user-roles', 'userRoles')->name('user-roles');
+            Route::get('/add-user-role', 'addUserRole')->name('add-user-role');
+            Route::get('edit-role/{id}', 'editRole');
+            Route::get('delete-role/{id}', 'deleteRole');
+            Route::get('user-account-information/{id}', 'userAccountInformation');
+            Route::get('edit-user-information/{id}', 'editUserInformation');
+            Route::get('delete-user/{id}', 'deleteUser');
+
         });
+
+        Route::post('save-role', 'saveUserRole')->name('save-role');
+        Route::post('store-role-update', 'storeRoleUpdate')->name('store-role-update');
+        Route::post('store-updated-information', 'storeUpdatedInformation')->name('store-updated-information');
+
     });
+
+    Route::post('store-user', 'storeUser')->name('store-user');
 
     Route::group(['middleware' => ['AdminAuth']], function () {
         Route::get('/', 'dashboard')->name('dashboard');
@@ -79,4 +97,11 @@ Route::controller(MasterDataController::class)->group(function () {
     Route::get('delete-record/{id}', 'deleteRecord');
     Route::get('delete-code/{id}', 'deleteCode');
 
+});
+
+Route::controller(AuditTrailController::class)->group(function () {
+
+    Route::get('audit-trail/today', 'today')->name('audit-trail/today');
+    Route::get('audit-trail/audit-report', 'auditReport')->name('audit-trail/audit-report');
+    Route::post('audit-trail/filter-audit-report', 'filterAuditReport')->name('audit-trail/filter-audit-report');
 });

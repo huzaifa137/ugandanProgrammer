@@ -115,53 +115,9 @@ use App\Http\Controllers\Helper;
                             </td>
                         </tr>
 
-                        <tr>
-                            <td style="font-weight: bold;">Entities</td>
-                            <td>
-                                <?php
-                                $ref = $user_profile_data->user_reference;
-                                if ($ref) {
-                                    $sel = DB::table('user_entities')->where('ue_reference', $ref)->get();
-                                
-                                    echo '<ol>';
-                                    foreach ($sel as $row) {
-                                        echo '<li>' . Helper::rgf('master_datas', $row->ue_entity, 'md_id', 'md_name') . '</li>';
-                                    }
-                                    echo '</ol>';
-                                
-                                    if (!count($sel)) {
-                                        echo 'Not Attached';
-                                    }
-                                } else {
-                                    echo 'Not Attached';
-                                }
-                                ?>
-                            </td>
-                        </tr>
+                        
 
-                        <tr>
-                            <td style="font-weight: bold;">Attached Department/Division/Project/Unit (s)</td>
-                            <td>
-                                <?php
-                                $ref = $user_profile_data->user_reference;
-                                if ($ref) {
-                                    $sel = DB::table('user_divisions')->where('ud_reference', $ref)->get();
-                                
-                                    echo '<ol>';
-                                    foreach ($sel as $row) {
-                                        echo '<li>' . Helper::rgf('master_datas', $row->ud_division, 'md_id', 'md_name') . '</li>';
-                                    }
-                                    echo '</ol>';
-                                
-                                    if (!count($sel)) {
-                                        echo 'Not Attached';
-                                    }
-                                } else {
-                                    echo 'Not Attached';
-                                }
-                                ?>
-                            </td>
-                        </tr>
+                       
 
                     </tbody>
                 </table>

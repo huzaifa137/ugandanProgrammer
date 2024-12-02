@@ -354,7 +354,7 @@
 															<td>home/blog</td>
 															<td class="text-center">
 																<div class="avatar-list avatar-list-stacked">
-																	<span class="avatar brround" style="background-image: url({{URL::asset('assets/images/users/16.jpg')}})"></span>
+																	<span class="avatar brround" style="background-image: url({{URL::asset('/assets/images/users/16.jpg')}})"></span>
 																	<span class="avatar brround" style="background-image: url({{URL::asset('assets/images/users/2.jpg')}})"></span>
 																	<span class="avatar brround" style="background-image: url({{URL::asset('assets/images/users/9.jpg')}})"></span>
 																	<span class="avatar brround" style="background-image: url({{URL::asset('assets/images/users/2.jpg')}})"></span>

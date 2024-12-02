@@ -33,13 +33,12 @@ use App\Http\Controllers\Controller;
                     </div>
                 @endif
 
-
-                <table class="table table-bordered table-striped" id="table">
+                <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>No.</th>
                             <th>User Role</th>
-                            <th>Total Users</th>
+                            {{-- <th>Total Users</th> --}}
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -49,7 +48,7 @@ use App\Http\Controllers\Controller;
                             <tr>
                                 <td style="width:30px;">{{ $key + 1 }}.</td>
                                 <td>{{ $item->user_name }}</td>
-                                <td>{{ Controller::totalRows('users_and_roles', 'uar_role_id', $item->id) }}</td>
+                                {{-- <td>{{ Controller::totalRows('users_and_roles', 'uar_role_id', $item->id) }}</td> --}}
                                 <td style="min-width:250px;">
                                     {{-- <a href="{{'view-users-and-roles/'.$item->id}}" class="btn btn-sm btn-warning"><i class="fa fa-fw fa-users"></i>Add / View Users</a> --}}
                                     <a onclick="return confirm('Are you sure you want to edit this user_role ?')"

@@ -31871,7 +31871,7 @@ a.text-dark:focus {
     }
 
     abbr[title]::after {
-        content: " ("attr(title) ")";
+        content: " (" attr(title) ")";
     }
 
     pre {
@@ -35893,6 +35893,37 @@ a.icon:hover {
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+    background-color: #ffffff;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead {
+    background-color: #ADD8E6;
+    color: white;
+    font-weight: bold;
+}
+
+.table th {
+    padding: 12px;
+    text-align: left;
+}
+
+.table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+
+.table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.table tbody tr:nth-child(even) {
     background-color: #ffffff;
 }
 

@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
+use App\Http\Controllers\Controller;
+use App\Models\MasterData;
+use App\Models\master_code;
 use App\Models\User;
 use DB;
-use Yajra\DataTables\Facades\DataTables;
-use App\Models\master_code;
-use App\Models\master_data;
-use App\Http\Controllers\Controller;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use RealRashid\SweetAlert\Facades\Alert;
+use Yajra\DataTables\Facades\DataTables;
 
 class MasterDataController extends Controller
 {
@@ -44,12 +43,12 @@ class MasterDataController extends Controller
         );
     }
 
-    public function supplierPrequalificationEvaluationCriteria(){
+    public function supplierPrequalificationEvaluationCriteria()
+    {
         $documents = DB::table("master_datas")
-        ->select('md_id', 'md_name', 'md_misc1', 'md_misc2')
-        ->where('md_code', 'PREQUALIFICATION_CRITERIA')
-        ->get();
-        
+            ->select('md_id', 'md_name', 'md_misc1', 'md_misc2')
+            ->where('md_code', 'PREQUALIFICATION_CRITERIA')
+            ->get();
 
         $data = ['LoggedUserAdmin' => User::where('id', '=', session('LoggedAdmin'))->first()];
 
@@ -58,7 +57,8 @@ class MasterDataController extends Controller
         ;
     }
 
-    public function storePrequalificationCriteria(Request $request){
+    public function storePrequalificationCriteria(Request $request)
+    {
 
         $select = DB::table('master_datas')->where('md_code', 'PREQUALIFICATION_CRITERIA')->where('md_name', $request->supplier_document)->where('md_misc1', $request->category_of_procurement)->get();
 
@@ -80,8 +80,6 @@ class MasterDataController extends Controller
         Alert::success('Success', 'New Criteria has been added successfully');
         return back();
     }
-
-
 
     public function requisitionDocuments()
     {
@@ -154,7 +152,6 @@ class MasterDataController extends Controller
         return view('master-logic.master-data', $data, compact(['mc_code']));
     }
 
-
     public function master_code()
     {
         $all_data = DB::table('master_codes')->orderBy('mc_name', 'ASC')->get();
@@ -163,17 +160,17 @@ class MasterDataController extends Controller
         return view('master-logic.master-code', $data, compact(['all_data']));
     }
 
-    public function masterCodeToData(){
+    public function masterCodeToData()
+    {
 
         $all_data = DB::table('master_codes')
-        ->orderBy('mc_name', 'ASC')
-        ->get();
-
+            ->orderBy('mc_name', 'ASC')
+            ->get();
 
         $selected = DB::table('master_codes')->get();
 
         return view('master-logic.master-code-to-data', compact(['all_data']))
-        ->with('selected', $selected)
+            ->with('selected', $selected)
         ;
     }
 
@@ -192,7 +189,6 @@ class MasterDataController extends Controller
         ;
     }
 
-
     public function editRecord($md_id)
     {
 
@@ -201,7 +197,7 @@ class MasterDataController extends Controller
         $tb_record = DB::table('master_datas')
             ->where('md_id', $md_id)
             ->get();
-            
+
         $md_master_code_id = DB::table('master_datas')->where('md_id', $md_id)->pluck('md_master_code_id');
         $md_master_code_id = $md_master_code_id[0];
 
@@ -242,7 +238,6 @@ class MasterDataController extends Controller
 
         }
     }
-
 
     public function addRecord(Request $request)
     {
@@ -288,7 +283,6 @@ class MasterDataController extends Controller
         $mc_name = "";
         $mc_code = array();
 
-
         if (empty($id)) {
             return view('master-logic.master-code-list-select')
                 ->with("selected", $selected)
@@ -296,7 +290,6 @@ class MasterDataController extends Controller
                 ->with('mc_name', $mc_name)
                 ->with('code_totals', $code_totals);
         }
-
 
         $mc_code = DB::table('master_datas')
             ->where("mc_id", $id)
@@ -309,19 +302,17 @@ class MasterDataController extends Controller
             ->first();
         $mc_name = $name->mc_name;
 
-
         if ($request->ajax()) {
             return DataTables::of($mc_code)
                 ->addColumn('action', function ($item) {
                     $links = array();
-                    $links[] =  '<a class="dropdown-item" href="'.url('master-data/edit-record/'.$item->id).'"><i class="fa fa-fw fa-edit"></i> Edit</a>';
-                    $links[] =  '<a onclick="return confirm(\'Are sure you want to delete '.$item->md_name.'?\'); " class="dropdown-item" href="'.url('delete-record/'.$item->id.'/'.$item->mc_id).'"><i class="fa fa-fw fa-times"></i> Delete</a>';
-                    
-                    return $this->dropDown($links); 
+                    $links[] = '<a class="dropdown-item" href="' . url('master-data/edit-record/' . $item->md_id) . '"><i class="fa fa-fw fa-edit"></i> Edit</a>';
+                    $links[] = '<a onclick="return confirm(\'Are sure you want to delete ' . $item->md_name . '?\'); " class="dropdown-item" href="' . url('delete-record/' . $item->md_id) . '"><i class="fa fa-fw fa-times"></i> Delete</a>';
+
+                    return $this->dropDown($links);
                 })
                 ->make(true);
         }
-
 
         return view('master-logic.master-code-list', compact(['mc_code']))
             ->with("selected", $selected)
@@ -330,7 +321,6 @@ class MasterDataController extends Controller
             ->with('code_totals', $code_totals);
     }
 
-    // The dropDown() method to generate the HTML for the dropdown
     public function dropDown($links)
     {
         return '<div class="dropdown">
@@ -357,46 +347,57 @@ class MasterDataController extends Controller
     public function addNewRecord(Request $request)
     {
 
-        $recordsave = new master_data();
+        $recordsave = new MasterData();
+
+        // $date = time();
+        // $session = Helper::user_id();
+        // $recordsave->md_master_code_id = $request->master_code_id;
+        // $recordsave->md_code = $request->md_code;
+        // $recordsave->md_name = $request->md_name;
+        // $recordsave->md_description = $request->md_description;
+        // $recordsave->md_date_added = $date;
+        // $recordsave->md_added_by = $session;
+        // $recordsave->save();
 
         $date = time();
         $session = Helper::user_id();
-        $recordsave->md_master_code_id = $request->master_code_id;
-        $recordsave->md_code = $request->md_code;
-        $recordsave->md_name = $request->md_name;
-        $recordsave->md_description = $request->md_description;
-        $recordsave->md_date_added = $date;
-        $recordsave->md_added_by = $session;
-        $recordsave->save();
+        $master_code_id = $request->master_code_id;
+        $md_code = $request->md_code;
+        $md_name = $request->md_name;
+        $md_description = $request->md_description;
+
+        DB::table('master_datas')->insert([
+            'md_master_code_id' => $master_code_id,
+            'md_code' => $md_code,
+            'md_name' => $md_name,
+            'md_description' => $md_description,
+            'md_date_added' => $date,
+            'md_added_by' => $session,
+        ]);
 
         Alert::success('success', 'New Document has been added successfully');
 
-
         $list_id = $this->rgf('master_codes', $request->master_code_id, "id", "mc_code");
 
-        return redirect('master-data/master-code-list/'.$list_id)->with('success', 'Record has been added successfully');
+        return redirect('master-data/master-code-list/' . $list_id)->with('success', 'Record has been added successfully');
     }
-
 
     public function deleteRecord($md_id)
     {
 
-        $masterRecord = DB::table('master_datas')->where('md_id',$md_id)->first();
-        $masterCode = DB::table('master_datas')->where('md_id',$md_id)->value('md_master_code_id');
+        $masterRecord = DB::table('master_datas')->where('md_id', $md_id)->first();
+        $masterCode = DB::table('master_datas')->where('md_id', $md_id)->value('md_master_code_id');
 
         $list_id = $this->rgf('master_codes', $masterCode, "id", "mc_code");
 
-        dd($list_id);
-
         if ($masterCode == config('constants.options.PROCUREMENT_CATEGORY')) {
-    
+
             $md_code = 'ppd_' . str_replace(' ', '_', strtolower($masterRecord->md_code));
             $md_name = 'ppd_' . str_replace(' ', '_', strtolower($masterRecord->md_name));
 
             $md_code1 = 'ppt_' . str_replace(' ', '_', strtolower($masterRecord->md_code));
             $md_name2 = 'ppt_' . str_replace(' ', '_', strtolower($masterRecord->md_name));
 
-            
             if (Schema::hasColumn('procurement_dates', $md_code) || Schema::hasColumn('procurement_dates', $md_name)) {
                 Schema::table('procurement_dates', function (Blueprint $table) use ($md_name) {
                     $table->dropColumn($md_name);
@@ -414,7 +415,7 @@ class MasterDataController extends Controller
             ->where('md_id', $md_id)
             ->delete();
 
-        return redirect('master-data/master-code-list/'.$list_id)->with('success', 'Record has been deleted successfully');
+        return redirect('master-data/master-code-list/' . $list_id)->with('success', 'Record has been deleted successfully');
     }
 
     public function updateMasterrecord(Request $request)
@@ -431,11 +432,11 @@ class MasterDataController extends Controller
             ->where('md_id', $record_id)
             ->update(['md_code' => $request->md_code, 'md_name' => $request->md_name, 'md_description' => $request->md_description, 'md_date_added' => $date, 'md_added_by' => $session]);
 
-            $list_id = $this->rgf('master_codes', $request->md_master_code_id, "mc_id", "mc_code");
-        
-            return redirect('master-data/master-code-list/'.$list_id)
+        $list_id = $this->rgf('master_codes', $request->md_master_code_id, "mc_id", "mc_code");
+
+        return redirect('master-data/master-code-list/' . $list_id)
             ->with('success', 'Data has been updated successfully')
-            ;
+        ;
     }
 
     public function sendMasterCode(Request $request)
@@ -444,11 +445,11 @@ class MasterDataController extends Controller
         $session = Helper::user_id();
 
         $values = ['mc_id' => $request->mc_code, 'mc_code' => $request->mc_code, 'mc_name' => $request->mc_name, 'mc_description' => $request->mc_description, 'mc_date_added' => $date, 'mc_added_by' => $session];
-        
+
         DB::table('master_codes')->insert($values);
 
         return redirect('master-data/master-code-to-data')
-        ->with('success', 'New data code has been added');
+            ->with('success', 'New data code has been added');
     }
 
     public function deleteCode($mc_id)
@@ -478,7 +479,6 @@ class MasterDataController extends Controller
 
     public function storeRequisitionDocument(Request $request)
     {
-
 
         $select = DB::table('master_datas')->where('md_master_code_id', 30075)->where('md_code', 'REQ_DOC')->where('md_name', $request->supplier_document)->where('md_misc1', $request->category_of_procurement)->get();
 
@@ -525,7 +525,7 @@ class MasterDataController extends Controller
             ->update([
                 'md_name' => $doc,
                 'md_misc2' => $mandatory,
-                'md_misc1' => $category
+                'md_misc1' => $category,
             ]);
 
         Alert::success('Success', 'Successfully Saved');
@@ -537,7 +537,7 @@ class MasterDataController extends Controller
     {
 
         $select = DB::table('master_datas')->where('md_code', 'TRA_DOC')
-                                           ->where('md_name', $request->supplier_document)->get();
+            ->where('md_name', $request->supplier_document)->get();
 
         if (count($select)) {
             Alert::error('Error', 'Document already exists');

@@ -30,8 +30,10 @@
                         Users <i class="fa fa-angle-down horizontal-icon"></i>
                     </a>
                     <ul class="sub-menu">
-                        <li><a href="{{ url('/' . ($page = 'user-management')) }}">User Management</a></li>
-                        <li><a href="{{ url('/' . ($page = 'user-roles')) }}">User Roles</a></li>
+                        <li><a href="{{ url('/users/users-register') }}">Register new User</a></li>
+                        <li><a href="{{ url('/users/users-information') }}">View users information</a></li>
+                        <li><a href="{{ url('/users/user-roles') }}">User roles</a></li>
+                        <li><a href="{{ url('/users/add-user-role') }}">Register new user role</a></li>
                     </ul>
                 </li>
 
@@ -58,7 +60,7 @@
                         Reports <i class="fa fa-angle-down horizontal-icon"></i>
                     </a>
                     <ul class="sub-menu">
-                        <li><a href="{{ url('/' . ($page = 'activity-reports')) }}">Activity Reports</a></li>
+                        <li><a href="{{ url('/audit-trail/today') }}">Activity Reports</a></li>
                         <li><a href="{{ url('/' . ($page = 'device-reports')) }}">Device Reports</a></li>
                     </ul>
                 </li>

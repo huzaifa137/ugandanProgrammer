@@ -12,9 +12,9 @@
 @endsection
 @section('content')
     <!--Row-->
-    <div class="row ">
+    <div class="row border">
         <div class="col-xl-12 col-md-12 col-lg-12">
-            <h4 class="page-title" style="text-align: center;">EDIT USER INFORMATION</h4>
+            <h4 class="page-title text-primary mb-4" style="text-align: center;">EDIT USER INFORMATION</h4>
 
             <form action="{{ route('store-updated-information') }}" class="border p-4 bg-light shadow" method="POST"
                 id="registerForm">
@@ -185,92 +185,24 @@
 
                 </div>
 
-                <div class="container">
-                    <!-- Select Entities Section -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h4 class="border-bottom pb-2 mb-3 mt-3">Select Entities</h4>
-                            <div class="formSep1">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <div class="d-flex flex-wrap me-3">
-                                        <?php
-                                        $select = DB::table('master_datas')->join('master_codes', 'id', '=', 'md_master_code_id')->where('mc_code', 'ENT')->orderBy('md_name', 'ASC')->get();
-                                        
-                                        foreach ($select as $row) {
-                                            echo '<div class="mb-2 me-3">';
-                                            echo '<label class="checkbox-inline">';
-                                            echo '<input class="all2" value="' . $row->md_id . '" name="entities[]" type="checkbox"> ' . $row->md_name;
-                                            echo '</label>';
-                                            echo '</div>';
-                                        }
-                                        ?>
-                                    </div>
-                                    <div>
-                                        <button type="button" class="checkAll2 btn btn-sm btn-danger">
-                                            <i class="fas fa-check-square"></i> Check/Uncheck All
-                                        </button>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Register User Button -->
+                <div class="row mt-4">
+                    <div class="col-md-12 d-flex justify-content-between align-items-center">
+                        <!-- Updated User Information Button -->
+                        <button class="btn btn-primary btn-sm" id="register-user-btn">
+                            <i class="fas fa-user-edit"></i> Updated User Information
+                        </button>
 
-                    <!-- Select User Divisions, Projects, or/and Units Section -->
-                    <div class="row mt-3">
-                        <div class="col-md-12">
-                            <h4 class="border-bottom pb-2 mb-3">Select User Divisions, Projects or/and Units</h4>
-                            <div class="formSep1">
-                                <div class="row">
-                                    <?php
-                                    
-                                    $ref = $info->user_reference;
-                                    
-                                    $select = DB::table('master_datas')->join('master_codes', 'id', '=', 'md_master_code_id')->where('mc_name', 'Requisition Unit')->orderBy('md_name', 'ASC')->get();
-                                    
-                                    foreach ($select as $row) {
-                                        $sel = DB::table('user_divisions')
-                                            ->where('ud_reference', $ref)
-                                            ->where('ud_division', $row->md_id)
-                                            ->get();
-                                    
-                                        $checked = count($sel) ? ' checked="checked" ' : '';
-                                    
-                                        echo '<div class="col-md-4">';
-                                        echo '<label class="checkbox-inline">';
-                                        echo '<input ' . $checked . ' value="' . $row->md_id . '" name="requisitionunits[]" type="checkbox"> ' . $row->md_name;
-                                        echo '</label>';
-                                        echo '</div>';
-                                    }
-                                    
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-
-                    <!-- Register User Button -->
-                    <div class="row mt-4">
-                        <div class="col-md-12 d-flex justify-content-between align-items-center">
-                            <!-- Updated User Information Button -->
-                            <button class="btn btn-primary btn-sm" id="register-user-btn">
-                                <i class="fas fa-user-edit"></i> Updated User Information
-                            </button>
-                    
-                            <!-- Check/Uncheck All Button -->
-                            <button type="button" class="checkAll btn btn-sm btn-danger">
-                                <i class="fas fa-check-square"></i> Check/Uncheck All
-                            </button>
-                        </div>
-                    </div>
-                    
-
                 </div>
         </div>
 
         </section>
         </fieldset>
+
         </form>
+
+
     </div>
     </div>
     <!--End row-->
@@ -288,67 +220,12 @@
     </div>
     </div><!-- end app-content-->
     </div>
+
+    <br> <br>
 @endsection
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script> <!-- FontAwesome for icons -->
-
-    <script type="text/javascript">
-        document.getElementById('register-user-btn').addEventListener('click', function(event) {
-            event.preventDefault();
-
-            var button = this;
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'Please confirm you want to update user information ?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, update Information !',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-
-                    button.disabled = true;
-                    button.innerHTML = 'updating user Information ... <i class="fas fa-spinner fa-spin"></i>';
-                    document.querySelector("form").submit();
-                }
-            });
-        });
-
-        $(document).ready(function() {
-            $('.checkAll').click(function() {
-                var firstCheckBox = false;
-                $('.all').each(function(index) {
-                    if (index == 0) {
-                        firstCheckBox = ($(this).is(':checked')) ? true : false;
-                    }
-
-                    if (!firstCheckBox)
-                        $(this).attr('checked', true);
-                    else
-                        $(this).attr('checked', false);
-
-                });
-            });
-            $('.checkAll2').click(function() {
-                var firstCheckBox = false;
-                $('.all2').each(function(index) {
-                    if (index == 0) {
-                        firstCheckBox = ($(this).is(':checked')) ? true : false;
-                    }
-
-                    if (!firstCheckBox)
-                        $(this).attr('checked', true);
-                    else
-                        $(this).attr('checked', false);
-
-                });
-            });
-        });
-    </script>
 
 
     <!--Moment js-->

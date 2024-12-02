@@ -23,13 +23,13 @@ class AuditTrailController extends Controller
                 "link_page" => self::$page,
                 "link_right" => "V",
             ),
-            array(
-                "link_name" => "Audit Report",
-                "link_address" => "audit-trail/audit-report",
-                "link_icon" => "fa-search",
-                "link_page" => self::$page,
-                "link_right" => "V",
-            ),
+            // array(
+            //     "link_name" => "Audit Report",
+            //     "link_address" => "audit-trail/audit-report",
+            //     "link_icon" => "fa-search",
+            //     "link_page" => self::$page,
+            //     "link_right" => "V",
+            // ),
         );
     }
 

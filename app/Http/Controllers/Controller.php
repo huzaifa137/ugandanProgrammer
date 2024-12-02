@@ -25,4 +25,18 @@ class Controller extends BaseController
 		return count($row);
 	}
 
+	public static function rgf($table, $id, $look_up, $column){
+
+		$sql = "SELECT $column FROM $table WHERE $look_up = '$id' ";
+		$row = DB::select($sql);
+
+        if (count($row) > 0) {
+            if (property_exists($row[0], $column)) {
+                return $row[0]->{$column};
+            } else {
+                return 'Column not found in the result';
+            }
+        }
+	}
+
 }

@@ -50,8 +50,7 @@ use App\Http\Controllers\Helper;
                 <div class="dropdown profile-dropdown">
                     <a href="#" class="nav-link pr-0 leading-none text-primary" data-toggle="dropdown">
                         <span>
-                            <img src="{{ URL::asset('assets/images/users/16.jpg') }}" alt="img"
-                                class="avatar avatar-md rounded-circle border border-primary">
+                            <img src="{{ asset('/assets/images/users/16.jpg') }}" alt="img" class="avatar avatar-md rounded-circle border border-primary">
                         </span>
                     </a>
 
