@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Attachment;
 use DB;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use PDF;
 use Session;
+
 class Helper extends Controller
 {
 
@@ -103,11 +99,16 @@ class Helper extends Controller
 
     public static function active_user()
     {
-        
+
         $admin = DB::table('users')->where('id', '=', Session('LoggedAdmin'))->first();
         return $user = @$admin->firstname . ' ' . @$admin->lastname;
     }
 
-    
+    public static function countRecords($array)
+    {
+        $count = count($array);
+
+        return $count;
+    }
 
 }

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuditTrailController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,29 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
  */
+
+Route::get('/original', 'LocationController@original');
+
+Route::controller(LocationController::class)->group(function () {
+
+    Route::group(['middleware' => ['AdminAuth']], function () {
+
+        Route::group(['prefix' => '/tracking'], function () {
+
+            Route::get('/tracking-overview', 'trackingDashboard');
+            Route::get('/GPS-dashboard', 'GPSDashboard');
+            Route::get('/generate-link', 'generateLink');
+            Route::get('/create-track-link', 'createTrackLink');
+            Route::get('/activate-track-link', 'activateTrackLink');
+            Route::get('/de-activate-track-link', 'deActivateTrackLink');
+        });
+
+        Route::get('/generate-tracking-link', 'generateTrackingLink');
+        Route::post('/save-tracking-link', 'saveTrackingLink');
+        Route::get('/tracking-status-update/{id}', 'statusUpdate');
+
+    });
+});
 
 Route::controller(UserController::class)->group(function () {
 

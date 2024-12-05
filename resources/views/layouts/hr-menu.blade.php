@@ -15,10 +15,9 @@
                         Dashboard <i class="fa fa-angle-down horizontal-icon"></i>
                     </a>
                     <ul class="sub-menu">
-                        <li><a href="{{ url('/' . ($page = 'phone-tracking-dashboard')) }}">Phone Tracking Overview</a>
+                        <li><a href="{{ url('/tracking/tracking-overview') }}">Phone Tracking </a>
                         </li>
-                        <li><a href="{{ url('/' . ($page = 'active-trackers')) }}">Active Trackers</a></li>
-                        <li><a href="{{ url('/' . ($page = 'notifications-sent')) }}">Notifications Sent</a></li>
+                        <li><a href="{{ url('/tracking/activate-track-link') }}">Active Trackers</a></li>
                     </ul>
                 </li>
 
@@ -46,8 +45,8 @@
                         Devices <i class="fa fa-angle-down horizontal-icon"></i>
                     </a>
                     <ul class="sub-menu">
-                        <li><a href="{{ url('/' . ($page = 'device-management')) }}">Device Management</a></li>
-                        <li><a href="{{ url('/' . ($page = 'device-logs')) }}">Device Logs</a></li>
+                        <li><a href="javascript:void(0);">Device Management</a></li>
+                        <li><a href="javascript:void(0);">Device Logs</a></li>
                     </ul>
                 </li>
 
@@ -61,7 +60,7 @@
                     </a>
                     <ul class="sub-menu">
                         <li><a href="{{ url('/audit-trail/today') }}">Activity Reports</a></li>
-                        <li><a href="{{ url('/' . ($page = 'device-reports')) }}">Device Reports</a></li>
+                        {{-- <li><a href="{{ url('/' . ($page = 'device-reports')) }}">Device Reports</a></li> --}}
                     </ul>
                 </li>
 
@@ -73,11 +72,11 @@
                         Settings <i class="fa fa-angle-down horizontal-icon"></i>
                     </a>
                     <ul class="sub-menu">
-                        <li><a href="{{ url('/' . ($page = 'general-settings')) }}">General Settings</a></li>
-                        <li><a href="{{ url('/' . ($page = 'app-settings')) }}">App Settings</a></li>
+                        {{-- <li><a href="{{ url('/' . ($page = 'general-settings')) }}">General Settings</a></li>
+                        <li><a href="{{ url('/' . ($page = 'app-settings')) }}">App Settings</a></li> --}}
                         <li><a href="{{ url('master-data/master-code-list') }}">Master Code</a></li>
                         <li><a href="{{ url('master-data/master-code-to-data') }}">Master Data</a></li>
-                        <li><a href="{{ url('/' . ($page = 'notification-settings')) }}">Notification Settings</a></li>
+                        {{-- <li><a href="{{ url('/' . ($page = 'notification-settings')) }}">Notification Settings</a></li> --}}
                     </ul>
                 </li>
 
