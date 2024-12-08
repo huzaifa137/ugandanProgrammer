@@ -136,7 +136,14 @@ use Carbon\Carbon;
                                         @foreach ($Links as $count => $link)
                                             <tr>
                                                 <td>{{ $count + 1 }}</td>
-                                                <td class="font-weight-semibold">{{ $link->gl_links }}</td>
+                                                
+                                                <td class="font-weight-semibold">
+                                                    <a href="{{ route('link.click', ['id' => $link->id]) }}"
+                                                        id="link-{{ $link->id }}">
+                                                        {{ $link->gl_links }}
+                                                    </a>
+                                                </td>
+
                                                 <td class="text-nowrap">
                                                     {{ \Carbon\Carbon::createFromTimestamp($link->gl_date_added)->toDateTimeString() }}
                                                 </td>
@@ -182,58 +189,57 @@ use Carbon\Carbon;
 
 
     <script>
+        function activateAccount(linkId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Please confirm you want to activate this account!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, activate it!',
+                cancelButtonText: 'No, cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
 
-       function activateAccount(linkId) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'Please confirm you want to activate this account!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, activate it!',
-            cancelButtonText: 'No, cancel',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-               
-                Swal.fire({
-                    title: 'Activated!',
-                    text: 'The Link has been successfully activated.',
-                    icon: 'success',
-                    showConfirmButton: true,  
-                    confirmButtonText: 'OK',
-             
-                }).then(() => {
+                    Swal.fire({
+                        title: 'Activated!',
+                        text: 'The Link has been successfully activated.',
+                        icon: 'success',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
 
-                    window.location.href = "{{ url('tracking-status-update') }}/" + linkId;
-                });
-            }
-        });
-    }
+                    }).then(() => {
 
-    function deactivateAccount(linkId) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'Please confirm you want to de-activate this account!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, deactivate it!',
-            cancelButtonText: 'No, cancel',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                
-                Swal.fire({
-                    title: 'Deactivated!',
-                    text: 'The Link has been successfully de-activated.',
-                    icon: 'success',
-                    showConfirmButton: true,  
-                    confirmButtonText: 'OK',
-                }).then(() => {
-                    window.location.href = "{{ url('tracking-status-update') }}/" + linkId;
-                });
-            }
-        });
-    }
+                        window.location.href = "{{ url('tracking-status-update') }}/" + linkId;
+                    });
+                }
+            });
+        }
+
+        function deactivateAccount(linkId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Please confirm you want to de-activate this account!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, deactivate it!',
+                cancelButtonText: 'No, cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    Swal.fire({
+                        title: 'Deactivated!',
+                        text: 'The Link has been successfully de-activated.',
+                        icon: 'success',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                    }).then(() => {
+                        window.location.href = "{{ url('tracking-status-update') }}/" + linkId;
+                    });
+                }
+            });
+        }
     </script>
 
     <!--Moment js-->

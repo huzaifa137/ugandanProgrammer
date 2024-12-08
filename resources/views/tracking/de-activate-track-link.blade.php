@@ -15,7 +15,7 @@ use Carbon\Carbon;
         <!--Page header-->
         <div class="page-header">
             <div class="page-leftheader">
-                <h4 class="page-title">Active Links</h4>
+                <h4 class="page-title">De-activated Links</h4>
             </div>
 
         </div>
@@ -35,7 +35,7 @@ use Carbon\Carbon;
                 @else
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Actively Tracking Links</h3>
+                            <h3 class="card-title">Currently De-activated Tracking Links</h3>
                         </div>
 
 

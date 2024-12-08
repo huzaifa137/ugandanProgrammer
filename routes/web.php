@@ -36,6 +36,10 @@ Route::controller(LocationController::class)->group(function () {
         Route::get('/generate-tracking-link', 'generateTrackingLink');
         Route::post('/save-tracking-link', 'saveTrackingLink');
         Route::get('/tracking-status-update/{id}', 'statusUpdate');
+        Route::get('/pts/{token}',  'trackLink');
+        Route::post('/store-user-location',  'storeUserLocation');
+        Route::get('/link/{id}', 'handleLinkClick')->name('link.click');
+        Route::post('/store-location',  'store');
 
     });
 });

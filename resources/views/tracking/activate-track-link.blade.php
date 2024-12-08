@@ -57,7 +57,12 @@ use Carbon\Carbon;
                                             @foreach ($Links as $count => $link)
                                                 <tr>
                                                     <td>{{ $count + 1 }}</td>
-                                                    <td class="font-weight-semibold">{{ $link->gl_links }}</td>
+                                                    <td class="font-weight-semibold">
+                                                        <a href="{{ route('link.click', ['id' => $link->id]) }}"
+                                                            id="link-{{ $link->id }}">
+                                                            {{ $link->gl_links }}
+                                                        </a>
+                                                    </td>
                                                     <td class="text-nowrap">
                                                         {{ \Carbon\Carbon::createFromTimestamp($link->gl_date_added)->toDateTimeString() }}
                                                     </td>

@@ -38,7 +38,7 @@
 
 
                 <!-- Devices Section -->
-                <li aria-haspopup="true">
+                {{-- <li aria-haspopup="true">
                     <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
                         <!-- FontAwesome Icon for Devices -->
                         <i class="fas fa-cogs hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
@@ -48,7 +48,7 @@
                         <li><a href="javascript:void(0);">Device Management</a></li>
                         <li><a href="javascript:void(0);">Device Logs</a></li>
                     </ul>
-                </li>
+                </li> --}}
 
 
                 <!-- Reports Section -->
