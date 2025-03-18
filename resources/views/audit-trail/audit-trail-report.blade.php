@@ -15,18 +15,7 @@ use App\Http\Controllers\Helper;
                 <div class="row">
                     <div class="col-sm-12 col-md-12">
                         <h3 class="heading">
-                            <?php 
-                                use App\Http\Controllers\Controller;
-                                $controller = new Controller();
-
-                                use App\Http\Controllers\AuditTrailController;
-                                $links = AuditTrailController::links();
-                                $controller->link_display('Approval Order','fa-check', $links, 'top');
-
-                                $url = url()->current();
-                                $url_parts = explode('/',$url);
-                                echo $method = ucwords(str_replace(" ",' ', lcfirst(str_replace('-',' ',(strtolower($url_parts[4]))))));
-                            ?>
+                           
                         </h3>
                         <div class="row">
                             <div class="col-sm-12 col-md-12">

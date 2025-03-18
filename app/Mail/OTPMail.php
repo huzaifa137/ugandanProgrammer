@@ -39,7 +39,7 @@ class OTPMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'PTS O.T.P',
+            subject: 'UP O.T.P',
         );
     }
 

@@ -85,7 +85,7 @@ class LocationController extends Controller
             $post->gl_date_added = time();
             $post->save();
 
-            AuditTrailController::register('TRACK LINK GENERATED', 'ADMIN Username: <b>' . Helper::full_name(Session('LoggedAdmin')) . '</b> Pasword: <b>*******</b>');
+            // AuditTrailController::register('TRACK LINK GENERATED', 'ADMIN Username: <b>' . Helper::full_name(Session('LoggedAdmin')) . '</b> Pasword: <b>*******</b>');
 
             return response()->json(['success' => true, 'message' => 'Link saved successfully']);
         } catch (\Exception $e) {
@@ -107,11 +107,11 @@ class LocationController extends Controller
 
         if ($ipStatus == 0) {
             $post->gl_active_status = 1;
-            AuditTrailController::register('TRACK LINK ACTIVATED', 'ADMIN Username: <b>' . Helper::full_name(Session('LoggedAdmin')) . '</b> Pasword: <b>*******</b>');
+            // AuditTrailController::register('TRACK LINK ACTIVATED', 'ADMIN Username: <b>' . Helper::full_name(Session('LoggedAdmin')) . '</b> Pasword: <b>*******</b>');
 
         } else {
             $post->gl_active_status = 0;
-            AuditTrailController::register('TRACK LINK DE-ACTIVATED', 'ADMIN Username: <b>' . Helper::full_name(Session('LoggedAdmin')) . '</b> Pasword: <b>*******</b>');
+            // AuditTrailController::register('TRACK LINK DE-ACTIVATED', 'ADMIN Username: <b>' . Helper::full_name(Session('LoggedAdmin')) . '</b> Pasword: <b>*******</b>');
 
         }
         $post->save();
@@ -153,7 +153,7 @@ class LocationController extends Controller
                 $LinkUpdated->gl_tracker_counter = $LinkUpdated->gl_tracker_counter + 1;
                 $LinkUpdated->save();
 
-                AuditTrailController::register('LINK LOCATION ', 'ADMIN Username: <b>' . $userLink . '</b> STORED: <b>*******</b>');
+                // AuditTrailController::register('LINK LOCATION ', 'ADMIN Username: <b>' . $userLink . '</b> STORED: <b>*******</b>');
 
                 Session::flash('success', 'Location stored successfully!');
                 return response()->json([

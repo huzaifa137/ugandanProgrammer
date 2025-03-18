@@ -39,7 +39,7 @@
 
                 <div class="card-body text-center">
                     <div class="pro-user">
-                        <h4 class="pro-user-username text-dark mb-1 font-weight-bold">{{ $user->user_title }}
+                        <h4 class="pro-user-username text-dark mb-1 font-weight-bold">{{ $user->username }}
                             {{ $user->firstname }} {{ $user->lastname }}</h4>
                         <h6 class="pro-user-desc text-muted">{{ $user->user_role }}</h6>
                         <a href="#" class="btn btn-success btn-sm mt-3">{{ $user->account_status }}</a>
@@ -63,7 +63,7 @@
                                             <i class="fa fa-user"></i>
                                         </div>
                                         <div class="media-body">
-                                            <span class="font-weight-bold mb-1">{{ $user->user_title }}</span> :
+                                            <span class="font-weight-bold mb-1">{{ $user->username }}</span> :
                                             {{ $user->firstname }}
                                             {{ $user->lastname }} <br>
                                             <span class="font-weight-bold mb-1">Role </span>: {{ $user->user_role }} <br>
@@ -110,15 +110,8 @@
                                             <small class="text-muted">Country</small>
                                             <div class="font-weight-bold">
 
-                                                <?php
-                                                $country = DB::table('countries')
-                                                    ->where('PhoneCode', @$user->country)
-                                                    ->select('Name', 'Iso')
-                                                    ->first();
-                                                ?>
-
-                                                <i class="flag flag-{{ strtolower($country->Iso ?? '') }} mr-2"
-                                                    title="{{ @$country->Name }}"></i>{{ @$country->Name }}
+                                                <i class="#"
+                                                    title="#"></i>Uganda
 
                                             </div>
                                         </div>

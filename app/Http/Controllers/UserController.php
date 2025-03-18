@@ -98,7 +98,7 @@ class UserController extends Controller
                 'email' => $email,
                 'username' => $username,
                 'resetUrl' => $resetUrl,
-                'title' => 'PTS O.T.P:Reset Password Link',
+                'title' => 'UP O.T.P:Reset Password Link',
             ];
 
             Mail::send('emails.reset_email', $data, function ($message) use ($data) {
@@ -168,7 +168,7 @@ class UserController extends Controller
             $request->session()->put('LoggedAdmin', $user_id);
             // $request->session()->put('ACTIVE_MODULE', 'SUPPLIERS');
 
-            AuditTrailController::register('LOGIN SUCCESSFULL', 'ADMIN Username: <b>' . $supplier_username . '</b> Pasword: <b>*******</b>');
+            // AuditTrailController::register('LOGIN SUCCESSFULL', 'ADMIN Username: <b>' . $supplier_username . '</b> Pasword: <b>*******</b>');
 
             $url = '/';
 
@@ -189,7 +189,7 @@ class UserController extends Controller
             ]);
 
         } else {
-            AuditTrailController::register('INVALID OTP', 'ADMIN Username: <b>' . $supplier_username . '</b> Pasword: <b>*******</b>');
+            // AuditTrailController::register('INVALID OTP', 'ADMIN Username: <b>' . $supplier_username . '</b> Pasword: <b>*******</b>');
 
             return response()->json([
                 'status' => false,
@@ -247,7 +247,7 @@ class UserController extends Controller
                 'regex:/\d/',
                 'regex:/[\W_]/',
             ],
-            'captcha' => 'required|captcha',
+            // 'captcha' => 'required|captcha',
         ]);
 
         $userInfo = User::where('email', '=', $request->email)->first();
@@ -268,7 +268,7 @@ class UserController extends Controller
                 $username = DB::table('users')->where('id', $user_id_check)->value('username');
 
                 $data = [
-                    'subject' => 'PTS LOGIN OTP',
+                    'subject' => 'UP LOGIN OTP',
                     'body' => 'Enter the Sent OTP to Login : ',
                     'otp' => $new_otp,
                     'username' => $username,
@@ -316,7 +316,7 @@ class UserController extends Controller
             ->update(['temp_otp' => $new_otp]);
 
         $data = [
-            'subject' => 'PTS RESENT OTP LOGIN',
+            'subject' => 'UP RESENT OTP LOGIN',
             'body' => 'Enter the Sent OTP to Login : ',
             'otp' => $new_otp,
             'username' => $username,
@@ -561,7 +561,7 @@ class UserController extends Controller
 
         if ($save) {
 
-            AuditTrailController::register('ACCOUNT CREATED', $request->firstname . ' ' . $request->lastname . ' has been created');
+            // AuditTrailController::register('ACCOUNT CREATED', $request->firstname . ' ' . $request->lastname . ' has been created');
 
             return back()->with('success', 'User account has been created successfully and user has been added to system users');
         } else {

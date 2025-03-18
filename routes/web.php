@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AuditTrailController;
+// use App\Http\Controllers\AuditTrailController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\UserController;
@@ -128,9 +128,4 @@ Route::controller(MasterDataController::class)->group(function () {
 
 });
 
-Route::controller(AuditTrailController::class)->group(function () {
 
-    Route::get('audit-trail/today', 'today')->name('audit-trail/today');
-    Route::get('audit-trail/audit-report', 'auditReport')->name('audit-trail/audit-report');
-    Route::post('audit-trail/filter-audit-report', 'filterAuditReport')->name('audit-trail/filter-audit-report');
-});

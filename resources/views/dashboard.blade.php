@@ -11,7 +11,7 @@
     <!--Page header-->
     <div class="page-header">
 		<div class="page-leftheader">
-			<h4 class="page-title">PTS Dashboard</h4>
+			<h4 class="page-title">UP Dashboard</h4>
 		</div>
 	</div>	
     <!--End Page header-->

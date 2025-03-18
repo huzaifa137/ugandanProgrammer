@@ -20,7 +20,7 @@
                     <div class="row">
                         <div class="col-md-8 mx-auto d-block">
                             <div class="">
-                                <h1 class="mb-2">User Login</h1>
+                                <h1 class="mb-2">Ugandan Programmer Login</h1>
                                 <p class="text-muted">Sign In to your account</p>
                             </div>
 
@@ -94,7 +94,7 @@
                                     @enderror
                                 </span>
 
-                                <div class="input-group mb-4">
+                                {{-- <div class="input-group mb-4">
                                     <span class="input-group-addon">
                                         <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24"
                                             viewBox="0 0 24 24" width="24">
@@ -113,9 +113,9 @@
                                     @error('captcha')
                                         {{ $message }}
                                     @enderror
-                                </span>
+                                </span> --}}
 
-                                <div class="input-group mb-4">
+                                {{-- <div class="input-group mb-4">
                                     <label class="control-label">Enter this captcha :</label>
 
                                     <div class="col-md-10">
@@ -125,7 +125,7 @@
                                                 id="reload">&#x21bb;</button>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="row">
                                     <div class="col-12">

@@ -19,7 +19,7 @@
 
     <p>This email is to inform you that a request has been made to reset the password for the supplier portal account associated with your email address, {{ $email }}. However, no changes have been made to your account at this time.</p>
 
-    <p>You can reset your password by clicking the provided link: {{ $resetUrl }}. If you did not request this password reset, please disregard this email, or you may inform us by replying directly. Remember, this is an automated message from the PTS, so do not reply to this email.</p>
+    <p>You can reset your password by clicking the provided link: {{ $resetUrl }}. If you did not request this password reset, please disregard this email, or you may inform us by replying directly. Remember, this is an automated message from the UP, so do not reply to this email.</p>
 
 </body>
 </html>

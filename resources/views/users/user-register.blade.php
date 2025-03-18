@@ -14,7 +14,7 @@
     <!--Row-->
     <div class="row ">
         <div class="col-xl-12 col-md-12 col-lg-12">
-            <h4 class="page-title" style="text-align: center;">PTS USER REGISTRATION</h4>
+            <h4 class="page-title" style="text-align: center;">UP USER REGISTRATION</h4>
             <br>
 
             <form action="{{ route('store-user') }}" class="border" method="POST" onsubmit="return validateForm()">

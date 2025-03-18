@@ -5,14 +5,12 @@
     <?php
     
     use App\Http\Controllers\AccessRightController;
-    use App\Http\Controllers\AuditTrailController;
+    // use App\Http\Controllers\AuditTrailController;
     use App\Http\Controllers\Controller;
     use App\Http\Controllers\Helper;
     $controller = new Controller();
     $user_id = Helper::user_id();
-    
-    $links = AuditTrailController::links();
-    
+        
     ?>
 
     <!--Page header-->

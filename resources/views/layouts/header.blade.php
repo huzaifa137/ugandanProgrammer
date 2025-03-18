@@ -10,13 +10,13 @@ use App\Http\Controllers\Helper;
         <div class="d-flex">
             <a class="header-brand text-left" href="{{ url('/') }}">
                 <img src="{{ URL::asset('assets/images/brand/logo.png') }}" class="header-brand-img desktop-lgo"
-                    alt="PTS logo">
+                    alt="UP logo">
                 <img src="{{ URL::asset('assets/images/brand/logo1.png') }}" class="header-brand-img dark-logo"
-                    alt="PTS logo">
+                    alt="UP logo">
                 <img src="{{ URL::asset('assets/images/brand/favicon.png') }}" class="header-brand-img mobile-logo"
-                    alt="PTS logo">
+                    alt="UP logo">
                 <img src="{{ URL::asset('assets/images/brand/favicon1.png') }}" class="header-brand-img darkmobile-logo"
-                    alt="PTS logo">
+                    alt="UP logo">
             </a>
             <a id="horizontal-navtoggle" class="animated-arrow hor-toggle"><span></span></a><!-- sidebar-toggle-->
 

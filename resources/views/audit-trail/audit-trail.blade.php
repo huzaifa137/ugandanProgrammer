@@ -11,7 +11,7 @@
     $controller = new Controller();
     $user_id = Helper::user_id();
     
-    $links = AuditTrailController::links();
+    // $links = AuditTrailController::links();
     
     ?>
 

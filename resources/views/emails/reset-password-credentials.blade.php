@@ -59,7 +59,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Welcome to PTS</h1>
+            <h1>Welcome to UP</h1>
         </div>
         <h3>Dear {{$name}},</h3>
         <p>These are the provided new user credentials and password which have been created :</p>
