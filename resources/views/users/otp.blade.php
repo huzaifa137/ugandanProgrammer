@@ -227,7 +227,7 @@
                                         title: 'Success',
                                         text: data.message,
                                         icon: 'success',
-                                        confirmButtonText: 'Okay'
+                                        confirmButtonText: 'Ok'
                                     });
                                 }
                             },

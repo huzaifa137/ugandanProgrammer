@@ -36,10 +36,10 @@ Route::controller(LocationController::class)->group(function () {
         Route::get('/generate-tracking-link', 'generateTrackingLink');
         Route::post('/save-tracking-link', 'saveTrackingLink');
         Route::get('/tracking-status-update/{id}', 'statusUpdate');
-        Route::get('/pts/{token}',  'trackLink');
-        Route::post('/store-user-location',  'storeUserLocation');
+        Route::get('/pts/{token}', 'trackLink');
+        Route::post('/store-user-location', 'storeUserLocation');
         Route::get('/link/{id}', 'handleLinkClick')->name('link.click');
-        Route::post('/store-location',  'store');
+        Route::post('/store-location', 'store');
 
     });
 });
@@ -57,23 +57,23 @@ Route::controller(UserController::class)->group(function () {
             Route::get('/users-profile', 'userProfile')->name('users-profile');
             Route::get('/users-register', 'userRegister');
             Route::get('/users-information', 'userInformation')->name('users.user-information');
-            Route::get('/user-roles', 'userRoles')->name('user-roles');
-            Route::get('/add-user-role', 'addUserRole')->name('add-user-role');
-            Route::get('edit-role/{id}', 'editRole');
-            Route::get('delete-role/{id}', 'deleteRole');
             Route::get('user-account-information/{id}', 'userAccountInformation');
-            Route::get('edit-user-information/{id}', 'editUserInformation');
             Route::get('delete-user/{id}', 'deleteUser');
-
+            Route::get('/register', 'register')->name('users.register');
+            Route::get('/edit-user-information', 'editUserInformation');
+            Route::get('/edit-specific-user/{userid}', 'editSpecificUser');
+            Route::get('/terms-and-conditions', 'user_terms_and_conditions')->name('users.terms-and-conditions');
         });
 
+        Route::post('store-internal-user', 'storeInternalUser')->name('store-internal-user');
+        Route::post('update-internal-user', 'storeUpdatedInternalUser')->name('update-internal-user');
+
+        // Route::post('user-account-creation', 'userAccountCreation')->name('user-account-creation');
         Route::post('save-role', 'saveUserRole')->name('save-role');
         Route::post('store-role-update', 'storeRoleUpdate')->name('store-role-update');
         Route::post('store-updated-information', 'storeUpdatedInformation')->name('store-updated-information');
 
     });
-
-    Route::post('store-user', 'storeUser')->name('store-user');
 
     Route::group(['middleware' => ['AdminAuth']], function () {
         Route::get('/', 'dashboard')->name('dashboard');
@@ -128,4 +128,33 @@ Route::controller(MasterDataController::class)->group(function () {
 
 });
 
+Route::controller(StudentController::class)->group(function () {
 
+    Route::group(['prefix' => '/users'], function () {
+
+        Route::group(['middleware' => ['AdminAuth']], function () {
+
+            Route::get('/register', 'register')->name('users.register');
+            Route::get('/terms-and-conditions', 'user_terms_and_conditions')->name('users.terms-and-conditions');
+            Route::get('/user-otp', function () {
+                $user_id_check    = session('userId');
+                $user_check_email = session('userEmail');
+
+                if (! $user_id_check || ! $user_check_email) {
+                    return redirect()->route('users.login')->with('fail', 'You must be logged in');
+                }
+                return view('users.otp', compact(['user_id_check', 'user_check_email']));
+            });
+        });
+
+        Route::post('user-account-creation', 'userAccountCreation')->name('user-account-creation');
+    });
+
+    Route::get('/clear-session', 'flushSession');
+
+});
+
+Route::controller(LocationController::class)->group(function () {
+
+    Route::get('/{page}', 'index');
+});

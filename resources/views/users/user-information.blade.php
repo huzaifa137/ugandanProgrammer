@@ -16,7 +16,7 @@
     <!--Row-->
     <div class="row ">
         <div class="col-xl-12 col-md-12 col-lg-12">
-            <h4 class="page-title" style="text-align: center;">USER INFORMATION</h4>
+            <h4 class="page-title" style="text-align: center;">User Information</h4>
             <div class="table-responsive">
 
                 @if (Session::get('success'))
@@ -35,12 +35,9 @@
                     <table id="table" class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
+                                <th style="width: 1px;">No.</th>
+                                <th>Username</th>
                                 <th>Email</th>
-                                <th>Gender</th>
-                                <th>Phone Number</th>
-                                <th>Account Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -87,38 +84,28 @@
 
 
     <script type="text/javascript">
-       
         $(document).ready(function() {
-            
+
             $('#table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route('users.user-information') }}',
                 columns: [{
-                        data: 'firstname',
-                        name: 'firstname'
+                        data: null,
+                        name: 'serial',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
                     },
                     {
-                        data: 'lastname',
-                        name: 'lastname'
+                        data: 'username',
+                        name: 'username'
                     },
                     {
                         data: 'email',
                         name: 'email'
-                    },
-                    {
-                        data: 'gender',
-                        name: 'gender'
-                    },
-                    {
-                        data: 'phonenumber',
-                        name: 'phonenumber'
-                    },
-                    {
-                        data: 'account_status',
-                        name: 'account_status',
-                        orderable: false,
-                        searchable: false
                     },
                     {
                         data: 'action',
@@ -127,11 +114,11 @@
                         searchable: false
                     }
                 ],
-                pageLength: 20,
+                pageLength: 10,
                 lengthMenu: [10, 25, 50, 100],
                 order: [
-                    [0, 'asc']
-                ],
+                    [1, 'asc']
+                ], // Now column 1 is 'username', not 0
                 searching: true,
                 ordering: true,
                 dom: 'Bfrtip',
@@ -155,6 +142,7 @@
             });
         });
     </script>
+
 
     </script>
 @endsection

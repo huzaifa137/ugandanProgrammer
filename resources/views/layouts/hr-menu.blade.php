@@ -24,32 +24,14 @@
                 <!-- Users Section -->
                 <li aria-haspopup="true">
                     <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
-                        <!-- FontAwesome Icon for Users -->
                         <i class="fas fa-users hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
                         Users <i class="fa fa-angle-down horizontal-icon"></i>
                     </a>
                     <ul class="sub-menu">
                         <li><a href="{{ url('/users/users-register') }}">Register new User</a></li>
                         <li><a href="{{ url('/users/users-information') }}">View users information</a></li>
-                        <li><a href="{{ url('/users/user-roles') }}">User roles</a></li>
-                        <li><a href="{{ url('/users/add-user-role') }}">Register new user role</a></li>
                     </ul>
                 </li>
-
-
-                <!-- Devices Section -->
-                {{-- <li aria-haspopup="true">
-                    <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
-                        <!-- FontAwesome Icon for Devices -->
-                        <i class="fas fa-cogs hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
-                        Devices <i class="fa fa-angle-down horizontal-icon"></i>
-                    </a>
-                    <ul class="sub-menu">
-                        <li><a href="javascript:void(0);">Device Management</a></li>
-                        <li><a href="javascript:void(0);">Device Logs</a></li>
-                    </ul>
-                </li> --}}
-
 
                 <!-- Reports Section -->
                 <li aria-haspopup="true">

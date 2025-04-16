@@ -14,6 +14,50 @@
             </div>
         </div>
 
+        <style>
+            .input-group {
+                display: flex;
+                align-items: stretch;
+            }
+
+            .input-group-addon {
+                padding: 6px 12px;
+                background-color: #eee;
+                border: 1px solid #ccc;
+                border-right: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 48px;
+            }
+
+            .input-wrapper {
+                position: relative;
+                flex: 1;
+            }
+
+            .input-wrapper input {
+                width: 100%;
+                height: 100%;
+                padding: 6px 40px 6px 12px;
+                border: 1px solid #ccc;
+                border-left: none;
+                box-sizing: border-box;
+                font-size: 14px;
+            }
+
+            .toggle-password {
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+                cursor: pointer;
+                height: 20px;
+                width: 20px;
+                fill: #888;
+            }
+        </style>
+
         <div class="w-80 page-content">
             <div class="page-single-content">
                 <div class="card-body p-6">
@@ -21,11 +65,10 @@
                         <div class="col-md-8 mx-auto d-block">
                             <div class="">
                                 <h1 class="mb-2">Ugandan Programmer Login</h1>
-                                <p class="text-muted">Sign In to your account</p>
+                                <p class="text-muted">Sign into your account</p>
                             </div>
 
                             @include('sweetalert::alert')
-
 
                             @if (Session::get('success'))
                                 <div class="alert alert-success">
@@ -69,8 +112,9 @@
 
                                 <div class="input-group mb-4">
                                     <span class="input-group-addon">
-                                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24"
-                                            viewBox="0 0 24 24" width="24">
+
+                                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="20"
+                                            width="20" viewBox="0 0 24 24">
                                             <g fill="none">
                                                 <path d="M0 0h24v24H0V0z" />
                                                 <path d="M0 0h24v24H0V0z" opacity=".87" />
@@ -78,54 +122,32 @@
                                             <path d="M6 20h12V10H6v10zm6-7c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"
                                                 opacity=".3" />
                                             <path
-                                                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" />
+                                                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0
+                                                                                                                                                            2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1
+                                                                                                                                                            0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" />
                                         </svg>
                                     </span>
 
-                                    <input type="password" id="password" name="password" class="form-control"
-                                        placeholder="Password" required
-                                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}"
-                                        title="Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.">
-
+                                    <div class="input-wrapper">
+                                        <input type="password" class="form-control" placeholder="Password" id="password">
+                                        <svg class="toggle-password" onclick="togglePassword('password', this)"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11
+                                                                                                                                                            11-7.5c-1.73-4.39-6-7.5-11-7.5zm0
+                                                                                                                                                            13c-2.76 0-5-2.24-5-5s2.24-5
+                                                                                                                                                            5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66
+                                                                                                                                                            0-3 1.34-3 3s1.34 3 3 3
+                                                                                                                                                            3-1.34 3-3-1.34-3-3-3z" />
+                                        </svg>
+                                    </div>
                                 </div>
+
                                 <span class="text-danger">
                                     @error('password')
                                         {{ $message }}
                                     @enderror
                                 </span>
-
-                                {{-- <div class="input-group mb-4">
-                                    <span class="input-group-addon">
-                                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24"
-                                            viewBox="0 0 24 24" width="24">
-                                            <path fill="none" d="M0 0h24v24H0V0z" />
-                                            <path
-                                                d="M19.45 8.62l-3.72-3.72c-.2-.2-.51-.2-.71 0l-.73.73c-.2.2-.2.51 0 .71l2.19 2.19H11c-2.47 0-4.45 1.98-4.45 4.45v1.07l-2.3-2.3c-.2-.2-.51-.2-.71 0l-.73.73c-.2.2-.2.51 0 .71l3.72 3.72c.2.2.51.2.71 0l.73-.73c.2-.2.2-.51 0-.71l-2.19-2.19h6.28c2.47 0 4.45-1.98 4.45-4.45v-1.07l2.3 2.3c.2.2.51.2.71 0l.73-.73c.19-.21.19-.52-.01-.72zM17 12.5c0 1.93-1.57 3.5-3.5 3.5h-6c0-1.93 1.57-3.5 3.5-3.5h6z" />
-                                        </svg>
-                                    </span>
-
-                                    <input type="text" id="captcha" name="captcha" minlength="4" maxlength="4"
-                                        class="form-control" placeholder="Captcha" required>
-                                </div>
-
-
-                                <span class="text-danger">
-                                    @error('captcha')
-                                        {{ $message }}
-                                    @enderror
-                                </span> --}}
-
-                                {{-- <div class="input-group mb-4">
-                                    <label class="control-label">Enter this captcha :</label>
-
-                                    <div class="col-md-10">
-                                        <div class="captcha">
-                                            <span style="width: 50%; height: 50%;">{!! captcha_img('flat') !!}</span>
-                                            <button type="button" class="btn btn-danger reload"
-                                                id="reload">&#x21bb;</button>
-                                        </div>
-                                    </div>
-                                </div> --}}
 
                                 <div class="row">
                                     <div class="col-12">
@@ -139,8 +161,16 @@
                                         </button>
 
                                     </div>
-                                </div>
 
+                                    <div class="col-12">
+                                        <div class="font-weight-normal mt-3 fs-15">You dont have an account,<a
+                                                class="btn-link font-weight-normal" href="{{ url('/users/register') }}">
+                                                Register
+                                                Here</a>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </form>
 
 
@@ -156,57 +186,116 @@
 
 
 @section('js')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('form').addEventListener('submit', function() {
-                var button = document.getElementById('login_button');
-                button.disabled = true;
-                button.innerHTML = '<i class="fe fe-arrow-right"></i> Logging in...';
-            });
-        });
+        function togglePassword(fieldId, icon) {
+            const input = document.getElementById(fieldId);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
 
+        $(document).ready(function() {
+            $('#login_button').on('click', function(e) {
+                e.preventDefault();
 
-        $('#reload').click(function() {
-            $.ajax({
+                var button = $(this);
+                button.prop('disabled', true).html('<i class="fe fe-arrow-right"></i> Logging in...');
 
-                type: 'GET',
-                url: '/reload-captcha',
-                success: function(data) {
-                    $(".captcha span").html(data.captcha)
+                let email = $('#email').val();
+                let password = $('#password').val();
+
+                $('#email').removeClass('is-invalid is-valid');
+                $('#password').removeClass('is-invalid is-valid');
+
+                let errorMessages = [];
+
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!email) {
+                    errorMessages.push("Email is required.");
+                    $('#email').addClass('is-invalid');
+                } else if (!emailRegex.test(email)) {
+                    errorMessages.push("Please enter a valid email address.");
+                    $('#email').addClass('is-invalid');
+                } else {
+                    $('#email').addClass('is-valid');
                 }
-            });
-        });
 
-        $('#supplier_login_in').click(function() {
+                if (!password) {
+                    errorMessages.push("Password is required.");
+                    $('#password').addClass('is-invalid');
+                } else {
+                    $('#password').addClass('is-valid');
+                }
 
-            var email = $('#email').val();
-            var password = $('#password').val();
-            var captcha = $('#captcha').val();
+                if (errorMessages.length > 0) {
+                    let errorList = '<ul>';
+                    errorMessages.forEach((err, i) => {
+                        errorList += `<li>${i + 1}. ${err}</li>`;
+                    });
+                    errorList += '</ul>';
 
-            var form_data = new FormData();
+                    Swal.fire({
+                        title: 'Validation Error',
+                        html: errorList,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
 
-            form_data.append('email', email);
-            form_data.append('password', password);
-            form_data.append('captcha', captcha);
+                    button.prop('disabled', false).html('<i class="fe fe-arrow-right"></i> Login');
+                    return;
+                }
 
-            $.ajax({
-                type: "POST",
-                processData: false,
-                contentType: false,
-                cache: false,
-                data: form_data,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/auth.check',
-                success: function(data) {
-                    if (data.status) {
-                        // handle success
+                $.ajax({
+                    url: "{{ route('auth-user-check') }}",
+                    type: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        email: email,
+                        password: password
+                    },
+                    success: function(response) {
+                        if (response.status) {
+                            window.location.href = response.redirect_url
+                        } else {
+
+                            Swal.fire({
+                                title: response.title ?? 'Login Failed',
+                                text: response.message ??
+                                    'We don’t recognize the email or password you provided.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+
+                                $('#login_button').prop('disabled', false).html(
+                                    '<i class="fe fe-arrow-right"></i> Login');
+                            });
+                        }
+                    },
+                    error: function(data) {
+
+                        try {
+                            const response = data.responseJSON;
+                            if (response && response.message) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    html: response.message,
+                                    confirmButtonText: 'OK'
+                                });
+                            } else {
+                                $('body').html(data
+                                    .responseText);
+                            }
+                        } catch (e) {
+                            $('body').html(data.responseText);
+                        }
+
+                        $('#login_button').prop('disabled', false).html(
+                            '<i class="fe fe-arrow-right"></i> Login');
                     }
-                },
-                error: function(data) {
-                    $('body').html(data.responseText);
-                }
+                });
+
             });
         });
     </script>

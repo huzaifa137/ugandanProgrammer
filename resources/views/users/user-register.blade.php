@@ -14,10 +14,10 @@
     <!--Row-->
     <div class="row ">
         <div class="col-xl-12 col-md-12 col-lg-12">
-            <h4 class="page-title" style="text-align: center;">UP USER REGISTRATION</h4>
+            <h4 class="page-title" style="text-align: center;">Account Registration</h4>
             <br>
 
-            <form action="{{ route('store-user') }}" class="border" method="POST" onsubmit="return validateForm()">
+            <form action="{{ route('store-internal-user') }}" class="border" method="POST" id="userForm">
 
                 @csrf
 
@@ -38,20 +38,22 @@
                 @endif
 
                 <div class="row">
+
                     <div class="col-md-4" style="padding-top:1rem;">
-                        <label>Title<span class="text-danger">*</span></label>
-                        <select name="user_title" id="user_title" class="input-sm form-control" required>
-                            <option value="Mr">Mr.</option>
-                            <option value="Mrs">Mrs.</option>
-                            <option value="Dr">Dr.</option>
-                            <option value="Prof.">Prof.</option>
-                        </select>
+                        <label>Username<span class="text-danger">*</span></label>
+                        <input type="text" name="username" id="username" class="username input-sm form-control"
+                            placeholder="Enter username" value="{{ old('username') }}">
+                        <span class="text-danger">
+                            @error('username')
+                                {{ $message }}
+                            @enderror
+                        </span>
                     </div>
 
                     <div class="col-md-4" style="padding-top:1rem;">
-                        <label>Firstname<span class="text-danger">*</span></label>
-                        <input type="text" name="firstname" id="firstname" class="input-sm form-control"
-                            placeholder="Enter Firstname" value="{{ old('firstname') }}" required>
+                        <label>Firstname<span class="text-danger"></span></label>
+                        <input type="text" name="firstname" id="firstname" class="firstname input-sm form-control"
+                            placeholder="Enter Firstname" value="{{ old('firstname') }}">
                         <span class="text-danger">
                             @error('firstname')
                                 {{ $message }}
@@ -60,9 +62,9 @@
                     </div>
 
                     <div class="col-md-4" style="padding-top:1rem;">
-                        <label>Lastname<span class="text-danger">*</span></label>
-                        <input type="text" name="lastname" id="lastname" class="input-sm form-control"
-                            placeholder="Enter Lastname" value="{{ old('lastname') }}" required>
+                        <label>Lastname<span class="text-danger"></span></label>
+                        <input type="text" name="lastname" id="lastname" class="lastname input-sm form-control"
+                            placeholder="Enter Lastname" value="{{ old('lastname') }}">
                         <span class="text-danger">
                             @error('lastname')
                                 {{ $message }}
@@ -72,49 +74,34 @@
                 </div>
 
                 <div class="row">
+
                     <div class="col-md-4" style="padding-top:1rem;">
-                        <label>Username<span class="text-danger">*</span></label>
-                        <input type="text" name="username" id="username" class="input-sm form-control"
-                            placeholder="Enter username" value="{{ old('username') }}" required>
+                        <label>Gender<span class="text-danger"></span></label>
+                        <select name="gender" id="gender" class="gender input-sm form-control">
+                            @if (@$info->gender)
+                                <option value="{{ $info->gender }}">{{ @$info->gender }}</option>
+                            @else
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            @endif
+                        </select>
+                    </div>
+
+                    <div class="col-md-4" style="padding-top:1rem;">
+                        <label>Email<span class="text-danger">*</span></label>
+                        <input type="email" name="email" id="email" class="email input-sm form-control"
+                            placeholder="Enter Email" value="{{ old('email') }}">
                         <span class="text-danger">
-                            @error('username')
+                            @error('email')
                                 {{ $message }}
                             @enderror
                         </span>
                     </div>
 
                     <div class="col-md-4" style="padding-top:1rem;">
-                        <label>Designation<span class="text-danger">*</span></label>
-                        <select name="title" id="title" class="input-sm form-control" required>
-                            @foreach ($Titles as $user_role)
-                                <option value="{{ $user_role->md_name }}">{{ $user_role->md_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-4" style="padding-top:1rem;">
-                        <label>Gender<span class="text-danger">*</span></label>
-                        <select name="gender" id="gender" class="input-sm form-control" required>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4" style="padding-top:1rem;">
-                        <label>User Role<span class="text-danger">*</span></label>
-                        <select name="user_role" id="user_role" class="input-sm form-control" required>
-                            @foreach ($user_roles as $user_role)
-                                <option value="{{ $user_role->user_name }}">{{ $user_role->user_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-4" style="padding-top:1rem;">
-                        <label>Phonenumber<span class="text-danger">*</span></label>
-                        <input type="text" name="phonenumber" id="phonenumber" class="input-sm form-control"
-                            placeholder="Enter phonenumber" value="{{ old('phonenumber') }}" required>
+                        <label>Phonenumber<span class="text-danger"></span></label>
+                        <input type="text" name="phonenumber" id="phonenumber" class="phonenumber input-sm form-control"
+                            placeholder="Enter phonenumber" value="{{ old('phonenumber') }}">
                         <span class="text-danger">
                             @error('phonenumber')
                                 {{ $message }}
@@ -122,34 +109,25 @@
                         </span>
                     </div>
 
-                    <div class="col-md-4" style="padding-top:1rem;">
-                        <label>Email<span class="text-danger">*</span></label>
-                        <input type="email" name="email" id="email" class="input-sm form-control"
-                            placeholder="Enter Email" value="{{ old('email') }}" required>
-                        <span class="text-danger">
-                            @error('email')
-                                {{ $message }}
-                            @enderror
-                        </span>
-                    </div>
                 </div>
 
                 <div class="row">
+
                     <div class="col-md-4" style="padding-top:1rem;">
-                        <label>Passport Number / NIN Number<span class="text-danger">*</span></label>
-                        <input type="text" name="passport" id="passport" class="input-sm form-control"
-                            placeholder="Enter Passport Number" value="{{ old('passport') }}" required>
+                        <label>Country<span class="text-danger"></span></label>
+                        <input type="text" name="country" id="country" class="country input-sm form-control"
+                            placeholder="Enter Country" value="{{ old('country') }}">
                         <span class="text-danger">
-                            @error('passport')
+                            @error('country')
                                 {{ $message }}
                             @enderror
                         </span>
                     </div>
 
                     <div class="col-md-4" style="padding-top:1rem;">
-                        <label>Password<span class="text-danger">*</span></label>
-                        <input type="password" name="password" id="password" class="input-sm form-control"
-                            placeholder="Enter Password" value="{{ old('password') }}" required>
+                        <label>Password<span class="text-danger"></span></label>
+                        <input type="password" name="password" id="password" class="password input-sm form-control"
+                            placeholder="Enter Password" value="{{ old('password') }}">
                         <span class="text-danger">
                             @error('password')
                                 {{ $message }}
@@ -158,10 +136,9 @@
                     </div>
 
                     <div class="col-md-4" style="padding-top:1rem;">
-                        <label>Confirm password<span class="text-danger">*</span></label>
+                        <label>Confirm Password<span class="text-danger"></span></label>
                         <input type="password" name="confirm_password" id="confirm_password"
-                            class="input-sm form-control" value="{{ old('confirm_password') }}"
-                            placeholder="Enter Password" required>
+                            class="input-sm form-control" placeholder="Enter Confirm password">
                         <span class="text-danger">
                             @error('confirm_password')
                                 {{ $message }}
@@ -189,41 +166,105 @@
     </div>
     </div>
 @endsection
+
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script> <!-- FontAwesome for icons -->
 
     <script>
-        function validateForm() {
-            var firstname = document.getElementById("firstname").value;
-            var lastname = document.getElementById("lastname").value;
-            var username = document.getElementById("username").value;
-            var phonenumber = document.getElementById("phonenumber").value;
-            var email = document.getElementById("email").value;
-            var passport = document.getElementById("passport").value;
-            var password = document.getElementById("password").value;
-            var confirm_password = document.getElementById("confirm_password").value;
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("userForm");
+            const submitButton = form.querySelector("button[type='submit']");
 
-            if (!firstname || !lastname || !username || !phonenumber || !email || !passport || !password || !
-                confirm_password) {
-                Swal.fire('Error', 'Please fill all required fields!', 'error');
-                return false;
-            }
+            form.addEventListener("submit", function(e) {
+                e.preventDefault();
 
-            if (password !== confirm_password) {
-                Swal.fire('Error', 'Passwords do not match!', 'error');
-                return false;
-            }
+                const firstname = document.getElementById("firstname").value.trim();
+                const lastname = document.getElementById("lastname").value.trim();
+                const username = document.getElementById("username").value.trim();
+                const country = document.getElementById("country").value.trim();
+                const phonenumber = document.getElementById("phonenumber").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value;
+                const confirm_password = document.getElementById("confirm_password").value.trim();
 
-            var phoneRegex = /^\d{10}$/;
-            if (!phoneRegex.test(phonenumber)) {
-                Swal.fire('Error', 'Please enter a valid phone number (10 digits)!', 'error');
-                return false;
-            }
+                let errors = [];
 
-            return true;
-        }
+                if (!username) {
+                    errors.push('• Username is required');
+                    $('#username').addClass('is-invalid');
+                }
+
+                if (!firstname) {
+                    errors.push('• Firstname is required');
+                    $('#firstname').addClass('is-invalid');
+                }
+
+                if (!lastname) {
+                    errors.push('• lastname is required');
+                    $('#lastname').addClass('is-invalid');
+                }
+
+                if (!email) {
+                    errors.push('• Email is required');
+                    $('#email').addClass('is-invalid');
+                }
+
+                if (!phonenumber) {
+                    errors.push('• Phonenumber is required field');
+                    $('#phonenumber').addClass('is-invalid');
+                }
+
+                if (!confirm_password) {
+                    errors.push('• Confirm Passsword is required field');
+                    $('#confirm_password').addClass('is-invalid');
+                }
+
+                if (!country) {
+                    errors.push('• Country is required field');
+                    $('#country').addClass('is-invalid');
+                }
+
+                const phoneRegex = /^\d{10}$/;
+                if (!phoneRegex.test(phonenumber)) {
+                    errors.push('• Please enter a valid phone number (10 digits)');
+                }
+
+                if (!password) {
+                    errors.push('• Password is required field');
+                    $('#password').addClass('is-invalid');
+                } else if (!confirm_password) {
+                    errors.push('• Confirm password is required field');
+                } else if (password !== confirm_password) {
+
+                    errors.push('• Passwords do not match');
+                }
+
+                if (errors.length > 0) {
+                    Swal.fire('Missing or Invalid Fields', errors.join('<br>'), 'error');
+                    return false;
+                }
+
+                Swal.fire({
+                    title: 'Confirm Submission',
+                    text: "Are you sure you want to create this user?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, submit it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        submitButton.innerHTML =
+                            'Creating user account...<i class="fas fa-spinner fa-spin"></i>';
+                        submitButton.disabled = true;
+
+                        form.submit();
+                    }
+                });
+            });
+        });
     </script>
+
     <!--Moment js-->
     <script src="{{ URL::asset('assets/plugins/moment/moment.js') }}"></script>
     <!-- Daterangepicker js-->

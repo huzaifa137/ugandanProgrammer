@@ -1,10 +1,9 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
-use Session;
 use Illuminate\Http\Request;
+use Session;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminAuth
@@ -17,11 +16,14 @@ class AdminAuth
     public function handle(Request $request, Closure $next): Response
     {
 
-        if (!session()->has('LoggedAdmin') &&
+        if (! session()->has('LoggedAdmin') &&
             ($request->path() != 'users/login' &&
-                !$request->routeIs('auth-user-check') &&
-                !$request->routeIs('regenerate-otp') &&
-                !$request->routeIs('password/reset') &&
+                $request->path() != 'users/register' &&
+                $request->path() != 'users/user-otp' &&
+                $request->path() != 'users/terms-and-conditions' &&
+                ! $request->routeIs('auth-user-check') &&
+                ! $request->routeIs('regenerate-otp') &&
+                ! $request->routeIs('password/reset') &&
                 $request->path() != 'users/forgot-password')) {
 
             Session::put('url.intended', $request->url());
@@ -29,7 +31,7 @@ class AdminAuth
             return redirect('/users/login')->with('fail', 'You must be logged in');
         }
 
-        if ((session()->has('LoggedAdmin') && ($request->path() == 'users/login' ||  $request->routeIs('auth-user-check')))) {
+        if ((session()->has('LoggedAdmin') && ($request->path() == 'users/login' || $request->path() == 'users/register' || $request->routeIs('auth-user-check')))) {
 
             Session::put('url.intended', $request->url());
 

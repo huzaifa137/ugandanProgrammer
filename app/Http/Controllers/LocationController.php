@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\GenerateLink;
@@ -29,8 +28,8 @@ class LocationController extends Controller
 
     public function generateLink()
     {
-        $Links = GenerateLink::orderBy('id', 'desc')->paginate(10);
-        $Activated = GenerateLink::where('gl_active_status', 1)->get();
+        $Links       = GenerateLink::orderBy('id', 'desc')->paginate(10);
+        $Activated   = GenerateLink::where('gl_active_status', 1)->get();
         $DeActivated = GenerateLink::where('gl_active_status', 0)->get();
         return view('tracking.generate-link', compact(['Links', 'Activated', 'DeActivated']));
     }
@@ -61,12 +60,12 @@ class LocationController extends Controller
 
     public function generateTrackingLink()
     {
-        $token = Str::random(30);
+        $token         = Str::random(30);
         $generatedLink = url('pts', $token);
 
         return response()->json([
             'success' => true,
-            'link' => $generatedLink,
+            'link'    => $generatedLink,
         ]);
     }
 
@@ -74,14 +73,14 @@ class LocationController extends Controller
     {
         try {
             $validated = $request->validate([
-                'link' => 'required|string|url',
+                'link'      => 'required|string|url',
                 'device_ip' => 'nullable|string',
             ]);
 
-            $post = new GenerateLink;
-            $post->gl_links = $validated['link'];
-            $post->gl_device_ip = $validated['device_ip'] ?? $request->ip();
-            $post->gl_added_by = Session('LoggedAdmin') ?? 'System';
+            $post                = new GenerateLink;
+            $post->gl_links      = $validated['link'];
+            $post->gl_device_ip  = $validated['device_ip'] ?? $request->ip();
+            $post->gl_added_by   = Session('LoggedAdmin') ?? 'System';
             $post->gl_date_added = time();
             $post->save();
 
@@ -91,7 +90,7 @@ class LocationController extends Controller
         } catch (\Exception $e) {
 
             \Log::error('Error saving link:', [
-                'message' => $e->getMessage(),
+                'message'      => $e->getMessage(),
                 'request_data' => $request->all(),
             ]);
 
@@ -123,11 +122,11 @@ class LocationController extends Controller
     public function trackLink($token)
     {
 
-        $link = GenerateLink::where('gl_links', 'like', '%' . $token . '%')->first();
+        $link     = GenerateLink::where('gl_links', 'like', '%' . $token . '%')->first();
         $userLink = $link->gl_links;
-        $LinkId = $link->id;
+        $LinkId   = $link->id;
 
-        if (!$link) {
+        if (! $link) {
             return response()->json(['error' => 'Link not found'], 404);
         }
 
@@ -138,18 +137,18 @@ class LocationController extends Controller
     {
         try {
             $longitude = $request->longitude;
-            $latitude = $request->latitude;
-            $userLink = $request->userLink;
-            $LinkId = $request->LinkId;
-            $ip = $request->ip;
+            $latitude  = $request->latitude;
+            $userLink  = $request->userLink;
+            $LinkId    = $request->LinkId;
+            $ip        = $request->ip;
 
             $LinkUpdated = GenerateLink::find($LinkId);
 
             if ($LinkUpdated && $LinkUpdated->gl_active_status === 1) {
 
-                $LinkUpdated->gl_device_ip = $ip;
-                $LinkUpdated->gl_latitude = $latitude ?? null;
-                $LinkUpdated->gl_longitude = $longitude ?? null;
+                $LinkUpdated->gl_device_ip       = $ip;
+                $LinkUpdated->gl_latitude        = $latitude ?? null;
+                $LinkUpdated->gl_longitude       = $longitude ?? null;
                 $LinkUpdated->gl_tracker_counter = $LinkUpdated->gl_tracker_counter + 1;
                 $LinkUpdated->save();
 
@@ -163,16 +162,16 @@ class LocationController extends Controller
 
             return response()->json([
                 'status' => false,
-                'error' => 'Link not found or inactive',
+                'error'  => 'Link not found or inactive',
             ]);
 
         } catch (\Exception $e) {
-            
+
             \Log::error('Error storing location: ' . $e->getMessage());
 
             return response()->json([
                 'status' => false,
-                'error' => 'Error: ' . $e->getMessage(), 
+                'error'  => 'Error: ' . $e->getMessage(),
             ]);
         }
     }
@@ -183,9 +182,9 @@ class LocationController extends Controller
 
         if ($link) {
             return view('tracking.collected-information', [
-                'latitude' => $link->gl_latitude,
+                'latitude'  => $link->gl_latitude,
                 'longitude' => $link->gl_longitude,
-                'ip' => $link->gl_device_ip,
+                'ip'        => $link->gl_device_ip,
             ]);
         }
 
@@ -195,43 +194,54 @@ class LocationController extends Controller
     public function store(Request $request)
     {
         try {
-            Log::info('Store method hit'); 
-            $latitude = $request->latitude;
+            Log::info('Store method hit');
+            $latitude  = $request->latitude;
             $longitude = $request->longitude;
-            $ip = $request->ip;
+            $ip        = $request->ip;
 
             Log::info('Latitude: ' . $latitude . ' Longitude: ' . $longitude . ' IP: ' . $ip);
 
             $googleApiKey = env('GOOGLE_MAPS_API_KEY');
-            $geoResponse = Http::withOptions([
+            $geoResponse  = Http::withOptions([
                 'verify' => false,
             ])->get("https://maps.googleapis.com/maps/api/geocode/json", [
                 'latlng' => "$latitude,$longitude",
-                'key' => $googleApiKey,
+                'key'    => $googleApiKey,
             ]);
 
-            Log::info('GeoResponse: ' . json_encode($geoResponse->json())); 
+            Log::info('GeoResponse: ' . json_encode($geoResponse->json()));
 
             $geoData = $geoResponse->json();
 
-            if (!isset($geoData['status']) || $geoData['status'] !== 'OK') {
+            if (! isset($geoData['status']) || $geoData['status'] !== 'OK') {
                 throw new Exception('Failed to fetch location details from Google Maps API.');
             }
 
-            $ipApiKey = env('IPSTACK_API_KEY');
+            $ipApiKey   = env('IPSTACK_API_KEY');
             $ipResponse = Http::get("https://ipapi.co/{$ip}/json/");
-            $ipData = $ipResponse->json();
+            $ipData     = $ipResponse->json();
 
             return response()->json([
                 'geoData' => [
                     'formatted_address' => $geoData['results'][0]['formatted_address'] ?? 'N/A',
-                    'location_details' => $geoData['results'][0] ?? [],
+                    'location_details'  => $geoData['results'][0] ?? [],
                 ],
-                'ipData' => $ipData,
+                'ipData'  => $ipData,
             ]);
         } catch (Exception $e) {
-            Log::error('Error: ' . $e->getMessage()); 
+            Log::error('Error: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function index($id)
+    {
+        $viewPath = 'sample-pages.' . $id;
+
+        if (view()->exists($viewPath)) {
+            return view($viewPath);
+        } else {
+            return view('404');
         }
     }
 

@@ -45,12 +45,52 @@ use App\Http\Controllers\Helper;
                         </div>
                     </form>
                 </div>
+                <style>
+                    .google-avatar-sm {
+                        width: 40px;
+                        height: 40px;
+                        background-color: #8e98db;
+                        color: white;
+                        font-size: 16px;
+                        font-weight: bold;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        text-transform: uppercase;
+                    }
+
+                    .nav-link .google-avatar-sm {
+                        vertical-align: middle;
+                    }
+                </style>
 
 
                 <div class="dropdown profile-dropdown">
+
+                    <?php
+                    $user = DB::table('users')->where('id', Session('LoggedAdmin'))->first();
+                    ?>
+
+                    @php
+                        $user = DB::table('users')->where('id', session('LoggedAdmin'))->first();
+                        $initial = strtoupper(substr($user->username, 0, 1));
+                        $FL = strtoupper(substr($user->firstname, 0, 1));
+                        $LL = strtoupper(substr($user->lastname, 0, 1));
+                    @endphp
+
                     <a href="#" class="nav-link pr-0 leading-none text-primary" data-toggle="dropdown">
                         <span>
-                            <img src="{{ asset('/assets/images/users/16.jpg') }}" alt="img" class="avatar avatar-md rounded-circle border border-primary">
+                            @if ($user->firstname && $user->lastname)
+                                <div class="google-avatar-sm">
+                                    {{ $FL }}{{ $LL }}
+                                </div>
+                            @elseif ($user->username)
+                                <div class="google-avatar-sm">
+                                    {{ $initial }}
+                                </div>
+                            @endif
                         </span>
                     </a>
 
@@ -58,7 +98,11 @@ use App\Http\Controllers\Helper;
                         <div class="text-center">
                             <a href="#"
                                 class="dropdown-item text-center user pb-0 font-weight-bold">{{ Helper::active_user() }}</a>
-                            <span class="text-center user-semi-title">App Developer</span>
+                            @if ($user->user_role == 1)
+                                <span class="text-center user-semi-title">Enrolled Student</span>
+                            @else
+                                <span class="text-center user-semi-title">Admin</span>
+                            @endif
                             <div class="dropdown-divider"></div>
                         </div>
                         <a class="dropdown-item d-flex" href="{{ route('users-profile') }}">
@@ -95,7 +139,7 @@ use App\Http\Controllers\Helper;
 
 <script>
     function confirmLogout(event) {
-        event.preventDefault(); 
+        event.preventDefault();
 
         Swal.fire({
             title: 'Are you sure?',
