@@ -162,7 +162,7 @@
                                                     class="btn btn-link p-0 d-flex align-items-center"
                                                     title="Edit Profile Information">
                                                     <i class="fe fe-edit mr-1"></i>
-                                                    Edit Profile Information
+                                                    Edit Details
                                                 </a>
                                             </div>
                                         </div>

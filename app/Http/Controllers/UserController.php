@@ -365,7 +365,6 @@ class UserController extends Controller
         return view('users.edit-user-information', compact(['info']));
     }
 
-
     public function editSpecificUser($userId)
     {
 
@@ -421,7 +420,6 @@ class UserController extends Controller
         return view('users.user-account-information', $data, compact(['user_profile_data']))
             ->with('next', $next)
             ->with('prev', $prev);
-
     }
 
     public function storeUpdatedInformation(Request $request)
@@ -671,5 +669,4 @@ class UserController extends Controller
 
         return back()->with('success', 'User account has been updated successfully');
     }
-
 }

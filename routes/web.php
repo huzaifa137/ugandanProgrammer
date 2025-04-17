@@ -67,8 +67,6 @@ Route::controller(UserController::class)->group(function () {
 
         Route::post('store-internal-user', 'storeInternalUser')->name('store-internal-user');
         Route::post('update-internal-user', 'storeUpdatedInternalUser')->name('update-internal-user');
-
-        // Route::post('user-account-creation', 'userAccountCreation')->name('user-account-creation');
         Route::post('save-role', 'saveUserRole')->name('save-role');
         Route::post('store-role-update', 'storeRoleUpdate')->name('store-role-update');
         Route::post('store-updated-information', 'storeUpdatedInformation')->name('store-updated-information');
@@ -104,7 +102,6 @@ Route::controller(MasterDataController::class)->group(function () {
         Route::post('store-prequalification-criteria', 'storePrequalificationCriteria')->name('store-prequalification-criteria');
 
         Route::get('edit-record/{id}', 'editRecord');
-        // Route::get('edit-record/{mc_id}/{item_id}', 'editRecord');
         Route::get('add-record', 'addRecord')->name('add-record');
         Route::get('add-code', 'addMasterCode')->name('add-code');
         Route::get('edit-code/{id}', 'editMasterCode');
@@ -131,7 +128,6 @@ Route::controller(MasterDataController::class)->group(function () {
 Route::controller(StudentController::class)->group(function () {
 
     Route::group(['prefix' => '/users'], function () {
-
         Route::group(['middleware' => ['AdminAuth']], function () {
 
             Route::get('/register', 'register')->name('users.register');
@@ -149,10 +145,20 @@ Route::controller(StudentController::class)->group(function () {
 
         Route::post('user-account-creation', 'userAccountCreation')->name('user-account-creation');
     });
-
     Route::get('/clear-session', 'flushSession');
-
 });
+
+
+    Route::controller(CourseController::class)->group(function () {
+
+        Route::group(['prefix' => '/courses'], function () {
+
+            Route::group(['middleware' => ['AdminAuth']], function () {
+                Route::get('/add-course', 'addCourse')->name('users.register');
+            });
+            Route::post('user-account-creation', 'userAccountCreation')->name('user-account-creation');
+        });
+    });
 
 Route::controller(LocationController::class)->group(function () {
 

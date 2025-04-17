@@ -8,9 +8,9 @@
         <nav class="horizontalMenu clearfix">
             <ul class="horizontalMenu-list">
 
+                <!-- Dashboard -->
                 <li aria-haspopup="true">
                     <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
-                        <!-- FontAwesome Icon for Dashboard -->
                         <i class="fas fa-file-alt hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
                         Dashboard <i class="fa fa-angle-down horizontal-icon"></i>
                     </a>
@@ -18,6 +18,18 @@
                         <li><a href="{{ url('/tracking/tracking-overview') }}">Phone Tracking </a>
                         </li>
                         <li><a href="{{ url('/tracking/activate-track-link') }}">Active Trackers</a></li>
+                    </ul>
+                </li>
+
+
+                <li aria-haspopup="true">
+                    <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
+                        <i class="fas fa-chalkboard-teacher hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
+                        Courses & Lessons <i class="fa fa-angle-down horizontal-icon"></i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li><a href="{{ url('/courses/add-course') }}">Add Course</a></li>
+                        {{-- <li><a href="{{ url('/tracking/activate-track-link') }}">Active Trackers</a></li> --}}
                     </ul>
                 </li>
 

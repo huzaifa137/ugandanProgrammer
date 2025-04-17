@@ -9,4 +9,7 @@
 <script src="{{URL::asset('assets/js/vendors/circle-progress.min.js')}}"></script>
 <!-- Jquery-rating js-->
 <script src="{{URL::asset('assets/plugins/rating/jquery.rating-stars.js')}}"></script>
+<!-- jQuery (required for Select2) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Select2 JS -->
 @yield('js')
