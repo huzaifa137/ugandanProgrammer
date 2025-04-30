@@ -133,13 +133,15 @@ Route::controller(StudentController::class)->group(function () {
             Route::get('/register', 'register')->name('users.register');
             Route::get('/terms-and-conditions', 'user_terms_and_conditions')->name('users.terms-and-conditions');
             Route::get('/user-otp', function () {
-                $user_id_check    = session('userId');
-                $user_check_email = session('userEmail');
+                $userId       = session('userId');
+                $userEmail    = session('userEmail');
+                $userPassword = session('userPassword');
 
-                if (! $user_id_check || ! $user_check_email) {
+                if (! $userId || ! $userEmail) {
                     return redirect()->route('users.login')->with('fail', 'You must be logged in');
                 }
-                return view('users.otp', compact(['user_id_check', 'user_check_email']));
+
+                return view('users.otp', compact(['userId', 'userEmail', 'userPassword']));
             });
         });
 
@@ -148,17 +150,22 @@ Route::controller(StudentController::class)->group(function () {
     Route::get('/clear-session', 'flushSession');
 });
 
+Route::controller(CourseController::class)->group(function () {
 
-    Route::controller(CourseController::class)->group(function () {
+    Route::group(['prefix' => '/courses'], function () {
 
-        Route::group(['prefix' => '/courses'], function () {
-
-            Route::group(['middleware' => ['AdminAuth']], function () {
-                Route::get('/add-course', 'addCourse')->name('users.register');
-            });
-            Route::post('user-account-creation', 'userAccountCreation')->name('user-account-creation');
+        Route::group(['middleware' => ['AdminAuth']], function () {
+            Route::get('/add-course', 'addCourse')->name('users.register');
+            Route::get('/all-courses', 'allCourses')->name('all.courses');
+            Route::post('/store-course', 'storeCourse')->name('store.course');
+            Route::get('/course-information/{course}', 'courseInformation')->name('courses.show');
+            Route::get('/edit-course-information/{course}', 'editcourseInformation')->name('edit.courses.show');
+            Route::delete('/delete-course/{course}', 'deletecourseInformation')->name('delete.course');
+            Route::post('/update-course-information', 'updateCourseInformation')->name('update.course.information');
         });
+        Route::post('user-course-creation', 'userAccountCreation')->name('user-course-creation');
     });
+});
 
 Route::controller(LocationController::class)->group(function () {
 

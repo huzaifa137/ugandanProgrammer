@@ -10,7 +10,7 @@
     <h1 style="color:green;">OTP - One Time Password</h1>
     <p>Dear {{$username}}, </p>
     <p>Please use the OTP below to continue</p>
-    <h2 style=="font-weight:bold;">OTP: <span style="color: red;font-weight:bold">{{$otp}}</span> </h2>
+    <h2 style=="font-weight:bold;">OTP: <span style="color: red;font-weight:bold">{{$generatedOTP}}</span> </h2>
     <p>Please note that this password will expire after 15 minutes</p>
 
     

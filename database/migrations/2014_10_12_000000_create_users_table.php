@@ -20,7 +20,8 @@ class CreateUsersTable extends Migration
             $table->text('email')->nullable();
             $table->text('password')->nullable();
             $table->integer('user_role')->default(1);
-
+            $table->integer('temp_otp')->nullable();
+            $table->integer('registration_status')->default(0);
             $table->text('firstname')->nullable();
             $table->text('lastname')->nullable();
             $table->text('gender')->nullable();

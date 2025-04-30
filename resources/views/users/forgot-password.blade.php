@@ -91,7 +91,11 @@
         function confirmSubmission(button) {
             const emailInput = document.querySelector("input[name='email']");
 
+        
             if (!emailInput.value.trim()) {
+
+                $('#student_username').removeClass('is-invalid').removeClass('is-valid');
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Required Field',

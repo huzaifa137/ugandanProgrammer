@@ -3,6 +3,7 @@
 @section('css')
     <!-- Include Select2 CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @section('page-header')
@@ -28,8 +29,40 @@
 
 @section('content')
     <!--Row-->
-    <link href="{{ URL::asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
-    <link href="{{ URL::asset('assets/plugins/fileupload/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
+
+    <style>
+        #course_thumbnail {
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            display: block;
+        }
+
+        #file-message {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        .form-control-file {
+            display: block;
+            width: 100%;
+            height: auto;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.25rem;
+            border: 1px solid #ced4da;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        #loading-gif {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            /* Ensure it's on top of other content */
+        }
+    </style>
 
     <div class="row ">
         <div class="col-md-12">
@@ -41,13 +74,14 @@
                             <div class="control-group form-group">
                                 <br>
                                 <label class="form-label">Course Title</label>
-                                <input type="text" id="course_title" class="course_title form-control required" placeholder="Name">
+                                <input type="text" id="course_title" class="course_title form-control required"
+                                    placeholder="Name">
                             </div>
                             <div class="control-group form-group">
                                 <label class="form-label">Instructor</label>
                                 <select class="form-control select2" id="instructor_id" name="instructor_id">
                                     @foreach ($instructors as $instructor)
-                                        <option value="{{ $instructor->id }}">{{ $instructor->name }}</option>
+                                        <option value="{{ $instructor->md_id }}">{{ $instructor->md_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -55,7 +89,7 @@
                                 <label class="form-label">Category</label>
                                 <select class="form-control select2" id="category_id" name="category_id">
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        <option value="{{ $category->md_id }}">{{ $category->md_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -63,7 +97,7 @@
                                 <label class="form-label">Language</label>
                                 <select class="form-control select2" id="language" name="language">
                                     @foreach ($languages as $language)
-                                        <option value="{{ $language->id }}">{{ $language->name }}</option>
+                                        <option value="{{ $language->md_id }}">{{ $language->md_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -72,13 +106,14 @@
                         <h3><i class="fas fa-file-alt me-2"></i> Course Content</h3>
                         <section>
                             <div class="form-group mt-3">
-                                <label for="description" class="form-label">Course Description</label>
-                                <textarea class="form-control" id="course_description" name="course_description" rows="5" placeholder="Write course description..."></textarea>
+                                <label for="course_description" class="form-label">Course Description</label>
+                                <input type="text" class="form-control" name="course_description" id="course_description"
+                                    placeholder="Write course description...">
                             </div>
 
                             <div class="form-group">
                                 <label for="difficulty" class="form-label">Difficulty</label>
-                                <select class="form-control" name="course_difficulty" id="course_difficulty">
+                                <select class="form-control select2" name="course_difficulty" id="course_difficulty">
                                     <option value="beginner">Beginner</option>
                                     <option value="intermediate">Intermediate</option>
                                     <option value="advanced">Advanced</option>
@@ -87,20 +122,27 @@
 
                             <div class="form-group">
                                 <label for="tags" class="form-label">Tags (comma-separated)</label>
-                                <input type="text" class="form-control" name="course_tags" id="course_tags" placeholder="e.g. PHP, Laravel, Web Development">
+                                <input type="text" class="form-control" name="course_tags" id="course_tags"
+                                    placeholder="e.g. PHP, Laravel, Web Development">
                             </div>
                         </section>
 
                         <h3><i class="fas fa-cog me-2"></i> Settings</h3>
                         <section>
+
                             <div class="form-group mt-3">
-                                <label for="thumbnail">Attach course thumbnail</label>
+                                <label for="" class="form-label">Attach Course Thumbnail</label>
                                 <div class="row">
                                     <div class="col-lg-12 col-sm-12">
-                                        <input type="file" class="dropify course_thumbnail" id="course_thumbnail" data-height="180" />
+                                        <input type="file" name="course_thumbnail" id="course_thumbnail"
+                                            accept=".jpg,.jpeg,.png" class="form-control form-control-file">
+                                        <small id="file-message" class="form-text text-muted mt-2" style="display:none;">
+                                            Thumbnail has been attached.
+                                        </small>
                                     </div>
                                 </div>
                             </div>
+
 
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="is_published" name="is_published">
@@ -109,43 +151,22 @@
                         </section>
                     </div>
                 </div>
+
+                <div id="loading-gif">
+                    <img src="{{ URL::asset('assets/images/brand/loading.gif') }}" alt="Loading...">
+                </div>
+
             </div>
         </div>
     </div>
+    </div>
+    </div>
+    </div>
+    </div>
     <!-- /Row -->
-
-    <style>
-        .select2-container--default .select2-search--dropdown .select2-search__field {
-            padding: 5px;
-            font-size: 14px;
-        }
-
-        .select2-container {
-            z-index: 9999 !important;
-        }
-    </style>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Ensure jQuery is loaded -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            // Initialize Select2 with search enabled
-            $('.select2').select2({
-                width: '100%'
-            });
-
-            // Sort options in the select2 dropdown
-            $('.select2').each(function() {
-                var select = $(this);
-                var options = select.find('option');
-                options.sort(function(a, b) {
-                    return $(a).text().localeCompare($(b).text());
-                });
-                select.empty().append(options);
-            });
-        });
-    </script>
 @endsection
 
 @section('js')

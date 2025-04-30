@@ -21,7 +21,7 @@ return new class extends Migration
             $table->json('tags')->nullable();
             $table->string('thumbnail')->nullable();               // Added
             $table->unsignedBigInteger('category_id')->nullable(); // Added
-            $table->boolean('is_published')->default(false);
+            $table->integer('is_published')->default(0);
             $table->timestamps();
         });
     }

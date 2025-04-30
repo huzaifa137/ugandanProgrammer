@@ -25,7 +25,7 @@
                             <div class="">
                                 <h1 class="mb-2">Verification</h1>
                                 <p class="text-muted">Enter the 5-digit code sent to <span
-                                        class="text-primary">{{ $userEmail }}</span></p>
+                                        class="text-primary">{{ $user_check_email }}</span></p>
                             </div>
 
                             @if (Session::get('success'))
@@ -43,7 +43,7 @@
                             <form action="{{ route('supplier-user-otp-verification') }}"
                                 class="mt-5 border p-4 bg-light shadow" method="POST">
 
-                                <input type="hidden" name="hidden_otp" id="hidden_otp" value={{ $userEmail }}>
+                                <input type="hidden" name="hidden_otp" id="hidden_otp" value={{ $user_id_check }}>
 
                                 <div class="d-flex justify-content-between mb-4">
                                     <input type="text" data-position="1" class="form-control text-center otp-input mx-1"
@@ -115,8 +115,19 @@
 
         });
 
-        $('#otp_verification').click(function() {
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                otp();
+            }
+        });
 
+        $('#otp_verification').click(function() {
+            otp();
+        });
+
+        function otp(){
+            
             var otp_1 = $('#otp_1').val();
             var otp_2 = $('#otp_2').val();
             var otp_3 = $('#otp_3').val();
@@ -126,29 +137,28 @@
             var hidden_otp = $('#hidden_otp').val();
 
             if (otp_1 == "" || otp_2 == "" || otp_3 == "" || otp_4 == "" || otp_5 == "") {
+
                 Swal.fire({
                     icon: 'error',
                     title: 'error!',
                     text: 'Please enter OTP token before submitting',
                 });
+
                 return false;
             }
 
-
-            $('#otp_verification').html(
-            '<span class="text-white">Verifying...</span><i class="fe fe-loader"></i> ');
-            $('#otp_verification').css('cursor', 'default');
-            $('#otp_verification').prop('disabled', true);
-
             var form_data = new FormData();
+
             form_data.append('otp_1', otp_1);
             form_data.append('otp_2', otp_2);
             form_data.append('otp_3', otp_3);
             form_data.append('otp_4', otp_4);
             form_data.append('otp_5', otp_5);
+
             form_data.append('hidden_otp', hidden_otp);
 
             $.ajax({
+
                 type: "POST",
                 processData: false,
                 contentType: false,
@@ -157,33 +167,31 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
+
                 url: '/supplier-user-otp-verification',
                 success: function(data) {
                     if (data.status) {
                         window.location.href = data.redirect_url;
                     } else {
-                        $('#otp_verification').html('Confirm');
-                        $('#otp_verification').prop('disabled', false);
-                        $('#otp_verification').css('cursor', 'pointer');
-
                         Swal.fire({
                             title: data.title,
                             text: data.message,
                             icon: 'error',
                             confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                return;
+                            }
                         });
                     }
                 },
+
                 error: function(data) {
-                    $('#otp_verification').html('Confirm');
-                    $('#otp_verification').prop('disabled', false);
-                    $('#otp_verification').css('cursor', 'pointer');
                     $('body').html(data.responseText);
                 }
             });
 
-        });
-
+        }
 
 
         $(document).ready(function() {
@@ -230,7 +238,7 @@
                                         title: 'Success',
                                         text: data.message,
                                         icon: 'success',
-                                        confirmButtonText: 'Ok'
+                                        confirmButtonText: 'Okay'
                                     });
                                 }
                             },

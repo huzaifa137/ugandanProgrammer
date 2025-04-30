@@ -29,7 +29,7 @@
                     </a>
                     <ul class="sub-menu">
                         <li><a href="{{ url('/courses/add-course') }}">Add Course</a></li>
-                        {{-- <li><a href="{{ url('/tracking/activate-track-link') }}">Active Trackers</a></li> --}}
+                        <li><a href="{{ url('/courses/all-courses') }}">All Courses</a></li>
                     </ul>
                 </li>
 

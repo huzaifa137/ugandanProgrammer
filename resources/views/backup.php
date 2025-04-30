@@ -204,10 +204,16 @@ document.getElementById('register-user-btn').addEventListener('click', function(
 </script>
 
 
+            $('#otp_verification').html(
+            '<span class="text-white">Verifying...</span><i class="fe fe-loader"></i> ');
+            $('#otp_verification').css('cursor', 'default');
+            $('#otp_verification').prop('disabled', true);
+
+
 @if ($procurement->isEmpty())
-<div class="col-sm-12 col-md-12">
-                <div class="alert alert-warning" role="alert">
-                    No prequalification periods found
+    <div class="col-sm-12 col-md-12">
+    <div class="alert alert-warning mt-3" role="alert">
+    No prequalification periods found
                 </div>
             </div>
                 @else
@@ -229,6 +235,16 @@ document.getElementById('register-user-btn').addEventListener('click', function(
                  <td><?php
                      echo Controller::DropMasterData(config('constants.options.PROCUREMENT_CATEGORY'), $procurement_record->category_of_procurement, 'category_of_procurement', 2);
                      ?></td>
+
+
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Category</label>
+                                    <td><?php
+                                        echo Helper::DropMasterData(config('constants.options.COURSE_CATEGORIES'), $course->category_id, 'category', 2);
+                                        ?></td>
+                                </div>
+                            </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -347,6 +363,7 @@ $finanical_year  = Controller::rgf('master_datas', $year, 'md_id', 'md_code');
 
 'pendingRequests' => $linkToProceed .'/support-team/pending-issues',
 
+var content = t_description.getData().trim();
 
 
 $user_comments = DB::table('procurement_comments')->where('ppc_year', $year)->where('ppc_division', $division)->get();
@@ -502,3 +519,44 @@ $('#student_username').removeClass('is-invalid').removeClass('is-valid');
               -------------------------------------------------------------------------------------------------------------
 
               <div class="w-40 bg-style min-h-100vh page-style">
+
+
+              $units_of_measures = master_data::where('md_master_code_id', '=', config('constants.options.UNIT_OF_MEASURE'))
+            ->orderBy('md_name')
+            ->select('md_id', 'md_name')
+            ->get();
+
+            <div class="card-footer">
+                        <div class="d-flex justify-content-center">
+                            {{ $allCourses->links('pagination::bootstrap-4') }}
+                        </div>
+                    </div>
+
+
+
+                <div id="loading-gif">
+                    <img src="{{ URL::asset('assets/images/brand/loading.gif') }}" alt="Loading...">
+                </div>
+
+        <style>
+
+        #loading-gif {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            /* Ensure it's on top of other content */
+        }
+    </style>
+
+
+function showLoading() {
+		$('#loading-gif').show();
+	}
+
+
+	function hideLoading() {
+		$('#loading-gif').hide();
+	}

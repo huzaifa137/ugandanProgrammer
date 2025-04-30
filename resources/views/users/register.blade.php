@@ -360,7 +360,7 @@
                                     Swal.fire({
                                         icon: 'success',
                                         title: response.title ??
-                                            'Account Created!',
+                                            'OTP SENT',
                                         html: response.message ??
                                             'Your account has been successfully created.',
                                         confirmButtonText: 'OK'

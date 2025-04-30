@@ -7,7 +7,6 @@ use App\Models\user_role;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Mail;
 use Yajra\DataTables\Facades\DataTables;
@@ -142,18 +141,43 @@ class UserController extends Controller
         $otp_4 = $request->input('otp_4');
         $otp_5 = $request->input('otp_5');
 
-        $new_otp = $otp_1 . $otp_2 . $otp_3 . $otp_4 . $otp_5;
-        $user_id = $request->input('hidden_otp');
+        $new_otp      = $otp_1 . $otp_2 . $otp_3 . $otp_4 . $otp_5;
+        $user_id      = $request->input('hidden_otp');
+        $userPassword = $request->input('userPassword');
 
-        $temp_otp_stored   = DB::table('users')->where('id', $user_id)->value('temp_otp');
-        $supplier_username = DB::table('users')->where('id', $user_id)->value('username');
+        $temp_otp_stored   = DB::table('users')->where('email', $user_id)->value('temp_otp');
+        $supplier_username = DB::table('users')->where('email', $user_id)->value('username');
+        $userId            = DB::table('users')->where('email', $user_id)->value('id');
 
         if ($new_otp == $temp_otp_stored) {
 
-            $request->session()->put('LoggedAdmin', $user_id);
+            $request->session()->put('LoggedAdmin', $userId);
+
             // $request->session()->put('ACTIVE_MODULE', 'SUPPLIERS');
 
             // AuditTrailController::register('LOGIN SUCCESSFULL', 'ADMIN Username: <b>' . $supplier_username . '</b> Pasword: <b>*******</b>');
+
+            DB::table('users')
+                ->where('id', $userId)
+                ->update(['registration_status' => 1]);
+
+            $user = DB::table('users')->where('id', $userId)->first();
+
+            $data = [
+                'email'    => $user->email,
+                'username' => $user->username,
+                'password' => session('userPassword'),
+                'title'    => 'UgandanProgrammer - User Account has been created successfully.',
+            ];
+
+            try {
+                Mail::send('emails.user-account-created', $data, function ($message) use ($data) {
+                    $message->to($data['email'])->subject($data['title']);
+                });
+            } catch (Exception $e) {
+                DB::table('users')->where('email', $user->email)->delete();
+                return back()->with('error', 'Email Not, Check Internet or re-register');
+            }
 
             $url = '/';
 
@@ -233,7 +257,6 @@ class UserController extends Controller
                 'regex:/\d/',
                 'regex:/[\W_]/',
             ],
-            // 'captcha' => 'required|captcha',
         ]);
 
         $userInfo = User::where('email', '=', $request->email)->first();
@@ -245,58 +268,78 @@ class UserController extends Controller
             ]);
         } else {
             if (Hash::check($request->password, $userInfo->password)) {
+
+                $registrationStatus = DB::table('users')->where('email', $request->email)->value('registration_status');
+
                 $user_check_email = $request->email;
 
-                $new_otp = rand(10000, 99999);
+                if ($registrationStatus == 0) {
 
-                $info = DB::table('users')
-                    ->where('email', $user_check_email)
-                    ->update(['temp_otp' => $new_otp]);
+                    $new_otp      = rand(10000, 99999);
+                    $generatedOTP = $new_otp;
 
-                $user_id_check = DB::table('users')->where('email', $user_check_email)->value('id');
-                $username      = DB::table('users')->where('id', $user_id_check)->value('username');
+                    $userId    = DB::table('users')->where('email', $request->email)->value('id');
+                    $user_mail = DB::table('users')->where('email', $request->email)->value('email');
+                    $username  = DB::table('users')->where('email', $request->email)->value('username');
 
-                $data = [
-                    'subject'  => 'UP LOGIN OTP',
-                    'body'     => 'Enter the Sent OTP to Login : ',
-                    'otp'      => $new_otp,
-                    'username' => $username,
-                    'email'    => $user_check_email,
-                ];
+                    DB::table('users')
+                        ->where('email', $request->email)
+                        ->update(['temp_otp' => $new_otp]);
 
-                if ($user_check_email) {
-                    $error = "";
-                    try {
-                        Mail::send('emails.otp', ['otp' => $new_otp, 'username' => $username], function ($message) use ($data) {
-                            $message->to($data['email'])->subject($data['subject']);
-                        });
-                    } catch (\Exception $e) {
+                    $data = [
+                        'subject'      => 'UP OTP LOGIN',
+                        'body'         => 'Enter the Sent OTP to Login : ',
+                        'generatedOTP' => $generatedOTP,
+                        'username'     => $username,
+                        'email'        => $user_mail,
+                    ];
 
-                        Log::error('Failed to send email: ' . $e->getMessage());
-                        $error = "Failed to send email: " . $e->getMessage();
+                    if ($user_mail) {
+                        try {
+                            Mail::send('emails.otp', $data, function ($message) use ($data) {
+                                $message->to($data['email'], $data['email'])->subject($data['subject']);
+                            });
+                        } catch (Exception $e) {
+                            return back()->with('error', 'Email Not, Check Internet or re-register');
+                        }
+
+                        $request->session()->put('userId', $userId);
+                        $request->session()->put('userEmail', $user_mail);
+                        $request->session()->put('userPassword', $request->password);
 
                         return response()->json([
-                            'status'  => false,
-                            'message' => 'No internet, OTP would not be sent',
+                            'status'       => true,
+                            'message'      => 'OTP has been sent,check your email to proceed',
+                            'redirect_url' => '/users/user-otp',
+                        ]);
+                    }
+                } else {
+
+                    $userId = DB::table('users')->where('email', $request->email)->value('id');
+
+                    $request->session()->put('LoggedAdmin', $userId);
+                    // $request->session()->put('ACTIVE_MODULE', 'SUPPLIERS');
+                    // AuditTrailController::register('LOGIN SUCCESSFULL', 'ADMIN Username: <b>' . $supplier_username . '</b> Pasword: <b>*******</b>');
+                    $url = '/';
+
+                    $url2 = session()->get('url.intended');
+
+                    if ($url2 != null) {
+                        return response()->json([
+                            'status'       => true,
+                            'message'      => 'Login successful',
+                            'redirect_url' => $url2,
                         ]);
                     }
 
-                    session([
-                        'userId'    => $user_id_check,
-                        'userEmail' => $user_check_email,
-                    ]);
-
                     return response()->json([
                         'status'       => true,
-                        'redirect_url' => '/users/user-otp',
-                    ]);
-                } else {
-                    return response()->json([
-                        'status'  => false,
-                        'message' => 'Invalid password or Email being entered',
+                        'message'      => 'Login successful',
+                        'redirect_url' => $url,
                     ]);
                 }
             } else {
+
                 return response()->json([
                     'status'  => false,
                     'message' => 'Invalid password or Email being entered',
@@ -308,28 +351,28 @@ class UserController extends Controller
     public function regenerateOTP(Request $request)
     {
 
-        $user_id = $request->input('hidden_otp');
+        $user_id      = $request->input('hidden_otp');
+        $new_otp      = rand(10000, 99999);
+        $generatedOTP = $new_otp;
 
-        $new_otp = rand(10000, 99999);
-
-        $user_mail = DB::table('users')->where('id', $user_id)->value('email');
-        $username  = DB::table('users')->where('id', $user_id)->value('username');
+        $user_mail = DB::table('users')->where('email', $user_id)->value('email');
+        $username  = DB::table('users')->where('email', $user_id)->value('username');
 
         DB::table('users')
-            ->where('id', $user_id)
+            ->where('email', $user_id)
             ->update(['temp_otp' => $new_otp]);
 
         $data = [
-            'subject'  => 'UP RESENT OTP LOGIN',
-            'body'     => 'Enter the Sent OTP to Login : ',
-            'otp'      => $new_otp,
-            'username' => $username,
-            'email'    => $user_mail,
+            'subject'      => 'UP RESENT OTP LOGIN',
+            'body'         => 'Enter the Sent OTP to Login : ',
+            'generatedOTP' => $generatedOTP,
+            'username'     => $username,
+            'email'        => $user_mail,
         ];
 
         if ($user_mail) {
-            Mail::send('emails.otp', ['otp' => $new_otp, 'username' => $username], function ($message) use ($data) {
-                $message->to($data['email'])->subject($data['subject']);
+            Mail::send('emails.otp', $data, function ($message) use ($data) {
+                $message->to($data['email'], $data['email'])->subject($data['subject']);
             });
         }
 

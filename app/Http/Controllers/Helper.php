@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use DB;
@@ -13,86 +12,34 @@ class Helper extends Controller
         return $user = Session::get('LoggedAdmin');
     }
 
-    public static function trim_all($str, $what = null, $with = ' ')
+    public static function instructor_name($user = "")
     {
-        if ($what === null) {
-            //  Character      Decimal      Use
-            //  "\0"            0           Null Character
-            //  "\t"            9           Tab
-            //  "\n"           10           New line
-            //  "\x0B"         11           Vertical Tab
-            //  "\r"           13           New Line in Mac
-            //  " "            32           Space
+        $user  = (int) $user;
+        $admin = DB::table('users')->where('id', '=', $user)->where('user_role', '!=', 1)->first();
 
-            $what = "\\x00-\\x20"; //all white-spaces and control chars
-        }
-
-        return trim(preg_replace("/[" . $what . "]+/", $with, $str), $what);
+        return $user = @$admin->firstname . ' ' . @$admin->lastname;
     }
 
-    public static function formatIcon($file_name)
+    public static function student_name($user = "")
     {
-        $format = strtolower(@end(@explode('.', $file_name)));
+        $user  = (int) $user;
+        $admin = DB::table('users')->where('id', '=', $user)->where('user_role', 1)->first();
 
-        if ($format == 'pdf') {
-            $icon = 'file-pdf-o text-danger';
-        } else if ($format == 'zip') {
-            $icon = 'file-zip-o text-danger';
-        } else if ($format == 'xls' || $format == 'xlsx') {
-            $icon = 'file-excel-o text-secondary text-success';
-        } else if ($format == 'doc' || $format == 'docx') {
-            $icon = 'file-word-o text-primary';
-        } else if ($format == 'xml text-success') {
-            $icon = 'file-xml';
-        } else if ($format == 'ppt') {
-            $icon = 'file-ppt';
-        } else if ($format == 'png') {
-            $icon = 'file-image';
-        } else if ($format == 'gif') {
-            $icon = 'file-image';
-        } else if ($format == 'jpg' || $format == 'jpeg') {
-            $icon = 'file-image';
-        } else if ($format == 'csv') {
-            $icon = 'file-csv text-success';
-        } else {
-            $icon = 'file';
-        }
-
-        return '<i class="fa fa-' . $icon . '"></i> ';
+        return $user = @$admin->firstname . ' ' . @$admin->lastname;
     }
 
-    public static function date_fm($time)
+    public static function category_name($user = "")
     {
-        $time = (int) $time;
+        $user  = (int) $user;
+        $admin = DB::table('users')->where('id', '=', $user)->where('user_role', '!=', 1)->first();
 
-        if (empty($time) || $time < 1000) {
-            return "";
-        }
-
-        return "" . date("M dS Y, H:i:s ", $time);
+        return $user = @$admin->firstname . ' ' . @$admin->lastname;
     }
 
-    public static function activePageNumber()
+    public static function language_name($user = "")
     {
-        $active = (int) (Session::get('pageNumbers')) ? Session::get('pageNumbers') : 20;
-
-        return $active;
-    }
-
-    public static function warning($message)
-    {
-        ?>
-        <div class="alert alert-warning alert-dismissable">
-            <a class="close" data-dismiss="alert">×</a>
-            <strong><?php echo $message; ?></strong>
-        </div>
-    <?php
-}
-
-    public static function full_name($user = "")
-    {
-        $user = (int) $user;
-        $admin = DB::table('users')->where('id', '=', $user)->first();
+        $user  = (int) $user;
+        $admin = DB::table('users')->where('id', '=', $user)->where('user_role', '!=', 1)->first();
 
         return $user = @$admin->firstname . ' ' . @$admin->lastname;
     }
@@ -100,15 +47,57 @@ class Helper extends Controller
     public static function active_user()
     {
 
-        $admin = DB::table('users')->where('id', '=', Session('LoggedAdmin'))->first();
+        $admin       = DB::table('users')->where('id', '=', Session('LoggedAdmin'))->first();
         return $user = @$admin->firstname . ' ' . @$admin->lastname;
     }
 
-    public static function countRecords($array)
+    public static function item_md_name($md_id)
     {
-        $count = count($array);
+        $md_name = DB::table('master_datas')
+            ->where('md_id', $md_id)
+            ->value('md_name');
 
-        return $count;
+        return $md_name;
+    }
+
+    public static function item_md_id($md_name)
+    {
+        $md_id = DB::table('master_datas')
+            ->where('md_name', $md_name)
+            ->value('md_id');
+
+        return $md_id;
+    }
+
+    public static function DropMasterData($code_id="", $selected="", $id="", $part=2, $disabled=0){
+
+        if(!$code_id)
+            $select = DB::table("master_datas")->get(); 
+        else
+            $select = DB::table("master_datas")->where("md_master_code_id", $code_id)->orderBy("md_name", "asc")->get();
+
+        $disabled = ($disabled)?"disabled":"";
+
+        $string = "";
+        $string .=  '<select name="'.$id.'" id="'.$id.'" class="form-control" '.$disabled.'>';
+        $string .= '<option value=""> -- Select -- </option>';
+        foreach($select as $row){
+            if($part == 1){
+                if($row->md_id == $selected)
+                    $string .=  '<option selected value="'.$row->md_id.'">'.$row->md_name.'</option>';
+                else
+                    $string .=  '<option value="'.$row->md_id.'">'.$row->md_name.'</option>';
+            }else if($part == 2){
+                if($row->md_id == $selected)
+                    $string .=  '<option selected value="'.$row->md_id.'">'.$row->md_name.' ('.$row->md_code.')</option>';
+                else
+                    $string .=  '<option value="'.$row->md_id.'">'.$row->md_name.' ('.$row->md_code.')</option>';
+            }
+        }
+
+        $string .=  '</select>';
+
+        return $string;
     }
 
 }
