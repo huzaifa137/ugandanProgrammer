@@ -1,8 +1,6 @@
 <?php
+namespace App\Models;
 
-namespace App\Models; 
-
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -16,9 +14,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 
-        'email', 
-        'password', 
+        'username',
+        'email',
+        'password',
         'temp_otp',
         'user_role',
         'user_status',
@@ -58,4 +56,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function completedLessons()
+    {
+        return $this->belongsToMany(Lesson::class)->withTimestamps();
+    }
+
 }

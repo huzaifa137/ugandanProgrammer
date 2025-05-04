@@ -5,7 +5,7 @@
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title">All Courses</h4>
+            <h4 class="page-title">All Quizzes</h4>
         </div>
         <div class="page-rightheader ml-auto d-lg-flex d-none">
             <ol class="breadcrumb">
@@ -15,7 +15,7 @@
                             <path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3zm5 15h-2v-6H9v6H7v-7.81l5-4.5 5 4.5V18z" />
                             <path d="M7 10.19V18h2v-6h6v6h2v-7.81l-5-4.5z" opacity=".3" />
                         </svg><span class="breadcrumb-icon"> Home</span></a></li>
-                <li class="breadcrumb-item active" aria-current="page">All Courses</li>
+                <li class="breadcrumb-item active" aria-current="page">All Quizzes</li>
             </ol>
         </div>
     </div>
@@ -46,46 +46,54 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
 
-                @if (count($allCourses) > 0)
-                    <div class="card-header">
-                        <h3>List of all courses</h3>
+                @if (count($quizzes) > 0)
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">List of all quizzies</h3>
+                        <a href="{{ url('quiz/create-quiz') }}" class="btn btn-sm btn-info">
+                            <i class="fas fa-plus-circle"></i> Create New Quiz
+                        </a>
                     </div>
                     <div class="table-responsive">
                         <table class="table card-table table-vcenter text-nowrap table-primary mb-0">
                             <thead class="bg-primary text-white">
                                 <tr>
                                     <th class="text-white" style="width: 1px;text-align:center;">No</th>
+                                    <th class="text-white">Quiz</th>
                                     <th class="text-white">Course</th>
-                                    <th class="text-white">Instructor</th>
-                                    <th class="text-white">Category</th>
-                                    <th class="text-white">Difficulty</th>
-                                    <th class="text-white" colspan="3" style="text-align: center;">Action</th>
+                                    <th class="text-white">Course Category</th>
+                                    <th class="text-white" colspan="4" style="text-align: center;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($allCourses as $count => $course)
+                                @foreach ($quizzes as $count => $quiz)
                                     <tr>
                                         <th scope="row">{{ $count + 1 }}</th>
-                                        <td>{{ $course->title }}</td>
-                                        <td>{{ Helper::item_md_name($course->instructor_id) }}</td>
-                                        <td>{{ Helper::item_md_name($course->category_id) }}</td>
-                                        <td>{{ $course->difficulty }}</td>
+                                        <td>{{ $quiz->title }}</td>
+                                        <td>{{ Helper::course_information($quiz->course_id) }}</td>
+                                        <td>{{ $quiz->type }}</td>
                                         <td>
-                                            <a href="{{ url('/courses/course-information', $course->id) }}"
+                                            <a href="{{ url('/courses/course-information', $quiz->id) }}"
                                                 class="btn btn-sm btn-primary">
                                                 <i class="fas fa-eye"></i> View
                                             </a>
                                         </td>
 
                                         <td>
-                                            <a href="{{ url('/courses/edit-course-information', $course->id) }}"
+                                            <a href="{{ url('/quiz/questions/create', $quiz->id) }}"
+                                                class="btn btn-sm btn-success">
+                                                <i class="fas fa-file-medical"></i> Add Qns
+                                            </a>
+                                        </td>
+
+                                        <td>
+                                            <a href="{{ url('/courses/edit-course-information', $quiz->id) }}"
                                                 class="btn btn-sm btn-secondary">
                                                 <i class="fas fa-eye"></i> <i class="fas fa-edit"></i>
                                                 Edit</a>
                                         </td>
 
                                         <td>
-                                            <a href="javascript:void(0);" data-id="{{ $course->id }}"
+                                            <a href="javascript:void(0);" data-id="{{ $quiz->id }}"
                                                 class="btn btn-sm btn-danger delete-course-btn">
                                                 <i class="fas fa-trash-alt"></i> Delete
                                             </a>
@@ -96,14 +104,19 @@
                         </table>
                         <div class="card-footer">
                             <div class="d-flex justify-content-center">
-                                {{ $allCourses->links('pagination::bootstrap-4') }}
+                                {{ $quizzes->links('pagination::bootstrap-4') }}
                             </div>
                         </div>
                     </div>
                 @else
                     <div class="col-sm-12 col-md-12">
-                        <div class="alert alert-warning mt-3" role="alert">
-                            No courses found in the system
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <a href="{{ url('quiz/create-quiz') }}" class="btn btn-sm btn-info">
+                                <i class="fas fa-plus-circle"></i> Create New Quiz
+                            </a>
+                        </div>
+                        <div class="alert alert-warning mt-3 mb-3" role="alert">
+                            No quizzes found in the system
                         </div>
                     </div>
                 @endif

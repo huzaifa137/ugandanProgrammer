@@ -54,7 +54,73 @@ error: function(data) {
 $('body').html(data.responseText);
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+        const form = document.getElementById("quizForm");
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
 
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You are about to create this quiz.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes, save it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        const form = $('#quizForm');
+        const submitBtn = form.find('button[type="submit"]');
+
+        form.on('submit', function(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You are about to create this quiz.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes, save it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Button UI
+                    submitBtn.prop('disabled', true);
+                    submitBtn.html('Creating quiz... <i class="fas fa-spinner fa-spin"></i>');
+
+                    // Submit with AJAX
+                    $.ajax({
+                        url: form.attr('action'),
+                        method: form.attr('method'),
+                        data: form.serialize(),
+                        success: function(response) {
+                            // Redirect or success SweetAlert
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Quiz created successfully!',
+                                icon: 'success'
+                            }).then(() => {
+                                window.location.href =
+                                    "{{ route('quizzes.create.quiz') }}";
+                            });
+                        },
+                        error: function(data) {
+                            // Show raw error HTML for debugging (as you requested)
+                            $('body').html(data.responseText);
+                        }
+                    });
+                }
+            });
+        });
+    });
 <!-- Confirm on Form submission -->
 
 <button class="btn btn-primary"><i class="fa fa-fw fa-save"></i> Save</button>

@@ -20,8 +20,6 @@ class CourseController extends Controller
     public function storeCourse(Request $request)
     {
 
-        // Validate the incoming request data
-
         $validated = $request->validate([
             'title'         => 'required|string|max:255',
             'description'   => 'required|string',
@@ -118,5 +116,4 @@ class CourseController extends Controller
             'message' => 'Course deleted successfully!',
         ]);
     }
-
 }

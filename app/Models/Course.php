@@ -24,4 +24,19 @@ class Course extends Model
     protected $casts = [
         'tags' => 'array',
     ];
+
+    public function modules()
+    {
+        return $this->hasMany(Module::class);
+    }
+
+    public function quizzes()
+    {
+        return $this->morphMany(Quiz::class, 'parent', 'type', 'type_id');
+    }
+
+    public function assignments()
+    {
+        return $this->morphMany(Assignment::class, 'parent', 'type', 'type_id');
+    }
 }

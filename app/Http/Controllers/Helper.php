@@ -69,33 +69,64 @@ class Helper extends Controller
         return $md_id;
     }
 
-    public static function DropMasterData($code_id="", $selected="", $id="", $part=2, $disabled=0){
+    public static function course_information($course_id)
+    {
+        $courseName = DB::table('courses')
+            ->where('id', $course_id)
+            ->value('title');
 
-        if(!$code_id)
-            $select = DB::table("master_datas")->get(); 
-        else
+        return $courseName;
+    }
+
+
+
+    // public static function quiz_information($course_id,$Lesson_id,$module_id,$type_category)
+    // {
+
+    //     dd($type_category);
+
+    //     $courseName = DB::table('courses')
+    //         ->where('id', $course_id)
+    //         ->value('title');
+
+    //     return $courseName;
+    // }
+
+
+    
+    public static function DropMasterData($code_id = "", $selected = "", $id = "", $part = 2, $disabled = 0)
+    {
+
+        if (! $code_id) {
+            $select = DB::table("master_datas")->get();
+        } else {
             $select = DB::table("master_datas")->where("md_master_code_id", $code_id)->orderBy("md_name", "asc")->get();
+        }
 
-        $disabled = ($disabled)?"disabled":"";
+        $disabled = ($disabled) ? "disabled" : "";
 
         $string = "";
-        $string .=  '<select name="'.$id.'" id="'.$id.'" class="form-control" '.$disabled.'>';
+        $string .= '<select name="' . $id . '" id="' . $id . '" class="form-control" ' . $disabled . '>';
         $string .= '<option value=""> -- Select -- </option>';
-        foreach($select as $row){
-            if($part == 1){
-                if($row->md_id == $selected)
-                    $string .=  '<option selected value="'.$row->md_id.'">'.$row->md_name.'</option>';
-                else
-                    $string .=  '<option value="'.$row->md_id.'">'.$row->md_name.'</option>';
-            }else if($part == 2){
-                if($row->md_id == $selected)
-                    $string .=  '<option selected value="'.$row->md_id.'">'.$row->md_name.' ('.$row->md_code.')</option>';
-                else
-                    $string .=  '<option value="'.$row->md_id.'">'.$row->md_name.' ('.$row->md_code.')</option>';
+        foreach ($select as $row) {
+            if ($part == 1) {
+                if ($row->md_id == $selected) {
+                    $string .= '<option selected value="' . $row->md_id . '">' . $row->md_name . '</option>';
+                } else {
+                    $string .= '<option value="' . $row->md_id . '">' . $row->md_name . '</option>';
+                }
+
+            } else if ($part == 2) {
+                if ($row->md_id == $selected) {
+                    $string .= '<option selected value="' . $row->md_id . '">' . $row->md_name . ' (' . $row->md_code . ')</option>';
+                } else {
+                    $string .= '<option value="' . $row->md_id . '">' . $row->md_name . ' (' . $row->md_code . ')</option>';
+                }
+
             }
         }
 
-        $string .=  '</select>';
+        $string .= '</select>';
 
         return $string;
     }

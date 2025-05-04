@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lessons', function (Blueprint $table) {
+        Schema::create('assignments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('module_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->text('video_url');
             $table->text('description')->nullable();
-            $table->integer('order')->default(0);
-            $table->boolean('is_preview')->default(false);
+            $table->text('instructions')->nullable();
+            $table->string('course_id');
+            $table->string('type'); // lesson, module, course
+            $table->unsignedBigInteger('type_id');
+            $table->dateTime('due_date')->nullable();
+            $table->boolean('file_upload_required')->default(false);
             $table->timestamps();
-        });
+        });        
     }
 
     /**
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lessons');
+        Schema::dropIfExists('assignments');
     }
 };
