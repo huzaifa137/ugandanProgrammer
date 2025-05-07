@@ -26,4 +26,8 @@ class Lesson extends Model
         return $this->morphMany(Assignment::class, 'parent', 'type', 'type_id');
     }
 
+    public function quiz()
+    {
+        return $this->morphOne(Quiz::class, 'parent', 'type', 'type_id');
+    }
 }

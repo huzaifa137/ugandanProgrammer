@@ -25,6 +25,27 @@
             margin-bottom: 5px;
         }
     }
+
+    @keyframes pulsePop {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+        }
+
+        70% {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+        }
+
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+        }
+    }
+
+    .animate-attention {
+        animation: pulsePop 1.5s infinite;
+    }
 </style>
 
 @section('content')
@@ -94,7 +115,19 @@
 
                         <div id="lessons-{{ $module->id }}" class="collapse mt-2">
                             @forelse($module->lessons as $lesson)
-                                @php $isCompleted = $user && $user->completedLessons->contains($lesson->id); @endphp
+                                @php
+                                    $isCompleted = $user && $user->completedLessons->contains($lesson->id);
+                                    $quiz = $lesson->quiz;
+
+                                    $hasAttempted = false;
+
+                                    if ($quiz && $user) {
+                                        $hasAttempted = DB::table('quiz_user')
+                                            ->where('quiz_id', $quiz->id)
+                                            ->where('user_id', $user->id)
+                                            ->exists();
+                                    }
+                                @endphp
 
                                 <div class="border rounded p-3 mb-2 position-relative">
                                     <div class="d-flex flex-wrap justify-content-end gap-2 mb-2">
@@ -132,6 +165,18 @@
                                             </button>
                                         </form>
                                     @endif
+
+                                    @if ($quiz = $lesson->quiz)
+                                        <a href="{{ route('quizzes.show', $quiz->id) }}"
+                                            class="btn btn-sm mt-2 {{ $hasAttempted ? 'btn-info' : 'btn-warning animate-attention' }} retake-quiz-btn">
+                                            <i class="fa fa-pen"></i> {{ $hasAttempted ? 'Retake Quiz' : 'Attempt Quiz' }}
+                                        </a>
+                                    @else
+                                        <button class="btn btn-sm btn-secondary mt-2" disabled>
+                                            <i class="fa fa-ban"></i> No Quiz Available
+                                        </button>
+                                    @endif
+
                                 </div>
                             @empty
                                 <p>No lessons yet.</p>
@@ -406,8 +451,6 @@
         });
     });
 
-
-
     $(document).on('click', '.edit-lesson-btn', function() {
         const id = $(this).data('id');
         const title = $(this).data('title');
@@ -482,16 +525,17 @@
                         const url = form.action;
                         const formData = new FormData(form);
 
-                        fetch(url, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': formData.get('_token'),
-                                    'Accept': 'application/json'
-                                },
-                                body: formData
-                            })
-                            .then(response => response.json())
-                            .then(data => {
+                        $.ajax({
+                            url: url,
+                            method: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            headers: {
+                                'X-CSRF-TOKEN': formData.get('_token'),
+                                'Accept': 'application/json'
+                            },
+                            success: function(data) {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Success',
@@ -499,20 +543,31 @@
                                     timer: 1500,
                                     showConfirmButton: false
                                 }).then(() => {
-                                    location
-                                        .reload(); // Reload to update UI
+                                    location.reload();
                                 });
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: 'Something went wrong!'
-                                });
-                            });
+                            },
+                            error: function(data) {
+
+                                const response = data.responseJSON;
+                                if (response && response.message) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: response.message
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Unexpected Error',
+                                        text: 'Something went wrong. Please check console or network tab for details.'
+                                    });
+                                }
+
+                            }
+                        });
                     }
                 });
+
             });
         });
     });

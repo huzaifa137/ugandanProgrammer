@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,6 +22,14 @@ class Quiz extends Model
 
     public function parent()
     {
-        return $this->morphTo(__FUNCTION__, 'type', 'type_id');
+        return $this->morphTo('parent', 'type', 'type_id');
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot('score', 'total', 'attempt_number', 'completed_at')
+            ->withTimestamps();
+    }
+
 }

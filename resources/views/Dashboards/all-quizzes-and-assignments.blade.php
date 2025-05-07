@@ -15,6 +15,7 @@
         </div>
     </div>
     <!--End Page header-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 @endsection
 @section('content')
     <!-- Row -->
@@ -22,41 +23,17 @@
     <div class="row">
         <div class="col-xl-12 col-md-12 col-lg-12">
             <div class="row">
+                
                 <!-- Quizzes Card -->
-                <div class="col-xl-6 col-lg-6 col-md-12">
-                    {{-- <a href="{{ url('/quiz/create-quiz') }}" class="text-decoration-none"> --}}
-                        <a href="{{ url('/quiz/all-quizzes') }}" class="text-decoration-none">
-                        <div class="card">
-                            <div class="card-body">
-                                <svg class="card-custom-icon text-primary icon-dropshadow-primary" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z">
-                                    </path>
-                                </svg>
-                                <p class="mb-1">Quizzes</p>
-                                <h2 class="mb-1 font-weight-bold">1,257</h2>
-                                <div class="progress progress-sm mt-3 bg-primary-transparent">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
-                                        style="width: 100%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
 
-                <!-- Assignments Card -->
-                <div class="col-xl-6 col-lg-6 col-md-12">
-                    {{-- <a href="{{ url('/assignments/create-assignment') }}" class="text-decoration-none"> --}}
-                        <a href="{{ url('/assignments/create-assignment') }}" class="text-decoration-none">
+                <div class="col-xl-6 col-lg-6 col-md-6">
+                    <a href="{{ url('/quiz/create-quiz') }}" class="text-decoration-none">
                         <div class="card">
-                            <div class="card-body">
-                                <svg class="card-custom-icon text-success icon-dropshadow-success" viewBox="0 0 24 24">
-                                    <path
-                                        d="M16 0H8c-1.1 0-1.99.89-1.99 1.99L6 22.01c0 1.1.89 1.99 1.99 1.99h8c1.1 0 1.99-.89 1.99-1.99L18 1.99c0-1.1-.89-1.99-1.99-1.99zm0 18H8V4h8v14z">
-                                    </path>
-                                </svg>
-                                <p class="mb-1">Assignments</p>
-                                <h2 class="mb-1 font-weight-bold">3,205</h2>
+                            <div class="card-body text-center">
+                                <i class="fas fa-tasks card-custom-icon text-success icon-dropshadow-success fa-4x"></i>
+
+                                <p class="mb-1" style="visibility: hidden;">Student Quizzes</p>
+                                <h2 class="mb-1 font-weight-bold">Create Quiz</h2>
                                 <div class="progress progress-sm mt-3 bg-success-transparent">
                                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
                                         style="width: 100%"></div>
@@ -66,7 +43,45 @@
                     </a>
                 </div>
 
+                <div class="col-xl-6 col-lg-6 col-md-12">
+                    <a href="{{ url('/quiz/all-quizzes') }}" class="text-decoration-none">
+                        <div class="card">
+                            <div class="card-body">
+                                <i
+                                    class="fas fa-clipboard-question card-custom-icon text-primary icon-dropshadow-primary fa-4x"></i>
+                                <h4 class="mb-1">All Quizzes</h4>
+                                <h2 class="mb-1 font-weight-bold">{{ $quizCount }}</h2>
+                                <div class="progress progress-sm mt-3 bg-primary-transparent">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                                        style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
             </div>
+
+            <!-- Centered Third Card -->
+            {{-- <div class="row justify-content-center mt-4">
+                <!-- Assignments Card -->
+                <div class="col-xl-6 col-lg-6 col-md-12">
+                    <a href="javascript:void(0);" class="text-decoration-none">
+                        <div class="card">
+                            <div class="card-body">
+                                <i class="fas fa-file-alt card-custom-icon text-info icon-dropshadow-info fa-4x"></i>
+                                <h4 class="mb-1">Assignments</h4>
+                                <h2 class="mb-1 font-weight-bold">0</h2>
+                                <div class="progress progress-sm mt-3 bg-info-transparent">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                        style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div> --}}
+
         </div>
     </div>
 

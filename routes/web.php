@@ -219,11 +219,18 @@ Route::controller(QuizController::class)->group(function () {
             Route::get('/create-quiz', 'createQuiz')->name('quizzes.create.quiz');
             Route::post('/store-quiz', 'storeQuiz')->name('quizzes.store.quiz');
             Route::get('/all-quizze-and-assignments', 'allQuizzesAndAssignments')->name('all.quizzes');
-            
+
             Route::get('/all-quizzes', 'allQuizzes')->name('all.quizzes');
             Route::get('/questions/create/{quiz}', 'createQuestions')->name('questions.create');
 
             Route::post('/questions/{quiz}', 'storeQuestions')->name('questions.store');
+            Route::get('/show-questions/{quiz}', 'showQuizQuestions')->name('quizzes.show.questions');
+
+            Route::get('/on-take/{quiz}', 'showQuizForm')->name('quizzes.ontake');
+            Route::post('/{quiz}/submit', 'submitQuiz')->name('quizzes.submit');
+            Route::get('/attempts/{quiz}', 'attempts')->name('quizzes.attempts');
+            Route::get('/show/{quiz}', 'showQuizForm')->name('quizzes.show');
+            Route::delete('/delete-quiz-questions/{id}', 'deleteQuizQuestion')->name('questions.destroy');
 
         });
 

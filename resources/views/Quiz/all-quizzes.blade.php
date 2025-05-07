@@ -49,9 +49,9 @@
                 @if (count($quizzes) > 0)
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h3 class="mb-0">List of all quizzies</h3>
-                        <a href="{{ url('quiz/create-quiz') }}" class="btn btn-sm btn-info">
+                        {{-- <a href="{{ url('quiz/create-quiz') }}" class="btn btn-sm btn-info">
                             <i class="fas fa-plus-circle"></i> Create New Quiz
-                        </a>
+                        </a> --}}
                     </div>
                     <div class="table-responsive">
                         <table class="table card-table table-vcenter text-nowrap table-primary mb-0">
@@ -72,9 +72,15 @@
                                         <td>{{ Helper::course_information($quiz->course_id) }}</td>
                                         <td>{{ $quiz->type }}</td>
                                         <td>
-                                            <a href="{{ url('/courses/course-information', $quiz->id) }}"
-                                                class="btn btn-sm btn-primary">
-                                                <i class="fas fa-eye"></i> View
+                                            <a href="{{ url('/quiz/show-questions', $quiz->id) }}"
+                                                class="btn btn-sm btn-secondary">
+                                                <i class="fas fa-user"></i> Admin View
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url('/quiz/on-take', $quiz->id) }}"
+                                                class="btn btn-sm btn-info">
+                                                <i class="fas fa-user-graduate"></i> Student View
                                             </a>
                                         </td>
 
@@ -83,13 +89,6 @@
                                                 class="btn btn-sm btn-success">
                                                 <i class="fas fa-file-medical"></i> Add Qns
                                             </a>
-                                        </td>
-
-                                        <td>
-                                            <a href="{{ url('/courses/edit-course-information', $quiz->id) }}"
-                                                class="btn btn-sm btn-secondary">
-                                                <i class="fas fa-eye"></i> <i class="fas fa-edit"></i>
-                                                Edit</a>
                                         </td>
 
                                         <td>
@@ -110,11 +109,11 @@
                     </div>
                 @else
                     <div class="col-sm-12 col-md-12">
-                        <div class="card-header d-flex justify-content-between align-items-center">
+                        {{-- <div class="card-header d-flex justify-content-between align-items-center">
                             <a href="{{ url('quiz/create-quiz') }}" class="btn btn-sm btn-info">
                                 <i class="fas fa-plus-circle"></i> Create New Quiz
                             </a>
-                        </div>
+                        </div> --}}
                         <div class="alert alert-warning mt-3 mb-3" role="alert">
                             No quizzes found in the system
                         </div>

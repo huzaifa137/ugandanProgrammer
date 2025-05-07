@@ -7,9 +7,12 @@ use App\Models\Lesson;
 use App\Models\Module;
 use App\Models\Question;
 use App\Models\Quiz;
+use App\Models\User;
+use App\Models\UserQuizAnswer;
+use App\Models\UserQuizAttempt;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-
 
 class QuizController extends Controller
 {
@@ -36,15 +39,15 @@ class QuizController extends Controller
         $quiz->description = $validated['description'];
         $quiz->course_id   = $request->input('course_id');
 
-        if ($request->quiz_category == 'Module') {
-            $quiz->type_id = $validated['module_id'] ?? '';
-            $quiz->type    = 'Module' ?? '';
-        } elseif ($request->quiz_category == 'Lesson') {
-            $quiz->type_id = $validated['lesson_id'] ?? '';
-            $quiz->type    = 'Lesson' ?? '';
+        if ($request->quiz_category == 'Lesson') {
+            $quiz->type_id = $validated['lesson_id'];
+            $quiz->type    = Lesson::class;
+        } elseif ($request->quiz_category == 'Module') {
+            $quiz->type_id = $validated['module_id'];
+            $quiz->type    = Module::class;
         } elseif ($request->quiz_category == 'Course') {
-            $quiz->type_id = $validated['course_id'] ?? '';
-            $quiz->type    = 'Course' ?? '';
+            $quiz->type_id = $validated['course_id'];
+            $quiz->type    = Course::class;
         }
 
         $quiz->save();
@@ -106,7 +109,9 @@ class QuizController extends Controller
 
     public function allQuizzesAndAssignments()
     {
-        return view('Dashboards.all-quizzes-and-assignments');
+        $quizCount = Quiz::all()->count();
+
+        return view('Dashboards.all-quizzes-and-assignments', compact(['quizCount']));
     }
 
     public function allQuizzes()
@@ -124,48 +129,20 @@ class QuizController extends Controller
         return view('Quiz.create-question', compact(['quiz', 'quizId']));
     }
 
-    // public function storeQuestions(Request $request, $quizId)
-    // {
-
-    //     $question = new Question();
-
-    //     $question->quiz_id       = $quizId;
-    //     $question->question_text = $request->input('question');
-    //     $question->question_type = $request->input('type');
-    //     $question->options       = $request->input('type') === 'mcq' ? json_encode($request->input('options')) : null;
-
-    //     if ($request->input('type') === 'short_answer') {
-    //         $question->correct_answer = $request->input('correct_answer_short_answer');
-
-    //     } elseif ($request->input('type') === 'true_false') {
-    //         $question->correct_answer = $request->input('correct_answer_boolean');
-
-    //     } elseif ($request->input('type') === 'mcq') {
-    //         $question->correct_answer = $request->input('correct_answer_mcqs');
-    //     }
-
-    //     $question->save();
-
-    //     return back()->with('success', 'Question added successfully!');
-    // }
-
-
     public function storeQuestions(Request $request, $quizId)
     {
         foreach ($request->input('questions', []) as $data) {
-    
+
             $question = new Question();
-    
-            $question->quiz_id        = $quizId;
-            $question->question_text  = Arr::get($data, 'question');
-            $question->question_type  = Arr::get($data, 'type');
-    
-            // Set options if type is MCQ
+
+            $question->quiz_id       = $quizId;
+            $question->question_text = Arr::get($data, 'question');
+            $question->question_type = Arr::get($data, 'type');
+
             $question->options = Arr::get($data, 'type') === 'mcq'
-                ? json_encode(Arr::get($data, 'options', []))
-                : null;
-    
-            // Set correct answer based on question type
+            ? json_encode(Arr::get($data, 'options', []))
+            : null;
+
             if (Arr::get($data, 'type') === 'short_answer') {
                 $question->correct_answer = Arr::get($data, 'correct_answer_short_answer');
             } elseif (Arr::get($data, 'type') === 'true_false') {
@@ -173,12 +150,166 @@ class QuizController extends Controller
             } elseif (Arr::get($data, 'type') === 'mcq') {
                 $question->correct_answer = Arr::get($data, 'correct_answer_mcqs');
             }
-    
+
             $question->save();
         }
-    
+
         return response()->json(['success' => true]);
     }
-    
+
+    public function showQuizQuestions($quizId)
+    {
+        $quiz = Quiz::with('questions')->findOrFail($quizId);
+        return view('Quiz.show-questions', compact('quiz'));
+    }
+
+    public function showQuizForm($quizId)
+    {
+        $quiz = Quiz::with('questions')->find($quizId);
+        $user = User::find(session('LoggedAdmin'));
+
+        $latestResults = DB::table('user_quiz_attempts')
+            ->where('quiz_id', $quizId)
+            ->where('user_id', $user->id)
+            ->orderByDesc('created_at')
+            ->first();
+
+        $results = [];
+
+        $latestAttempt = UserQuizAttempt::where('quiz_id', $quizId)
+            ->where('user_id', $user->id)
+            ->latest()
+            ->first();
+
+        $answers = collect();
+        if ($latestAttempt) {
+            $answers = UserQuizAnswer::where('user_quiz_attempt_id', $latestAttempt->id)->get();
+        }
+
+        $results = $quiz->questions->map(function ($question) use ($answers) {
+            $response = $answers->firstWhere('question_id', $question->id);
+
+            return [
+                'question'       => $question->question_text,
+                'user_answer'    => $response?->answer ?? null,
+                'is_correct'     => $response?->is_correct ?? false,
+                'has_answer'     => ! is_null($response),
+                'correct_answer' => $question->correct_answer,
+            ];
+        });
+
+        $hasSubmission = UserQuizAttempt::where('user_id', $user->id)
+            ->where('quiz_id', $quiz->id)
+            ->whereHas('answers')
+            ->exists();
+
+        $score = $results->filter(function ($result) {
+            return $result['is_correct'];
+        })->count();
+
+        $total = $quiz->questions->count();
+
+        return view('Quiz.on-take', compact(['quiz', 'results', 'answers', 'hasSubmission', 'score', 'total']));
+
+    }
+
+    public function submitQuiz(Request $request, Quiz $quiz)
+    {
+        $submittedAnswers = $request->input('answers', []);
+        $questions        = $quiz->questions;
+
+        $score   = 0;
+        $total   = $questions->count();
+        $results = [];
+
+        if ($questions->isEmpty()) {
+            return redirect()->back()->with('error', 'No questions were found in this quiz.');
+        }
+
+        $user = User::find(session('LoggedAdmin'));
+
+        $userQuizAttempt = UserQuizAttempt::create([
+            'user_id'      => $user->id,
+            'quiz_id'      => $quiz->id,
+            'score'        => 0,
+            'completed_at' => now(),
+        ]);
+
+        foreach ($questions as $question) {
+            $userAnswer    = isset($submittedAnswers[$question->id]) ? trim($submittedAnswers[$question->id]) : null;
+            $correctAnswer = trim($question->correct_answer);
+
+            $isCorrect = false;
+
+            if ($question->question_type === 'short_answer') {
+                $isCorrect = strtolower($userAnswer) === strtolower($correctAnswer);
+            } else {
+                $isCorrect = $userAnswer === $correctAnswer;
+            }
+
+            if ($isCorrect) {
+                $score++;
+            }
+
+            $userQuizAttempt->answers()->create([
+                'question_id' => $question->id,
+                'answer'      => $userAnswer,
+                'is_correct'  => $isCorrect,
+            ]);
+
+            $results[] = [
+                'question'       => $question->question_text,
+                'user_answer'    => $userAnswer,
+                'correct_answer' => $correctAnswer,
+                'is_correct'     => $isCorrect,
+            ];
+        }
+
+        $userQuizAttempt->update(['score' => $score]);
+
+        $lastAttempt = $user->quizzes()
+            ->where('quiz_id', $quiz->id)
+            ->orderByDesc('pivot_attempt_number')
+            ->first();
+
+        $attemptNumber = $lastAttempt ? $lastAttempt->pivot->attempt_number + 1 : 1;
+
+        $user->quizzes()->attach($quiz->id, [
+            'score'          => $score,
+            'total'          => $total,
+            'attempt_number' => $attemptNumber,
+            'completed_at'   => now(),
+        ]);
+
+        return view('Quiz.on-take-result', [
+            'quiz'          => $quiz,
+            'score'         => $score,
+            'total'         => $total,
+            'results'       => $results,
+            'attemptNumber' => $attemptNumber,
+        ]);
+    }
+
+    public function attempts(Quiz $quiz)
+    {
+
+        $user = User::find(Session('LoggedAdmin'));
+
+        $attempts = $user->quizzes()
+            ->where('quiz_id', $quiz->id)
+            ->orderByDesc('pivot_attempt_number')
+            ->get();
+
+        return view('quizzes.attempts', compact('quiz', 'attempts'));
+    }
+
+    public function deleteQuizQuestion($id)
+    {
+
+        $question = Question::findOrFail($id);
+        $question->delete();
+
+        return response()->json(['success' => 'Question deleted successfully']);
+    }
 
 }

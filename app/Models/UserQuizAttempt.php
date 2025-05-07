@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class UserQuizAttempt extends Model
@@ -18,5 +19,10 @@ class UserQuizAttempt extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(UserQuizAnswer::class);
     }
 }

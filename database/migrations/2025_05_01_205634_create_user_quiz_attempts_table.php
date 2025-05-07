@@ -18,8 +18,8 @@ return new class extends Migration
             $table->float('score')->nullable();
             $table->dateTime('completed_at')->nullable();
             $table->timestamps();
-        });        
-    }
+        });
+    }    
 
     /**
      * Reverse the migrations.

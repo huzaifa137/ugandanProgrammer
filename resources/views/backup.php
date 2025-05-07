@@ -121,6 +121,16 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     });
+
+
+    @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: '{{ session('error') }}',
+            });
+        @endif
+        
 <!-- Confirm on Form submission -->
 
 <button class="btn btn-primary"><i class="fa fa-fw fa-save"></i> Save</button>
@@ -626,3 +636,30 @@ function showLoading() {
 	function hideLoading() {
 		$('#loading-gif').hide();
 	}
+
+
+    <script>
+        document.getElementById('quiz-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Once submitted, you won't be able to change your answers.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, submit it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    const submitBtn = e.target.querySelector('button[type="submit"]');
+
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = 'Submitting...<i class="fas fa-spinner fa-spin"></i>';
+
+                    e.target.submit();
+                }
+            });
+        });
+    </script>
