@@ -32,6 +32,7 @@
                         <li><a href="{{ url('/courses/all-courses') }}">All Courses</a></li>
                         <li><a href="{{ url('/courses/add-course-module') }}">Course Modules</a></li>
                         <li><a href="{{ url('/quiz/all-quizze-and-assignments') }}">Quiz & Assignments</a></li>
+                        <li><a href="{{ url('/quiz/all-quizze-and-assignments') }}">Interractive Code Editors</a></li>
                     </ul>
                 </li>
 

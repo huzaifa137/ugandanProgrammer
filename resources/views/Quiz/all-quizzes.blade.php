@@ -49,9 +49,6 @@
                 @if (count($quizzes) > 0)
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h3 class="mb-0">List of all quizzies</h3>
-                        {{-- <a href="{{ url('quiz/create-quiz') }}" class="btn btn-sm btn-info">
-                            <i class="fas fa-plus-circle"></i> Create New Quiz
-                        </a> --}}
                     </div>
                     <div class="table-responsive">
                         <table class="table card-table table-vcenter text-nowrap table-primary mb-0">
@@ -60,7 +57,6 @@
                                     <th class="text-white" style="width: 1px;text-align:center;">No</th>
                                     <th class="text-white">Quiz</th>
                                     <th class="text-white">Course</th>
-                                    <th class="text-white">Course Category</th>
                                     <th class="text-white" colspan="4" style="text-align: center;">Action</th>
                                 </tr>
                             </thead>
@@ -70,7 +66,6 @@
                                         <th scope="row">{{ $count + 1 }}</th>
                                         <td>{{ $quiz->title }}</td>
                                         <td>{{ Helper::course_information($quiz->course_id) }}</td>
-                                        <td>{{ $quiz->type }}</td>
                                         <td>
                                             <a href="{{ url('/quiz/show-questions', $quiz->id) }}"
                                                 class="btn btn-sm btn-secondary">
@@ -78,8 +73,7 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="{{ url('/quiz/on-take', $quiz->id) }}"
-                                                class="btn btn-sm btn-info">
+                                            <a href="{{ url('/quiz/on-take', $quiz->id) }}" class="btn btn-sm btn-info">
                                                 <i class="fas fa-user-graduate"></i> Student View
                                             </a>
                                         </td>
@@ -92,8 +86,8 @@
                                         </td>
 
                                         <td>
-                                            <a href="javascript:void(0);" data-id="{{ $quiz->id }}"
-                                                class="btn btn-sm btn-danger delete-course-btn">
+                                            <a href="#" class="btn btn-sm btn-danger delete-quiz-btn"
+                                                data-id="{{ $quiz->id }}">
                                                 <i class="fas fa-trash-alt"></i> Delete
                                             </a>
                                         </td>
@@ -144,10 +138,10 @@
             $('#loading-gif').hide();
         }
 
-        $(document).on('click', '.delete-course-btn', function(e) {
+        $(document).on('click', '.delete-quiz-btn', function(e) {
             e.preventDefault();
 
-            var courseId = $(this).data('id');
+            var quizId = $(this).data('id');
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -161,7 +155,7 @@
                 if (result.isConfirmed) {
                     showLoading();
                     $.ajax({
-                        url: '/courses/delete-course/' + courseId,
+                        url: '/quiz/delete-quiz/' + quizId,
                         type: 'DELETE',
                         data: {
                             _token: '{{ csrf_token() }}'
@@ -184,5 +178,15 @@
                 }
             });
         });
+
+
+        @if (session('success'))
+            Swal.fire({
+                title: 'Success!',
+                text: '{{ session('success') }}',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        @endif
     </script>
 @endsection

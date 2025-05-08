@@ -312,4 +312,16 @@ class QuizController extends Controller
         return response()->json(['success' => 'Question deleted successfully']);
     }
 
+    public function deleteQuiz($quizId)
+    {
+
+        $quizFound = Quiz::find($quizId);
+        $quizFound->delete();
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Quiz has been deleted successfully!',
+        ]);        
+    }
+
 }

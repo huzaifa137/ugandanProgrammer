@@ -20,6 +20,12 @@
         </div>
     </div>
     <!--End Page header-->
+
+    <style>
+        .custom-bg .card-header {
+            background-color: #8e98db;
+        }
+    </style>
 @endsection
 @section('content')
     <div class="row">
@@ -39,7 +45,7 @@
 
                     @if ($hasSubmission)
                         @if ($results->isNotEmpty())
-                            <div class="accordion mb-4" id="mainAccordion">
+                            <div class="accordion mb-4 custom-bg" id="mainAccordion">
                                 <div class="card">
                                     <div class="card-header d-flex justify-content-between align-items-center"
                                         id="mainHeading">
@@ -47,11 +53,11 @@
                                             type="button" data-bs-toggle="collapse" data-bs-target="#mainCollapse"
                                             aria-expanded="false" aria-controls="mainCollapse"
                                             style="text-align: left; text-decoration: none;">
-                                            <strong><span style="color: green">Last Submission</span></strong>
+                                            <strong><span style="color: #FFF">Last Submission</span></strong>
                                         </button>
                                         <h6 class="mb-0">
-                                            <span class="text-danger">Your Score:</span> {{ $score }} /
-                                            {{ $total }}
+                                            <span class="text-white">Your Score: {{ $score }} /
+                                            {{ $total }}</span>
                                         </h6>
                                     </div>
 
@@ -70,8 +76,8 @@
                                                                 aria-expanded="false"
                                                                 aria-controls="collapse{{ $index }}"
                                                                 style="text-align: left; text-decoration: none;">
-                                                                Question {{ $index + 1 }}:
-                                                                {{ \Illuminate\Support\Str::limit($result['question'], 60) }}
+                                                                <span class="text-white"> Question {{ $index + 1 }}:
+                                                                {{ \Illuminate\Support\Str::limit($result['question'], 60) }} </span>
                                                             </button>
                                                         </div>
 

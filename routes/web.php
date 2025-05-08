@@ -231,6 +231,7 @@ Route::controller(QuizController::class)->group(function () {
             Route::get('/attempts/{quiz}', 'attempts')->name('quizzes.attempts');
             Route::get('/show/{quiz}', 'showQuizForm')->name('quizzes.show');
             Route::delete('/delete-quiz-questions/{id}', 'deleteQuizQuestion')->name('questions.destroy');
+            Route::delete('/delete-quiz/{quiz}', 'deleteQuiz');
 
         });
 
@@ -242,6 +243,20 @@ Route::controller(QuizController::class)->group(function () {
 
         Route::get('/get-course-modules/{course_id}', 'getCourseModules');
         Route::get('/get-course-lessons/{module_id}', 'getModuleLesson');
+
+    });
+});
+
+
+Route::controller(codEditorController::class)->group(function () {
+
+    Route::group(['middleware' => ['AdminAuth']], function () {
+
+        Route::group(['prefix' => '/code-editor'], function () {
+
+            Route::get('/programming', 'programmingCodeEditor');
+
+        });
 
     });
 });
