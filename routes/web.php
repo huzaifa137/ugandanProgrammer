@@ -49,10 +49,12 @@ Route::controller(UserController::class)->group(function () {
     Route::group(['prefix' => '/users'], function () {
 
         Route::get('/user-logout', 'userLogout')->name('user-logout');
+        Route::get('/student-logout', 'studentLogout')->name('student-logout');
+
         Route::group(['middleware' => ['AdminAuth']], function () {
             Route::get('/forgot-password', 'forgotPassword')->name('forgot-password');
             Route::get('/login', 'login')->name('users.login');
-            Route::get('/', 'login');
+            Route::get('/', 'login')->name('admin.dashboard');
             Route::post('auth-user-check', 'checkUser')->name('auth-user-check');
             Route::get('/users-profile', 'userProfile')->name('users-profile');
             Route::get('/users-register', 'userRegister');
@@ -84,8 +86,8 @@ Route::controller(UserController::class)->group(function () {
     Route::post('user-store-new-password', 'store_new_password')->name('user-store-new-password');
     Route::post('supplier-user-otp-verification', 'supplierOtpVerification')->name('supplier-user-otp-verification');
     Route::get('reload-captcha', 'reload_captcha')->name('reload-captcha');
-
 });
+
 
 Route::controller(MasterDataController::class)->group(function () {
 
@@ -247,7 +249,6 @@ Route::controller(QuizController::class)->group(function () {
     });
 });
 
-
 Route::controller(codEditorController::class)->group(function () {
 
     Route::group(['middleware' => ['AdminAuth']], function () {
@@ -255,6 +256,14 @@ Route::controller(codEditorController::class)->group(function () {
         Route::group(['prefix' => '/code-editor'], function () {
 
             Route::get('/programming', 'programmingCodeEditor');
+        });
+
+        Route::group(['prefix' => '/certificates'], function () {
+
+            Route::get('/{course}/certificate/preview', 'preview')->name('certificate.preview');
+            Route::get('/{course}/certificate/download', 'download')->name('certificate.download');
+            Route::get('/certificate/template/{course}', 'template')->name('certificate.template');
+            Route::get('/all-preview', 'previewAllCertificates')->name('certificates.all');
 
         });
 
@@ -262,6 +271,22 @@ Route::controller(codEditorController::class)->group(function () {
 });
 
 Route::controller(LocationController::class)->group(function () {
+    Route::group(['middleware' => ['AdminAuth']], function () {
+        Route::get('/{page}', 'index');
+    });
+});
 
-    Route::get('/{page}', 'index');
+Route::controller(StudentController::class)->group(function () {
+
+    Route::group(['middleware' => ['StudentAuth']], function () {
+
+        Route::group(['prefix' => '/student'], function () {
+
+            Route::get('/dashboard', 'studentDashboard')->name('student.dashboard');
+            Route::get('/profile', 'studentProfile')->name('student.profile');
+            Route::get('/edit-student-profile', 'editStudentProfile');
+            Route::get('/courses-and-lessons', 'coursesAndLessons')->name('student.courses.lessons');
+
+        });
+    });
 });

@@ -30,4 +30,12 @@ class Lesson extends Model
     {
         return $this->morphOne(Quiz::class, 'parent', 'type', 'type_id');
     }
+
+    public function lessons()
+    {
+        return $this->belongsToMany(Lesson::class)->withTimestamps();
+    }
+    
+    
+
 }

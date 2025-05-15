@@ -8,11 +8,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminAuth
 {
+
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return \Symfony\Component\HttpFoundation\Response
      */
+
     public function handle(Request $request, Closure $next): Response
     {
 
@@ -24,17 +28,20 @@ class AdminAuth
                 ! $request->routeIs('auth-user-check') &&
                 ! $request->routeIs('regenerate-otp') &&
                 ! $request->routeIs('password/reset') &&
-                $request->path() != 'users/forgot-password')) {
-
+                $request->path() != 'users/forgot-password')
+        ) {
             Session::put('url.intended', $request->url());
 
             return redirect('/users/login')->with('fail', 'You must be logged in');
         }
 
-        if ((session()->has('LoggedAdmin') && ($request->path() == 'users/login' || $request->path() == 'users/register' || $request->routeIs('auth-user-check')))) {
+        if (session()->has('LoggedStudent') &&
+            ($request->path() == 'users/login' || $request->path() == 'users/register' || $request->routeIs('auth-user-check'))) {
+            return redirect('/student/dashboard');
+        }
 
-            Session::put('url.intended', $request->url());
-
+        if (session()->has('LoggedAdmin') && 
+            ($request->path() == 'users/login' || $request->path() == 'users/register' || $request->routeIs('auth-user-check'))) {
             return redirect('/');
         }
 
@@ -45,6 +52,5 @@ class AdminAuth
         $response->headers->set('Expires', 'Sat, 01 Jan 1990 00:00:00 GMT');
 
         return $response;
-
     }
 }

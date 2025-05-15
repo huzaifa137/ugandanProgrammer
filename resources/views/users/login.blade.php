@@ -69,7 +69,7 @@
                             </div>
 
                             @include('sweetalert::alert')
-
+                            
                             @if (Session::get('success'))
                                 <div class="alert alert-success">
                                     {{ Session::get('success') }}

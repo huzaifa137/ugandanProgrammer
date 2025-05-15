@@ -84,15 +84,17 @@ class CourseController extends Controller
 
         $course = Course::find($request->course_id);
 
-        if ($course) {
-
+        if ($course) {  
+                        
             $tags = $request->tags ? array_map('trim', explode(',', $request->tags)) : [];
-
+            
             $course->update([
                 'title'         => $request->title,
                 'description'   => $request->description,
                 'language'      => $request->language,
                 'difficulty'    => $request->difficulty,
+                'selling_price' => $request->selling_price,
+                'old_price'     => $request->old_price,
                 'tags'          => $tags,
                 'category_id'   => $request->category,
                 'instructor_id' => $request->instructor_id,

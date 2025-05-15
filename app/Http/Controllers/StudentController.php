@@ -6,6 +6,7 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Mail;
+use App\Models\Course;
 
 class StudentController extends Controller
 {
@@ -140,34 +141,45 @@ class StudentController extends Controller
 
         $temp_otp_stored   = DB::table('users')->where('id', $user_id)->value('temp_otp');
         $supplier_username = DB::table('users')->where('id', $user_id)->value('username');
+        $userRole          = DB::table('users')->where('id', $user_id)->value('user_role');
 
         if ($new_otp == $temp_otp_stored) {
 
-            $request->session()->put('LoggedAdmin', $user_id);
-            // $request->session()->put('ACTIVE_MODULE', 'SUPPLIERS');
+            if ($userRole != 1) {
+                $request->session()->put('LoggedAdmin', $user_id);
+            } else {
+                $request->session()->put('LoggedStudent', $user_id);
+            }
 
             // AuditTrailController::register('LOGIN SUCCESSFULL', 'ADMIN Username: <b>' . $supplier_username . '</b> Pasword: <b>*******</b>');
 
-            $url = '/';
-
+            $url  = '/';
             $url2 = session()->get('url.intended');
+            $url3  = '/student/dashboard';
 
-            if ($url2 != null) {
+            if ($userRole != 1) {
+                if ($url2 != null) {
+                    return response()->json([
+                        'status'       => true,
+                        'message'      => 'Login successful',
+                        'redirect_url' => $url2,
+                    ]);
+                }
+
                 return response()->json([
                     'status'       => true,
                     'message'      => 'Login successful',
-                    'redirect_url' => $url2,
+                    'redirect_url' => $url,
+                ]);
+            } else {
+                return response()->json([
+                    'status'       => true,
+                    'message'      => 'Login successful',
+                    'redirect_url' => $url3,
                 ]);
             }
 
-            return response()->json([
-                'status'       => true,
-                'message'      => 'Login successful',
-                'redirect_url' => $url,
-            ]);
-
         } else {
-            // AuditTrailController::register('INVALID OTP', 'ADMIN Username: <b>' . $supplier_username . '</b> Pasword: <b>*******</b>');
 
             return response()->json([
                 'status'  => false,
@@ -175,6 +187,42 @@ class StudentController extends Controller
                 'message' => 'Entered OTP is invalid, please check your email for correct OTP code',
             ]);
         }
+    }
+
+    public function studentDashboard(Request $request)
+    {
+        return view('student.dashboard');
+    }
+
+    public function studentProfile(Request $request)
+    {
+        $user = DB::table('users')->where('id', session('LoggedStudent'))->first();
+
+        return view('student.profile', compact(['user']));
+    }
+
+    public function studentCourses()
+    {
+        $allCourses = Course::orderBy('id', 'desc')->paginate(12);
+
+        return view('student.all-courses', compact(['allCourses']));
+    }
+
+    public function editStudentProfile()
+    {
+
+        $info = DB::table('users')->where('id', Session('LoggedStudent'))->first();
+
+        return view('student.edit-profile', compact(['info']));
+    }
+
+
+    public function coursesAndLessons()
+    {
+
+        $allCourses = Course::orderBy('id', 'desc')->paginate(8);
+
+        return view('student.courses-and-lessons', compact(['allCourses']));
     }
 
 }

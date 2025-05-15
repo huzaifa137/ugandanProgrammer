@@ -1,8 +1,12 @@
-@extends('layouts.master')
-
+<?php
+use App\Http\Controllers\Helper;
+use App\Http\Controllers\Controller;
+$controller = new Controller();
+?>
+@extends('layouts-side-bar.master')
 @section('css')
-    <!-- Morris Charts css -->
-    <link href="{{ URL::asset('assets/plugins/morris/morris.css') }}" rel="stylesheet" />
+    <!---jvectormap css-->
+    <link href="{{ URL::asset('assets/plugins/jvectormap/jqvmap.css') }}" rel="stylesheet" />
     <!-- Data table css -->
     <link href="{{ URL::asset('assets/plugins/datatable/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
     <!--Daterangepicker css-->
@@ -11,10 +15,11 @@
 @section('page-header')
 @endsection
 @section('content')
-    <!--Row-->
+    <br> <br>
+
     <div class="row ">
         <div class="col-xl-12 col-md-12 col-lg-12">
-            <h4 class="page-title" style="text-align: center;">User Information Update</h4>
+            <h4 class="page-title" style="text-align: center;">Student Information Update</h4>
             <br>
 
             <form action="{{ route('update-internal-user') }}" class="border" method="POST" id="userForm">
@@ -34,6 +39,12 @@
                 @if (Session::get('success'))
                     <div class="alert alert-success">
                         {{ Session::get('success') }}
+                    </div>
+                @endif
+
+                @if (Session::get('fail'))
+                    <div class="alert alert-danger">
+                        {{ Session::get('fail') }}
                     </div>
                 @endif
 
@@ -143,8 +154,8 @@
 
                 <div class="row">
                     <div class="col-md-4" style="padding-top: 1rem;">
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            <i class="fas fa-user-edit"></i> Update User Information
+                        <button type="submit" id="submitBtn" class="btn btn-primary btn-sm">
+                            <i class="fas fa-user-edit"></i> Update Student Information
                         </button>
                     </div>
 
@@ -156,96 +167,120 @@
             <br> <br>
         </div>
     </div>
-    <!--End row-->
-    </div>
-    </div><!-- end app-content-->
-    </div>
 
-    <br> <br>
+    </div>
+    </div>
+    </div>
 @endsection
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @section('js')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
-
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const form = document.getElementById("userForm");
-            const submitButton = form.querySelector("button[type='submit']");
+        document.getElementById('userForm').addEventListener('submit', function(event) {
+            event.preventDefault();
 
-            form.addEventListener("submit", function(e) {
-                e.preventDefault();
+            const password = document.getElementById('password').value.trim();
+            const confirmPassword = document.getElementById('confirm_password').value.trim();
+            const submitBtn = document.getElementById('submitBtn');
 
-                const username = document.getElementById("username").value.trim();
-                const firstname = document.getElementById("firstname").value.trim();
-                const lastname = document.getElementById("lastname").value.trim();
-                const gender = document.getElementById("gender").value.trim();
-                const email = document.getElementById("email").value.trim();
-                const phonenumber = document.getElementById("phonenumber").value.trim();
-                const country = document.getElementById("country").value.trim();
-                const password = document.getElementById("password").value.trim();
-                const confirmPassword = document.getElementById("confirm_password").value.trim();
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#]).{6,}$/;
 
-                const errors = [];
-                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#]).{6,}$/;
+            if ((password && !confirmPassword) || (!password && confirmPassword)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'Both Password and Confirm Password must be provided if you want to update the password.'
+                });
+                return;
+            }
 
-                if (!username) {
-                    errors.push('• Username is required.');
-                    document.getElementById("username").classList.add("is-invalid");
-                }
-
-                if (!email) {
-                    errors.push('• Email is required.');
-                    document.getElementById("email").classList.add("is-invalid");
-                }
-
-                if ((password && !confirmPassword) || (!password && confirmPassword)) {
-                    errors.push('• Both Password and Confirm Password must be filled to update password.');
-                }
-
-                if (password && confirmPassword) {
-                    if (password !== confirmPassword) {
-                        errors.push('• Passwords do not match.');
-                    } else if (!passwordRegex.test(password)) {
-                        errors.push(
-                            '• Password must be at least 6 characters and contain at least one uppercase letter, one lowercase letter, one digit, and one special character (@$!%*?&#).'
-                        );
-                    }
-                }
-
-                if (phonenumber && !/^\d{10}$/.test(phonenumber)) {
-                    errors.push('• Phone number must be 10 digits.');
-                }
-
-                if (errors.length > 0) {
-                    Swal.fire('Validation Errors', errors.join('<br>'), 'error');
+            if (password && confirmPassword) {
+                if (password !== confirmPassword) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Password Mismatch',
+                        text: 'Password and Confirm Password do not match.'
+                    });
                     return;
                 }
 
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "Do you want to update the user information?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, update it!',
-                    cancelButtonText: 'No, cancel!',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        submitButton.innerHTML =
-                            'Updating... <i class="fas fa-spinner fa-spin"></i>';
-                        submitButton.disabled = true;
-                        form.submit();
-                    }
-                });
+                if (!passwordRegex.test(password)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Weak Password',
+                        html: `Password must:
+                        <ul style="text-align: left;">
+                            <li>Be at least 6 characters</li>
+                            <li>Contain one uppercase letter</li>
+                            <li>Contain one lowercase letter</li>
+                            <li>Contain one digit</li>
+                            <li>Contain one special character (@$!%*?&#)</li>
+                        </ul>`
+                    });
+                    return;
+                }
+            }
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to update the student information?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, update it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    submitBtn.innerHTML =
+                        'Updating student information... <i class="fas fa-spinner fa-spin"></i>';
+                    submitBtn.disabled = true;
+
+                    setTimeout(() => {
+                        event.target.submit();
+                    }, 500); 
+                }
             });
         });
     </script>
 
-    <!-- Additional Scripts -->
+
+    <!-- ECharts js -->
+    <script src="{{ URL::asset('assets/plugins/echarts/echarts.js') }}"></script>
+    <!-- Peitychart js-->
+    <script src="{{ URL::asset('assets/plugins/peitychart/jquery.peity.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/peitychart/peitychart.init.js') }}"></script>
+    <!-- Apexchart js-->
+    <script src="{{ URL::asset('assets/js/apexcharts.js') }}"></script>
+    <!--Moment js-->
     <script src="{{ URL::asset('assets/plugins/moment/moment.js') }}"></script>
+    <!-- Daterangepicker js-->
     <script src="{{ URL::asset('assets/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
     <script src="{{ URL::asset('assets/js/daterange.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/chart/chart.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/chart/chart.extension.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/echarts/echarts.js') }}"></script>
-    <script src="{{ URL::asset('assets/js/index2.js') }}"></script>
+    <!---jvectormap js-->
+    <script src="{{ URL::asset('assets/plugins/jvectormap/jquery.vmap.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/jvectormap/jquery.vmap.world.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/jvectormap/jquery.vmap.sampledata.js') }}"></script>
+    <!-- Index js-->
+    <script src="{{ URL::asset('assets/js/index1.js') }}"></script>
+    <!-- Data tables js-->
+    <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.bootstrap4.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.bootstrap4.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/jszip.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/pdfmake.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/vfs_fonts.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/js/datatables.js') }}"></script>
+    <!--Counters -->
+    <script src="{{ URL::asset('assets/plugins/counters/counterup.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/counters/waypoints.min.js') }}"></script>
+    <!--Chart js -->
+    <script src="{{ URL::asset('assets/plugins/chart/chart.bundle.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/chart/utils.js') }}"></script>
 @endsection

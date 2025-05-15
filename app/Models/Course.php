@@ -16,6 +16,8 @@ class Course extends Model
         'difficulty',
         'tags',
         'thumbnail',
+        'selling_price',
+        'old_price',
         'category_id',
         'is_published',
     ];
@@ -39,4 +41,10 @@ class Course extends Model
     {
         return $this->morphMany(Assignment::class, 'parent', 'type', 'type_id');
     }
+
+    public function lessons()
+    {
+        return $this->hasManyThrough(Lesson::class, Module::class);
+    }
+
 }

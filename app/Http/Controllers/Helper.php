@@ -23,9 +23,21 @@ class Helper extends Controller
     public static function student_name($user = "")
     {
         $user  = (int) $user;
-        $admin = DB::table('users')->where('id', '=', $user)->where('user_role', 1)->first();
+        $admin = DB::table('users')
+            ->where('id', $user)
+            ->where('user_role', 1)
+            ->first();
 
-        return $user = @$admin->firstname . ' ' . @$admin->lastname;
+        return $admin ? trim($admin->firstname . ' ' . $admin->lastname) : null;
+    }
+
+    public static function student_username($user = "")
+    {
+        $user = (int) $user;
+        return DB::table('users')
+            ->where('id', $user)
+            ->where('user_role', 1)
+            ->value('username');
     }
 
     public static function category_name($user = "")
@@ -78,22 +90,6 @@ class Helper extends Controller
         return $courseName;
     }
 
-
-
-    // public static function quiz_information($course_id,$Lesson_id,$module_id,$type_category)
-    // {
-
-    //     dd($type_category);
-
-    //     $courseName = DB::table('courses')
-    //         ->where('id', $course_id)
-    //         ->value('title');
-
-    //     return $courseName;
-    // }
-
-
-    
     public static function DropMasterData($code_id = "", $selected = "", $id = "", $part = 2, $disabled = 0)
     {
 

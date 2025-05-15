@@ -106,12 +106,9 @@ class LocationController extends Controller
 
         if ($ipStatus == 0) {
             $post->gl_active_status = 1;
-            // AuditTrailController::register('TRACK LINK ACTIVATED', 'ADMIN Username: <b>' . Helper::full_name(Session('LoggedAdmin')) . '</b> Pasword: <b>*******</b>');
 
         } else {
             $post->gl_active_status = 0;
-            // AuditTrailController::register('TRACK LINK DE-ACTIVATED', 'ADMIN Username: <b>' . Helper::full_name(Session('LoggedAdmin')) . '</b> Pasword: <b>*******</b>');
-
         }
         $post->save();
 

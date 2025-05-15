@@ -148,14 +148,15 @@ class UserController extends Controller
         $temp_otp_stored   = DB::table('users')->where('email', $user_id)->value('temp_otp');
         $supplier_username = DB::table('users')->where('email', $user_id)->value('username');
         $userId            = DB::table('users')->where('email', $user_id)->value('id');
+        $userRole          = DB::table('users')->where('email', $user_id)->value('user_role');
 
         if ($new_otp == $temp_otp_stored) {
 
-            $request->session()->put('LoggedAdmin', $userId);
-
-            // $request->session()->put('ACTIVE_MODULE', 'SUPPLIERS');
-
-            // AuditTrailController::register('LOGIN SUCCESSFULL', 'ADMIN Username: <b>' . $supplier_username . '</b> Pasword: <b>*******</b>');
+            if ($userRole != 1) {
+                $request->session()->put('LoggedAdmin', $userId);
+            } else {
+                $request->session()->put('LoggedStudent', $userId);
+            }
 
             DB::table('users')
                 ->where('id', $userId)
@@ -179,26 +180,33 @@ class UserController extends Controller
                 return back()->with('error', 'Email Not, Check Internet or re-register');
             }
 
-            $url = '/';
-
+            $url  = '/';
             $url2 = session()->get('url.intended');
+            $url3 = '/student/dashboard';
 
-            if ($url2 != null) {
+            if ($userRole != 1) {
+                if ($url2 != null) {
+                    return response()->json([
+                        'status'       => true,
+                        'message'      => 'Login successful',
+                        'redirect_url' => $url2,
+                    ]);
+                }
+
                 return response()->json([
                     'status'       => true,
                     'message'      => 'Login successful',
-                    'redirect_url' => $url2,
+                    'redirect_url' => $url,
+                ]);
+            } else {
+                return response()->json([
+                    'status'       => true,
+                    'message'      => 'Login successful',
+                    'redirect_url' => $url3,
                 ]);
             }
 
-            return response()->json([
-                'status'       => true,
-                'message'      => 'Login successful',
-                'redirect_url' => $url,
-            ]);
-
         } else {
-            // AuditTrailController::register('INVALID OTP', 'ADMIN Username: <b>' . $supplier_username . '</b> Pasword: <b>*******</b>');
 
             return response()->json([
                 'status'  => false,
@@ -216,6 +224,17 @@ class UserController extends Controller
     public function userLogout()
     {
         if (session()->has('LoggedAdmin')) {
+            session()->flush();
+            return redirect('/');
+        } else {
+            return redirect('/');
+        }
+        return back();
+    }
+
+    public function studentLogout()
+    {
+        if (session()->has('LoggedStudent')) {
             session()->flush();
             return redirect('/');
         } else {
@@ -315,28 +334,40 @@ class UserController extends Controller
                     }
                 } else {
 
-                    $userId = DB::table('users')->where('email', $request->email)->value('id');
+                    $userId   = DB::table('users')->where('email', $request->email)->value('id');
+                    $userRole = DB::table('users')->where('email', $request->email)->value('user_role');
 
-                    $request->session()->put('LoggedAdmin', $userId);
-                    // $request->session()->put('ACTIVE_MODULE', 'SUPPLIERS');
-                    // AuditTrailController::register('LOGIN SUCCESSFULL', 'ADMIN Username: <b>' . $supplier_username . '</b> Pasword: <b>*******</b>');
-                    $url = '/';
+                    if ($userRole != 1) {
+                        $request->session()->put('LoggedAdmin', $userId);
+                    } else {
+                        $request->session()->put('LoggedStudent', $userId);
+                    }
 
+                    $url  = '/';
                     $url2 = session()->get('url.intended');
+                    $url3 = '/student/dashboard';
 
-                    if ($url2 != null) {
+                    if ($userRole != 1) {
+                        if ($url2 != null) {
+                            return response()->json([
+                                'status'       => true,
+                                'message'      => 'Login successful',
+                                'redirect_url' => $url2,
+                            ]);
+                        }
+
                         return response()->json([
                             'status'       => true,
                             'message'      => 'Login successful',
-                            'redirect_url' => $url2,
+                            'redirect_url' => $url,
+                        ]);
+                    } else {
+                        return response()->json([
+                            'status'       => true,
+                            'message'      => 'Login successful',
+                            'redirect_url' => $url3,
                         ]);
                     }
-
-                    return response()->json([
-                        'status'       => true,
-                        'message'      => 'Login successful',
-                        'redirect_url' => $url,
-                    ]);
                 }
             } else {
 
@@ -675,7 +706,7 @@ class UserController extends Controller
             'email'    => 'required|email',
         ]);
 
-        if ($request->password != null) {
+        if ($request->password != null && $request->confirmPassword != null) {
             $request->validate(
                 [
                     'password' => [
@@ -697,19 +728,41 @@ class UserController extends Controller
             );
         }
 
-        User::updateOrCreate(
-            ['id' => $request->user_id],
-            [
-                'username'    => $request->username,
-                'email'       => $request->email,
-                'password'    => $request->password,
-                'firstname'   => $request->firstname,
-                'lastname'    => $request->lastname,
-                'gender'      => $request->gender,
-                'phonenumber' => $request->phonenumber,
-                'country'     => $request->country,
-            ]);
+        $password = trim($request->password);
 
-        return back()->with('success', 'User account has been updated successfully');
+        if ($request->password != null) {
+            
+            User::updateOrCreate(
+                ['id' => $request->user_id],
+                [
+                    'username'    => $request->username,
+                    'email'       => $request->email,
+                    'password'    => Hash::make($password),
+                    'firstname'   => $request->firstname,
+                    'lastname'    => $request->lastname,
+                    'gender'      => $request->gender,
+                    'phonenumber' => $request->phonenumber,
+                    'country'     => $request->country,
+                ]);
+
+            return back()->with('success', 'User account has been updated successfully');
+
+        } else {
+
+            User::updateOrCreate(
+                ['id' => $request->user_id],
+                [
+                    'username'    => $request->username,
+                    'email'       => $request->email,
+                    'firstname'   => $request->firstname,
+                    'lastname'    => $request->lastname,
+                    'gender'      => $request->gender,
+                    'phonenumber' => $request->phonenumber,
+                    'country'     => $request->country,
+                ]);
+
+            return back()->with('success', 'User account has been updated successfully');
+        }
+
     }
 }

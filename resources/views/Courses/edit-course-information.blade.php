@@ -145,6 +145,24 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Old Price</label>
+                                    <input type="text" class="form-control" id="old_price" placeholder="Course Old Price"
+                                        value="{{ $course->old_price }}">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Selling Price</label>
+                                    <input type="text" class="form-control" id="selling_price"
+                                        placeholder="Course Selling Price" value="{{ $course->selling_price }}">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="card-footer text-right">
                             <a href="javascript:void(0);" class="btn btn-lg btn-primary" id="updateBtn">
                                 <i class="fas fa-check-circle"></i> Update
@@ -194,7 +212,10 @@
                         difficulty: $('#difficulty').val(),
                         category: $('#category').val(),
                         description: $('#description').val(),
+                        selling_price: $('#selling_price').val(),
+                        old_price: $('#old_price').val(),
                         instructor_id: $('#instructor_id').val(),
+
                         tags: $('#tags').val(),
                         _token: "{{ csrf_token() }}"
                     };

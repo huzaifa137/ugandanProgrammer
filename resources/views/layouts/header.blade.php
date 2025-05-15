@@ -69,12 +69,16 @@ use App\Http\Controllers\Helper;
 
                 <div class="dropdown profile-dropdown">
 
-                    <?php
-                    $user = DB::table('users')->where('id', Session('LoggedAdmin'))->first();
-                    ?>
 
                     @php
-                        $user = DB::table('users')->where('id', session('LoggedAdmin'))->first();
+                        $user = null;
+
+                        if (session()->has('LoggedAdmin')) {
+                            $user = DB::table('users')->where('id', session('LoggedAdmin'))->first();
+                        } elseif (session()->has('LoggedStudent')) {
+                            $user = DB::table('users')->where('id', session('LoggedStudent'))->first();
+                        }
+
                         $initial = strtoupper(substr($user->username, 0, 1));
                         $FL = strtoupper(substr($user->firstname, 0, 1));
                         $LL = strtoupper(substr($user->lastname, 0, 1));
