@@ -35,7 +35,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-header">Add question to : <strong> {{ $quiz->title }}</strong></h3>
+                    <h3 class="card-header">Add question to : <strong> &nbsp; {{ $quiz->title }}</strong></h3>
                 </div>
 
                 <div class="form-border">

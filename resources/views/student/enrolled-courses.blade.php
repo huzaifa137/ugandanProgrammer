@@ -46,30 +46,75 @@ $controller = new Controller();
         }
     </style>
     <br> <br>
+    <h3>Enrolled Courses</h3>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
 
-<div class="mb-3 d-flex justify-content-between align-items-end flex-wrap">
-    <div>
-        <label for="course-filter" class="form-label">Filter Courses:</label>
-        <select id="course-filter" class="form-control" style="max-width: 300px;">
-            <option value="all" selected>All Courses</option>
-            <option value="enrolled">Enrolled Courses</option>
-            <option value="not_enrolled">Not Enrolled Courses</option>
-        </select>
-    </div>
+                @foreach ($enrolledCourses as $course)
+                    @php
+                        $courseModuleCount = $course->modules->count();
+                        $courseLessonsCount = $course->modules->flatMap->lessons->count();
+                        $isEnrolled = in_array($course->id, $enrolledCourseIds);
+                    @endphp
 
-    <div>
-        <a href="{{ route('student.cart') }}" class="btn mt-4" style="background-color: #28a745; color: white;">
-            <i class="fas fa-shopping-cart"></i> Proceed to Cart
-        </a>
-    </div>
-</div>
+                    <div class="col-xl-4 col-lg-6 col-sm-6">
+                        <div class="card item-card">
+                            <div class="card-body pb-0">
+                                <div class="text-center">
+                                    <img src="{{ $course->thumbnail ? asset('storage/' . $course->thumbnail) : asset('assets/images/products/default.jpg') }}"
+                                        alt="Course Thumbnail" class="img-fluid w-100">
+                                </div>
+                                <div class="card-body px-0">
+                                    <div class="cardtitle">
+                                        <div>
+                                            @for ($i = 0; $i < 5; $i++)
+                                                <a href="#"><i class="fa fa-star text-yellow fs-16"></i></a>
+                                            @endfor
+                                        </div>
+                                        <a class="shop-title">{{ $course->title }} ({{ $courseLessonsCount }})</a>
+                                        <h5 style="margin-top: 0.2rem; text-align: left !important;color:green;">
+                                            Ugx{{ $course->selling_price }}
+                                        </h5>
+                                    </div>
 
+                                    <div class="cardprice"
+                                        style="display: flex; flex-direction: column; align-items: flex-start; text-align: left !important;">
+                                        <span class="type--strikethrough"
+                                            style="text-align: left !important; margin-bottom: 4px;color:red;">
+                                            Ugx{{ $course->old_price }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
 
-    <div id="courses-container">
-        @include('Courses.partials.courses_grid', [
-            'allCourses' => $allCourses,
-            'enrolledCourseIds' => $enrolledCourseIds,
-        ])
+                            <div class="text-center border-top p-4">
+                                <a href="{{ route('course.details', $course->id) }}"
+                                    class="btn btn-light btn-svgs mt-1 mb-1">
+                                    <i class="fa fa-eye me-1"></i> &nbsp; View Course Details
+                                </a>
+
+                                @if ($isEnrolled)
+                                    <a href="{{ route('lesson.ongoing', $course->id) }}"
+                                        class="btn btn-success btn-svgs mt-1 mb-1">
+                                        <i class="fa fa-book me-1"></i> &nbsp; Resume Learning
+                                    </a>
+                                @else
+                                    <form action="{{ route('cart.add', $course->id) }}" method="POST"
+                                        style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary btn-svgs mt-1 mb-1">
+                                            <i class="fa fa-shopping-cart me-1"></i> Add to Cart
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+
+            </div>
+        </div>
     </div>
 
     </div>

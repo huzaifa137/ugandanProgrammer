@@ -14,31 +14,24 @@
         z-index: 2000 !important;
     }
 
-    /* Optional: Adjust iframe max width for better control */
     .video-container {
         width: 100%;
-        /* Ensure the container doesn't exceed the parent width */
         max-width: 100%;
         margin: 0 auto;
     }
 
-    /* Ensuring iframe is contained within the video container */
     .video-container iframe {
         width: 100%;
         height: 100%;
         border: none;
-        /* Optional: Remove border if you like */
     }
 
-    /* Optional: Making sure iframe ratio remains 16:9 */
     .ratio-16x9 {
         position: relative;
         padding-bottom: 56.25%;
-        /* Aspect Ratio: 16:9 */
         height: 0;
         overflow: hidden;
         max-width: 100%;
-        /* Prevents it from overflowing */
     }
 
     .ratio-16x9 iframe {

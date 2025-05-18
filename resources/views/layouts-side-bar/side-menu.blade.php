@@ -25,7 +25,14 @@
         <li class="slide">
             <a class="side-menu__item" href="{{ url('student/courses-and-lessons') }}">
                 <i class="fa fa-book fa-2x mr-3"></i>
-                Courses & Lessons
+                Course Enrollment
+            </a>
+        </li>
+
+        <li class="slide">
+            <a class="side-menu__item" href="{{ url('student/lessons-and-study') }}">
+                <i class="fa fa-book-open fa-2x mr-3"></i>
+                Lessons & Study
             </a>
         </li>
 

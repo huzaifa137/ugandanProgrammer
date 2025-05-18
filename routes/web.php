@@ -88,7 +88,6 @@ Route::controller(UserController::class)->group(function () {
     Route::get('reload-captcha', 'reload_captcha')->name('reload-captcha');
 });
 
-
 Route::controller(MasterDataController::class)->group(function () {
 
     Route::group(['prefix' => 'master-data'], function () {
@@ -286,7 +285,24 @@ Route::controller(StudentController::class)->group(function () {
             Route::get('/profile', 'studentProfile')->name('student.profile');
             Route::get('/edit-student-profile', 'editStudentProfile');
             Route::get('/courses-and-lessons', 'coursesAndLessons')->name('student.courses.lessons');
+            Route::get('/lessons-and-study', 'lessonsAndStudy')->name('student.lesson.study');
+            Route::get('/cart', 'addCart')->name('student.cart');
+            Route::get('/cart/remove/{id}', 'removeCart')->name('cart.remove');
+            Route::get('/checkout', 'checkout')->name('student.checkout');
+            Route::get('/courses/filter', 'filterCourses')->name('student.courses.filter');
+            Route::get('/course-details/{id}', 'courseDetails')->name('course.details');
+            Route::get('/course-study/{id}', 'courseStudy')->name('course.study');
+            Route::get('/ongoing-lesson/{id}', 'lessonStudying')->name('lesson.ongoing');
+            Route::get('/lesson-details/{id}', 'showLesson')->name('student.lessons.details');
+            Route::get('/show/{quiz}', 'showQuizForm')->name('student.quizzes.show');
 
+            Route::post('/{lesson}/complete', 'lessonComplete')->name('student.lessons.complete');
+            Route::post('/{quiz}/submit', 'submitQuiz')->name('student.quizzes.submit');
+            Route::post('/checkout-process', 'processCheckout')->name('checkout.process');
+            Route::post('/add-to-cart/{id}', 'addToCartAction')->name('student.add.cart');
+            Route::post('/enroll-course-cart-action/{id}', 'enrollCourseCartAction')->name('student.enroll.course.action');
+            Route::post('/cart/update-quantity', 'updateQuantity')->name('cart.updateQuantity');
         });
+
     });
 });
