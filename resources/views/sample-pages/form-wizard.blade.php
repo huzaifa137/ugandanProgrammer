@@ -115,7 +115,7 @@
 													<div data-acc-content>
 														<div class="my-3">
 															<div class="form-group">
-																<label>Name:</label>
+																<label>Name : </label>
 																<input type="text" name="name" class="form-control" />
 															</div>
 															<div class="form-group">

@@ -20,6 +20,7 @@ class Course extends Model
         'old_price',
         'category_id',
         'is_published',
+        'pricing_category',
     ];
 
     // If using JSON for tags, ensure it's casted properly

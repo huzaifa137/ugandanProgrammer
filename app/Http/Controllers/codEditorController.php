@@ -29,20 +29,6 @@ class codEditorController extends Controller
         return view('certificates.preview', compact('course', 'allLessons', 'completedLessons'));
     }
 
-    public function download(Course $course)
-    {
-        $user      = User::find(session('LoggedAdmin'));
-        $total     = $course->lessons()->count();
-        $completed = $user->lessons()->where('course_id', $course->id)->count();
-
-        if ($total !== $completed) {
-            return redirect()->back()->with('error', 'You must complete all lessons to download the certificate.');
-        }
-
-        $pdf = PDF::loadView('certificates.template', ['user' => $user, 'course' => $course]);
-        return $pdf->download($course->slug . '-certificate.pdf');
-    }
-
     public function template(Course $course)
     {
         $user = User::find(session('LoggedAdmin'));

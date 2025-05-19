@@ -35,7 +35,10 @@ class Lesson extends Model
     {
         return $this->belongsToMany(Lesson::class)->withTimestamps();
     }
-    
-    
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 
 }

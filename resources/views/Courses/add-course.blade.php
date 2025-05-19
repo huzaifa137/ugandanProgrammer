@@ -143,6 +143,14 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label for="pricing_category" class="form-label">Pricing</label>
+                                <select class="form-control select2" name="pricing_category" id="pricing_category">
+                                    <option value="1">Paid</option>
+                                    <option value="0">Free</option>
+                                </select>
+                            </div>
+
 
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="is_published" name="is_published">

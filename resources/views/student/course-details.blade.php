@@ -100,7 +100,7 @@ $controller = new Controller();
                 @if ($isEnrolled)
                     <div class="text-lg-right mt-4 mt-lg-0">
                         <a href="{{ route('lesson.ongoing', $course->id) }}" class="btn btn-success btn-svgs mt-1 mb-1">
-                            <i class="fa fa-book me-1"></i> &nbsp; Continue
+                            <i class="fa fa-book me-1"></i> &nbsp; Continue Learning
                         </a>
                     </div>
                 @else

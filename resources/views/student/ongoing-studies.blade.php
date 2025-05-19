@@ -60,15 +60,15 @@ $controller = new Controller();
         }
     </style>
     <div class="row">
+        <div class="col-12 text-center">
+            <h1>{{ $course->title }}</h1>
+        </div>
 
         <div class="col-xl-9 col-lg-8 col-md-12">
-            <!-- Cards Row -->
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-lg-12">
                     <div class="row">
-
                         <div class="col-xl-4 col-lg-4 col-md-12">
-
                             <div class="card toggle-tab" data-target="#modules">
                                 <div class="card-body">
                                     <i class="fas fa-cogs card-custom-icon text-success icon-dropshadow-success"
@@ -84,7 +84,6 @@ $controller = new Controller();
                         </div>
 
                         <div class="col-xl-4 col-lg-4 col-md-12">
-
                             <div class="card toggle-tab" data-target="#lessons">
                                 <div class="card-body">
                                     <i class="fas fa-book-open card-custom-icon text-secondary icon-dropshadow-secondary"
@@ -100,7 +99,6 @@ $controller = new Controller();
                         </div>
 
                         <div class="col-xl-4 col-lg-4 col-md-12">
-
                             <div class="card toggle-tab" data-target="#quizzes">
                                 <div class="card-body">
                                     <i class="fas fa-question-circle card-custom-icon text-primary icon-dropshadow-primary"
@@ -119,20 +117,82 @@ $controller = new Controller();
                 </div>
             </div>
 
-            <!-- Tabbed Content Just Below Cards -->
+
             <div class="tab-content mt-4" id="studyTabsContent">
-                <!-- Modules -->
+
                 <div class="tab-pane fade" id="modules" role="tabpanel">
-                    @foreach ($course->modules as $module)
-                        <div class="card mb-2">
-                            <div class="card-header">
-                                <strong>{{ $module->title }}</strong>
+                    <div class="accordion" id="modulesAccordion">
+                        @foreach ($course->modules as $module)
+                            @php
+                                $totalLessons = $module->lessons->count();
+                                $completedLessons = $module->lessons
+                                    ->filter(function ($lesson) {
+                                        return $lesson->usersCompleted->contains(session('LoggedStudent'));
+                                    })
+                                    ->count();
+
+                                $isModuleComplete = $totalLessons > 0 && $completedLessons === $totalLessons;
+                            @endphp
+
+                            <div class="card mb-2">
+                                <div class="card-header d-flex justify-content-between align-items-center"
+                                    id="heading-{{ $module->id }}">
+                                    <strong>{{ $module->title }}</strong>
+                                    <div class="d-flex gap-2">
+                                        @if ($isModuleComplete)
+                                            <button type="button" class="btn btn-sm btn-success mt-2">
+                                                <i class="fas fa-check-circle"></i> 100% Completed
+                                            </button>
+                                        @else
+                                            <button type="button" class="btn btn-sm btn-danger mt-2">
+                                                <i class="fas fa-times-circle"></i> Not Yet Completed
+                                            </button>
+                                        @endif
+                                        &nbsp;
+                                        <button class="btn btn-sm btn-info mt-2" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapse-{{ $module->id }}" aria-expanded="false"
+                                            aria-controls="collapse-{{ $module->id }}">
+                                            <i class="fas fa-chevron-down"></i> Show Lessons
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div id="collapse-{{ $module->id }}" class="collapse"
+                                    aria-labelledby="heading-{{ $module->id }}" data-bs-parent="#modulesAccordion">
+                                    <div class="card-body">
+                                        <p>{{ $module->description ?? 'No description' }}</p>
+
+                                        @foreach ($module->lessons as $lesson)
+                                            @php
+                                                $isLessonComplete = $lesson->usersCompleted->contains(
+                                                    session('LoggedStudent'),
+                                                );
+                                            @endphp
+
+                                            <div
+                                                class="border rounded p-2 mb-2 d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <strong>{{ $lesson->title }}</strong><br>
+                                                    <small>{{ $lesson->description ?? 'No description' }}</small>
+                                                </div>
+                                                <div>
+                                                    @if ($isLessonComplete)
+                                                        <span class="badge bg-success">
+                                                            <i class="fas fa-check-circle"></i> Completed
+                                                        </span>
+                                                    @else
+                                                        <span class="badge bg-danger">
+                                                            <i class="fas fa-times-circle"></i> Not Completed
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <p>{{ $module->description ?? 'No description' }}</p>
-                            </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
 
                 <!-- Lessons -->
@@ -207,19 +267,44 @@ $controller = new Controller();
 
                 <!-- Quizzes -->
                 <div class="tab-pane fade" id="quizzes" role="tabpanel">
+                    @php $user = \App\Models\User::find(session('LoggedStudent')); @endphp
+
                     @foreach ($course->modules as $module)
                         @foreach ($module->lessons as $lesson)
                             @foreach ($lesson->quizzes as $quiz)
+                                @php
+                                    $hasAttempted = false;
+
+                                    if ($quiz && $user) {
+                                        $hasAttempted = DB::table('quiz_user')
+                                            ->where('quiz_id', $quiz->id)
+                                            ->where('user_id', $user->id)
+                                            ->exists();
+                                    }
+                                @endphp
+
                                 <div class="card mb-2">
-                                    <div class="card-body">
-                                        <strong>{{ $quiz->title }}</strong><br>
-                                        <small>Belongs to Lesson: {{ $lesson->title }}</small>
+                                    <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
+                                        <div>
+                                            <strong>{{ $quiz->title }}</strong><br>
+                                            <small>Belongs to Lesson: {{ $lesson->title }}</small>
+                                        </div>
+
+                                        <div>
+                                            <a href="{{ route('student.quizzes.show', $quiz->id) }}"
+                                                class="btn btn-sm mt-2 {{ $hasAttempted ? 'btn-dark' : 'btn-warning animate-attention' }} retake-quiz-btn">
+                                                <i class="fa fa-pen"></i>
+                                                {{ $hasAttempted ? 'Retake Quiz' : 'Attempt Quiz' }}
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
                         @endforeach
                     @endforeach
                 </div>
+
+
             </div>
         </div>
 
@@ -238,6 +323,8 @@ $controller = new Controller();
         </div>
     </div>
 
+    <!-- Bootstrap JS bundle (with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
 

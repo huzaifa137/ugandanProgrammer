@@ -135,7 +135,7 @@ $(function () {
 
 		const course_thumbnail = $('#course_thumbnail').val().trim();
 		const is_published = $('#is_published').is(':checked');
-
+		
 		let errors = [];
 		if (!course_thumbnail) {
 			errors.push('• Attaching course thumbnail is required');

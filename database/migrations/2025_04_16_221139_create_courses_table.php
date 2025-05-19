@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('is_published')->default(0);
             $table->text('selling_price')->default(0);
             $table->text('old_price')->default(0);
+            $table->integer('pricing_category')->default(1);
             $table->timestamps();
         });
     }

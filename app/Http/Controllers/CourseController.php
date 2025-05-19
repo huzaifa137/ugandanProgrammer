@@ -21,15 +21,16 @@ class CourseController extends Controller
     {
 
         $validated = $request->validate([
-            'title'         => 'required|string|max:255',
-            'description'   => 'required|string',
-            'language'      => 'nullable|string',
-            'difficulty'    => 'required|in:beginner,intermediate,advanced',
-            'tags'          => 'nullable|json',
-            'thumbnail'     => 'nullable|file|image',
-            'category_id'   => 'required',
-            'instructor_id' => 'required',
-            'is_published'  => 'required',
+            'title'            => 'required|string|max:255',
+            'description'      => 'required|string',
+            'language'         => 'nullable|string',
+            'difficulty'       => 'required|in:beginner,intermediate,advanced',
+            'tags'             => 'nullable|json',
+            'thumbnail'        => 'nullable|file|image',
+            'category_id'      => 'required',
+            'instructor_id'    => 'required',
+            'is_published'     => 'required',
+            'pricing_category' => 'required',
         ]);
 
         $thumbnailPath = null;
@@ -38,15 +39,16 @@ class CourseController extends Controller
         }
 
         $course = Course::create([
-            'title'         => $validated['title'],
-            'description'   => $validated['description'],
-            'language'      => $validated['language'],
-            'difficulty'    => $validated['difficulty'],
-            'tags'          => $validated['tags'] ? json_decode($validated['tags']) : [],
-            'thumbnail'     => $thumbnailPath,
-            'category_id'   => $validated['category_id'],
-            'instructor_id' => $validated['instructor_id'],
-            'is_published'  => 1,
+            'title'            => $validated['title'],
+            'description'      => $validated['description'],
+            'language'         => $validated['language'],
+            'difficulty'       => $validated['difficulty'],
+            'tags'             => $validated['tags'] ? json_decode($validated['tags']) : [],
+            'thumbnail'        => $thumbnailPath,
+            'category_id'      => $validated['category_id'],
+            'instructor_id'    => $validated['instructor_id'],
+            'pricing_category' => $validated['pricing_category'],
+            'is_published'     => 1,
         ]);
 
         return response()->json([
@@ -84,10 +86,10 @@ class CourseController extends Controller
 
         $course = Course::find($request->course_id);
 
-        if ($course) {  
-                        
+        if ($course) {
+
             $tags = $request->tags ? array_map('trim', explode(',', $request->tags)) : [];
-            
+
             $course->update([
                 'title'         => $request->title,
                 'description'   => $request->description,

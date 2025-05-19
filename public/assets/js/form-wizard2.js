@@ -116,6 +116,7 @@ $(function () {
 						thumbnail: $('#course_thumbnail')[0].files[0],
 						category_id: $('#category_id').val(),
 						instructor_id: $('#instructor_id').val(),
+						pricing_category: $('#pricing_category').val(),
 						is_published: $('#is_published').is(':checked'),
 					};
 
@@ -128,6 +129,7 @@ $(function () {
 					formData.append('tags', JSON.stringify(courseData.tags));
 					formData.append('thumbnail', courseData.thumbnail);
 					formData.append('category_id', courseData.category_id);
+					formData.append('pricing_category', courseData.pricing_category);
 					formData.append('instructor_id', courseData.instructor_id);
 					formData.append('is_published', $('#is_published').is(':checked'));
 

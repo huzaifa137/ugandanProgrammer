@@ -40,7 +40,7 @@
 
                 <div class="display-name">
                     <span style="line-height:40px;">
-                        Name:
+                        Name :
                         <span class="text-primary font-weight-bold">
                             {{ Helper::student_name(Session('LoggedStudent')) ?: Helper::student_username(Session('LoggedStudent')) }}
                         </span>

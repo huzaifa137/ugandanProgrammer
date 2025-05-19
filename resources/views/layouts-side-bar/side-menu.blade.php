@@ -32,41 +32,17 @@
         <li class="slide">
             <a class="side-menu__item" href="{{ url('student/lessons-and-study') }}">
                 <i class="fa fa-book-open fa-2x mr-3"></i>
-                Lessons & Study
+                My Lessons
             </a>
         </li>
 
         <li class="slide">
-            <a class="side-menu__item" href="/tendering/tender-dashboard">
-                <i class="fas fa-file-contract fa-2x mr-3"></i>
-                Tenders</span></a>
-        </li>
-        <li class="slide">
-            <a class="side-menu__item" href="/supplier/contracts">
-                <i class="fas fa-scroll fa-2x mr-3"></i>
-                Contracts</span></a>
-        </li>
-
-        <li class="slide">
-            <a class="side-menu__item" href="{{ url('/supplier/supplier-framework-contracts') }}">
-                <i class="fas fa-handshake fa-2x mr-3"></i>
-                Framework Contracts
+            <a class="side-menu__item" href="{{ url('student/all-preview') }}">
+                <i class="fa fa-scroll fa-2x mr-3"></i>
+                My Certificates
             </a>
         </li>
 
-        <li class="slide">
-            <a class="side-menu__item" href="{{ url('/supplier/supplier-lpos') }}">
-                <i class="fas fa-file-invoice fa-2x mr-3"></i>
-                LPO
-            </a>
-        </li>
-
-        <li class="slide">
-            <a class="side-menu__item" href="{{ url('/asset-disposal/supplier-dashboard') }}">
-                <i class="fas fa-recycle fa-2x mr-3"></i>
-                Asset Disposal
-            </a>
-        </li>
 
         <li class="slide">
             <a class="side-menu__item" href="#" id="logoutMenu">

@@ -260,7 +260,6 @@ Route::controller(codEditorController::class)->group(function () {
         Route::group(['prefix' => '/certificates'], function () {
 
             Route::get('/{course}/certificate/preview', 'preview')->name('certificate.preview');
-            Route::get('/{course}/certificate/download', 'download')->name('certificate.download');
             Route::get('/certificate/template/{course}', 'template')->name('certificate.template');
             Route::get('/all-preview', 'previewAllCertificates')->name('certificates.all');
 
@@ -295,6 +294,8 @@ Route::controller(StudentController::class)->group(function () {
             Route::get('/ongoing-lesson/{id}', 'lessonStudying')->name('lesson.ongoing');
             Route::get('/lesson-details/{id}', 'showLesson')->name('student.lessons.details');
             Route::get('/show/{quiz}', 'showQuizForm')->name('student.quizzes.show');
+            Route::get('/all-preview', 'previewAllCertificates')->name('certificates.all');
+            Route::get('/{course}/certificate/download', 'download')->name('certificate.download');
 
             Route::post('/{lesson}/complete', 'lessonComplete')->name('student.lessons.complete');
             Route::post('/{quiz}/submit', 'submitQuiz')->name('student.quizzes.submit');

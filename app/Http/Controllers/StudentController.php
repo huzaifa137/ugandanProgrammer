@@ -7,6 +7,7 @@ use App\Models\Quiz;
 use App\Models\User;
 use App\Models\UserQuizAnswer;
 use App\Models\UserQuizAttempt;
+use Barryvdh\DomPDF\Facade\Pdf;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -672,6 +673,63 @@ class StudentController extends Controller
         }
 
         return response()->json(['message' => 'Lesson marked as completed']);
+    }
+
+    public function previewAllCertificates()
+    {
+        $user    = User::find(session('LoggedStudent'));
+        $courses = Course::with('modules.lessons')->get();
+
+        $certificates = [];
+
+        foreach ($courses as $course) {
+            $allLessonIds = \App\Models\Lesson::whereHas('module', function ($query) use ($course) {
+                $query->where('course_id', $course->id);
+            })->pluck('id')->toArray();
+
+            $completedLessonIds = $user->lessons()
+                ->whereIn('lessons.id', $allLessonIds)
+                ->pluck('lessons.id')
+                ->unique()
+                ->toArray();
+
+            $certificates[] = [
+                'course'          => $course,
+                'allLessonsCount' => count($allLessonIds),
+                'completedCount'  => count($completedLessonIds),
+                'isCompleted'     => count($allLessonIds) > 0 && count($completedLessonIds) === count($allLessonIds),
+            ];
+        }
+
+        return view('student.all-preview', [
+            'user'         => $user,
+            'certificates' => $certificates,
+        ]);
+    }
+
+    public function download(Course $course)
+    {
+        $user = User::find(session('LoggedStudent'));
+
+        if (! $user) {
+            return redirect()->back()->with('error', 'User not logged in.');
+        }
+
+        $courseLessonIds = $course->lessons()->pluck('lessons.id');
+
+        $completedLessonIds = $user->lessons()
+            ->whereIn('lessons.id', $courseLessonIds)
+            ->pluck('lessons.id');
+
+        $total     = count($courseLessonIds);
+        $completed = count($completedLessonIds);
+
+        if ($total !== $completed) {
+            return redirect()->back()->with('error', 'You must complete all lessons to download the certificate.');
+        }
+
+        $pdf = PDF::loadView('certificates.pdf', ['user' => $user, 'course' => $course]);
+        return $pdf->download($course->slug . '-certificate.pdf');
     }
 
 }
