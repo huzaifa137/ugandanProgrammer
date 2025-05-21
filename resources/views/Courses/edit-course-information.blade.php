@@ -78,12 +78,26 @@
                     <div class="card-body">
                         <div class="row">
 
-                            <div class="col-sm-12 col-md-12">
+                            <div class="col-sm-6 col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">Instructor First Name</label>
+                                    <label class="form-label">Instructor Name</label>
                                     <td><?php
                                     echo Helper::DropMasterData(config('constants.options.COURSE_INSTRUCTORS'), $course->instructor_id, 'instructor_id', 1);
                                     ?></td>
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="pricing_category" class="form-label">Pricing</label>
+                                    <select class="form-control select2" name="pricing_category" id="pricing_category">
+                                        <option value="{{ $course->pricing_category }}">
+                                            {{ $course->pricing_category == 1 ? 'Paid' : 'Free' }}
+                                        </option>
+                                        <option value="1">Paid</option>
+                                        <option value="0">Free</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -149,8 +163,8 @@
                             <div class="col-sm-6 col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Old Price</label>
-                                    <input type="text" class="form-control" id="old_price" placeholder="Course Old Price"
-                                        value="{{ $course->old_price }}">
+                                    <input type="text" class="form-control" id="old_price"
+                                        placeholder="Course Old Price" value="{{ $course->old_price }}">
                                 </div>
                             </div>
 
@@ -215,6 +229,7 @@
                         selling_price: $('#selling_price').val(),
                         old_price: $('#old_price').val(),
                         instructor_id: $('#instructor_id').val(),
+                        pricing_category: $('#pricing_category').val(),
 
                         tags: $('#tags').val(),
                         _token: "{{ csrf_token() }}"

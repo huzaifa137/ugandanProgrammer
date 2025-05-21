@@ -1,8 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\contactUs;
 use App\Models\Course;
 use DB;
+use Mail;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -91,15 +94,16 @@ class CourseController extends Controller
             $tags = $request->tags ? array_map('trim', explode(',', $request->tags)) : [];
 
             $course->update([
-                'title'         => $request->title,
-                'description'   => $request->description,
-                'language'      => $request->language,
-                'difficulty'    => $request->difficulty,
-                'selling_price' => $request->selling_price,
-                'old_price'     => $request->old_price,
-                'tags'          => $tags,
-                'category_id'   => $request->category,
-                'instructor_id' => $request->instructor_id,
+                'title'            => $request->title,
+                'description'      => $request->description,
+                'language'         => $request->language,
+                'difficulty'       => $request->difficulty,
+                'selling_price'    => $request->selling_price,
+                'old_price'        => $request->old_price,
+                'tags'             => $tags,
+                'category_id'      => $request->category,
+                'instructor_id'    => $request->instructor_id,
+                'pricing_category' => $request->pricing_category,
             ]);
         }
 
@@ -120,4 +124,38 @@ class CourseController extends Controller
             'message' => 'Course deleted successfully!',
         ]);
     }
+
+    public function contactUs()
+    {
+        $messages = contactUs::orderBy('created_at', 'desc')->get();
+
+        return view('Courses.contact-us', compact(['messages']));
+    }
+
+    public function updateMessageResponse(Request $request, $messageId)
+    {
+        $message = contactUs::findOrFail($messageId);
+        $user = user::findOrFail($message->student_id);
+
+        $message->admin_response_message = $request->input('response');
+        $message->admin_response_status  = 1;
+        $message->admin_responded_by     = Session('LoggedAdmin');
+        $message->save();
+        
+        $data = [
+            'email'           => $message->student_email,
+            'username'        => $user->username,
+            'student_message' => $request->input('response'),
+            'title'           => 'U.P STUDENT MESSAGE FROM CONTACT US',
+            'response_status' => $message->admin_response_status == 1 ? 'Responded' : 'Pending',
+        ];
+
+        Mail::send('emails.student-contact-us-response', $data, function ($message) use ($data) {
+            $message->to($data['email'], $data['email'])->subject($data['title']);
+        });
+
+        return redirect()->back()->with('success', 'Response submitted successfully.');
+
+    }
+
 }

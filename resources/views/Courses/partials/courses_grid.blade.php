@@ -38,6 +38,9 @@
                                     <h5 style="margin-top: 0.2rem; text-align: left !important;color:green;">
                                         Ugx{{ $course->selling_price }}
                                     </h5>
+                                    <h5 class="text-info">
+                                        ({{ $course->pricing_category == 1 ? 'Paid' : 'Free Course' }})
+                                    </h5>
                                 </div>
 
                                 <div class="cardprice"

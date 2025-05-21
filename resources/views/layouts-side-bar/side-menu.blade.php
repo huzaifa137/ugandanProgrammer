@@ -43,6 +43,13 @@
             </a>
         </li>
 
+        <li class="slide">
+            <a class="side-menu__item" href="{{ url('student/contact-us') }}">
+                <i class="fa fa-address-book fa-2x mr-3"></i>
+                Contact Us
+            </a>
+        </li>
+
 
         <li class="slide">
             <a class="side-menu__item" href="#" id="logoutMenu">

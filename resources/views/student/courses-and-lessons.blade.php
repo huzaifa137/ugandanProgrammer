@@ -47,22 +47,22 @@ $controller = new Controller();
     </style>
     <br> <br>
 
-<div class="mb-3 d-flex justify-content-between align-items-end flex-wrap">
-    <div>
-        <label for="course-filter" class="form-label">Filter Courses:</label>
-        <select id="course-filter" class="form-control" style="max-width: 300px;">
-            <option value="all" selected>All Courses</option>
-            <option value="enrolled">Enrolled Courses</option>
-            <option value="not_enrolled">Not Enrolled Courses</option>
-        </select>
-    </div>
+    <div class="mb-3 d-flex justify-content-between align-items-end flex-wrap">
+        <div>
+            <label for="course-filter" class="form-label">Filter Courses:</label>
+            <select id="course-filter" class="form-control" style="max-width: 300px;">
+                <option value="all" selected>All Courses</option>
+                <option value="enrolled">Enrolled Courses</option>
+                <option value="not_enrolled">Not Enrolled Courses</option>
+            </select>
+        </div>
 
-    <div>
-        <a href="{{ route('student.cart') }}" class="btn mt-4" style="background-color: #28a745; color: white;">
-            <i class="fas fa-shopping-cart"></i> Proceed to Cart
-        </a>
+        <div>
+            <a href="{{ route('student.cart') }}" class="btn mt-4" style="background-color: #28a745; color: white;">
+                <i class="fas fa-shopping-cart"></i> Proceed to Cart
+            </a>
+        </div>
     </div>
-</div>
 
 
     <div id="courses-container">

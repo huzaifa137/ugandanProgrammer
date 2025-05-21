@@ -8,7 +8,6 @@
         <nav class="horizontalMenu clearfix">
             <ul class="horizontalMenu-list">
 
-                <!-- Dashboard -->
                 <li aria-haspopup="true">
                     <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
                         <i class="fas fa-file-alt hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
@@ -38,7 +37,6 @@
                     </ul>
                 </li>
 
-                <!-- Users Section -->
                 <li aria-haspopup="true">
                     <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
                         <i class="fas fa-users hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
@@ -50,32 +48,24 @@
                     </ul>
                 </li>
 
-                <!-- Reports Section -->
                 <li aria-haspopup="true">
                     <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
-                        <!-- FontAwesome Icon for Reports -->
                         <i class="fas fa-chart-bar hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
-                        Reports <i class="fa fa-angle-down horizontal-icon"></i>
+                        Contact Us <i class="fa fa-angle-down horizontal-icon"></i>
                     </a>
                     <ul class="sub-menu">
-                        <li><a href="{{ url('/audit-trail/today') }}">Activity Reports</a></li>
-                        {{-- <li><a href="{{ url('/' . ($page = 'device-reports')) }}">Device Reports</a></li> --}}
+                        <li><a href="{{ url('/courses/contact-us') }}">Messages</a></li>
                     </ul>
                 </li>
 
-                <!-- Settings Section -->
                 <li aria-haspopup="true">
                     <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
-                        <!-- FontAwesome Icon for Settings -->
                         <i class="fas fa-sliders-h hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
                         Settings <i class="fa fa-angle-down horizontal-icon"></i>
                     </a>
                     <ul class="sub-menu">
-                        {{-- <li><a href="{{ url('/' . ($page = 'general-settings')) }}">General Settings</a></li>
-                        <li><a href="{{ url('/' . ($page = 'app-settings')) }}">App Settings</a></li> --}}
                         <li><a href="{{ url('master-data/master-code-list') }}">Master Code</a></li>
                         <li><a href="{{ url('master-data/master-code-to-data') }}">Master Data</a></li>
-                        {{-- <li><a href="{{ url('/' . ($page = 'notification-settings')) }}">Notification Settings</a></li> --}}
                     </ul>
                 </li>
 

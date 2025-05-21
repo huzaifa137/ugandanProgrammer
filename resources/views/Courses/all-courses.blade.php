@@ -80,7 +80,7 @@
                                         <td>
                                             <a href="{{ url('/courses/edit-course-information', $course->id) }}"
                                                 class="btn btn-sm btn-secondary">
-                                                <i class="fas fa-eye"></i> <i class="fas fa-edit"></i>
+                                                <i class="fas fa-edit"></i>
                                                 Edit</a>
                                         </td>
 

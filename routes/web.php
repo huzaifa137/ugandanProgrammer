@@ -161,13 +161,14 @@ Route::controller(CourseController::class)->group(function () {
             Route::post('/store-course', 'storeCourse')->name('store.course');
             Route::get('/course-information/{course}', 'courseInformation')->name('courses.show');
             Route::get('/edit-course-information/{course}', 'editcourseInformation')->name('edit.courses.show');
-
             Route::get('/course-module', 'courseModule')->name('courses.module');
             Route::get('/add-course-module', 'addCourseModule')->name('all.courses.module');
+            Route::get('/contact-us', 'contactUs')->name('contact.us');
 
             Route::delete('/delete-course/{course}', 'deletecourseInformation')->name('delete.course');
             Route::delete('/delete-module/{id}', 'deleteModuleInformation')->name('delete.course.module');
 
+            Route::post('/admin/messages/{id}/response', 'updateMessageResponse')->name('admin.updateMessageResponse');
             Route::post('/update-course-information', 'updateCourseInformation')->name('update.course.information');
             Route::post('/save-course-module', 'saveCourseModule')->name('save.course.module');
             Route::put('/update-module/{id}', 'updateModule')->name('update.course.module');
@@ -296,7 +297,9 @@ Route::controller(StudentController::class)->group(function () {
             Route::get('/show/{quiz}', 'showQuizForm')->name('student.quizzes.show');
             Route::get('/all-preview', 'previewAllCertificates')->name('certificates.all');
             Route::get('/{course}/certificate/download', 'download')->name('certificate.download');
+            Route::get('/contact-us', 'contactUs')->name('contact.us');
 
+            Route::post('/submit-message', 'submitMesage')->name('student.submit.message');
             Route::post('/{lesson}/complete', 'lessonComplete')->name('student.lessons.complete');
             Route::post('/{quiz}/submit', 'submitQuiz')->name('student.quizzes.submit');
             Route::post('/checkout-process', 'processCheckout')->name('checkout.process');

@@ -93,7 +93,7 @@
                     <div class="row">
                         <div class="col-sm-12 col-md-12">
                             <div class="form-group">
-                                <label class="form-label">Instructor First Name</label>
+                                <label class="form-label">Instructor Name</label>
                                 <input type="text" class="form-control"
                                     value="{{ Helper::item_md_name($course->instructor_id) ?? 'N/A' }}" readonly>
                             </div>

@@ -80,7 +80,7 @@ $controller = new Controller();
                                     <strong> UGX {{ number_format($discount ?? 0) }}</strong>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between">
-                                    <span>VAT (18%)</span>
+                                    <span>VAT (0)</span>
                                     <strong>UGX {{ number_format($vat) }}</strong>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between font-weight-bold">
@@ -95,7 +95,8 @@ $controller = new Controller();
 
                         <div class="mt-4">
                             <a href="#" id="proceed-to-payment-btn" class="btn btn-primary btn-block">
-                                <i class="fas fa-credit-card"></i> Proceed to Payment
+                                {{-- <i class="fas fa-credit-card"></i> Proceed to Payment --}}
+                                <i class="fas fa-credit-card"></i> Proceed to Enroll
                             </a>
 
                             <form id="checkout-process-form" method="POST" action="{{ route('checkout.process') }}"
@@ -118,14 +119,28 @@ $controller = new Controller();
 @endsection
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
         $('#proceed-to-payment-btn').on('click', function(e) {
             e.preventDefault();
-            $('#checkout-process-form').submit();
+
+            let isAllFree = {{ $isAllFree ? 'true' : 'false' }};
+
+            if (isAllFree) {
+                $('#checkout-process-form').submit();
+            } else {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Payment Required',
+                    html: 'You can only enroll in free courses for now.<br>For paid courses, please contact the admin on <br><br> Whatsapp : <strong>0702 08 22 09</strong>',
+                    confirmButtonText: 'Okay'
+                });
+            }
         });
     });
 </script>
+
 
 @section('js')
     <!-- ECharts js -->

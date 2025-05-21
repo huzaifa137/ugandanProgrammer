@@ -48,4 +48,8 @@ class Course extends Model
         return $this->hasManyThrough(Lesson::class, Module::class);
     }
 
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'enrollments', 'course_id', 'user_id');
+    }
 }

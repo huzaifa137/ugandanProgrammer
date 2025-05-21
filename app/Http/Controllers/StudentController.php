@@ -1,15 +1,19 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\contactUs;
 use App\Models\Course;
 use App\Models\Lesson;
+use App\Models\Module;
 use App\Models\Quiz;
+use App\Models\Student;
 use App\Models\User;
 use App\Models\UserQuizAnswer;
 use App\Models\UserQuizAttempt;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Mail;
@@ -193,9 +197,39 @@ class StudentController extends Controller
         }
     }
 
-    public function studentDashboard(Request $request)
+    public function studentDashboard()
     {
-        return view('student.dashboard');
+        $studentId = session('LoggedStudent');
+
+        $coursesCount = DB::table('enrollments')
+            ->where('user_id', $studentId)
+            ->count();
+
+        $moduleIds = Module::whereHas('course.students', function ($q) use ($studentId) {
+            $q->where('users.id', $studentId);
+        })->pluck('id');
+
+        $modulesCount = $moduleIds->count();
+
+        $lessonIds    = Lesson::whereIn('module_id', $moduleIds)->pluck('id');
+        $totalLessons = $lessonIds->count();
+
+        $completedLessons = DB::table('lesson_user')
+            ->where('user_id', $studentId)
+            ->whereIn('lesson_id', $lessonIds)
+            ->count();
+
+        $quizzesTaken  = DB::table('quiz_user')->where('user_id', $studentId)->count();
+        $quizzesPassed = DB::table('quiz_user')->where('user_id', $studentId)->where('score', '>=', 50)->count();
+
+
+        $student = user::find($studentId);
+
+        return view('student.dashboard', compact(
+            'coursesCount', 'modulesCount', 'totalLessons',
+            'completedLessons', 'quizzesTaken', 'quizzesPassed',
+            'student'
+        ));
     }
 
     public function studentProfile(Request $request)
@@ -278,6 +312,36 @@ class StudentController extends Controller
         return redirect()->back()->with('error', 'Item not found in cart.');
     }
 
+    // public function checkout()
+    // {
+    //     $cart = session()->get('cart', []);
+
+    //     if (empty($cart)) {
+    //         return redirect()->route('student.cart')->with('error', 'Your cart is empty.');
+    //     }
+
+    //     $subtotal = 0;
+
+    //     foreach ($cart as $item) {
+
+    //         $courseId = $item['course_id'] ?? $item['id'];
+    //         $course   = \App\Models\Course::find($courseId);
+
+    //         if ($course && $course->pricing_category == 0) {
+    //             continue;
+    //         }
+
+    //         $price = (int) str_replace(',', '', $item['price']);
+    //         $subtotal += $price * $item['quantity'];
+    //     }
+
+    //     $discount = 0;
+    //     $vat      = ($subtotal - $discount) * 0;
+    //     $total    = $subtotal - $discount + $vat;
+
+    //     return view('student.checkout', compact('cart', 'subtotal', 'discount', 'vat', 'total'));
+    // }
+
     public function checkout()
     {
         $cart = session()->get('cart', []);
@@ -286,19 +350,28 @@ class StudentController extends Controller
             return redirect()->route('student.cart')->with('error', 'Your cart is empty.');
         }
 
-        $subtotal = 0;
+        $subtotal  = 0;
+        $isAllFree = true;
+
         foreach ($cart as $item) {
+            $courseId = $item['course_id'] ?? $item['id'];
+            $course   = \App\Models\Course::find($courseId);
+
+            if ($course && $course->pricing_category == 0) {
+                continue;
+            }
+
+            $isAllFree = false;
+
             $price = (int) str_replace(',', '', $item['price']);
             $subtotal += $price * $item['quantity'];
         }
 
         $discount = 0;
+        $vat      = ($subtotal - $discount) * 0;
+        $total    = $subtotal - $discount + $vat;
 
-        $vat = ($subtotal - $discount) * 0;
-
-        $total = $subtotal - $discount + $vat;
-
-        return view('student.checkout', compact('cart', 'subtotal', 'discount', 'vat', 'total'));
+        return view('student.checkout', compact('cart', 'subtotal', 'discount', 'vat', 'total', 'isAllFree'));
     }
 
     public function processCheckout(Request $request)
@@ -732,4 +805,44 @@ class StudentController extends Controller
         return $pdf->download($course->slug . '-certificate.pdf');
     }
 
+    public function contactUs()
+    {
+        $studentEmail = DB::table('users')->where('id', Session('LoggedStudent'))->value('email');
+        $messages     = contactUs::orderBy('created_at', 'desc')->where('student_id', Session('LoggedStudent'))->get();
+
+        return view('student.contact-us', compact(['studentEmail', 'messages']));
+    }
+
+    public function submitMesage(Request $request)
+    {
+
+        contactUs::create([
+            'student_email'          => $request->studentEmail,
+            'student_subject'        => $request->subject,
+            'student_message'        => $request->message,
+            'student_id'             => Session('LoggedStudent'),
+            'admin_response_status'  => 0,
+            'admin_response_message' => '',
+            'admin_responded_by'     => null,
+            'date_added'             => Carbon::now()->toDateTimeString(),
+        ]);
+
+        $studentInformation = user::find(Session('LoggedStudent'));
+
+        $data = [
+            'email'           => $studentInformation->email,
+            'username'        => $studentInformation->username,
+            'student_message' => $request->message,
+            'title'           => 'U.P STUDENT MESSAGE FROM CONTACT US',
+        ];
+
+        Mail::send('emails.student-contact-us', $data, function ($message) use ($data) {
+            $message->to($data['email'], $data['email'])->subject($data['title']);
+        });
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Your message has been submitted.',
+        ]);
+    }
 }

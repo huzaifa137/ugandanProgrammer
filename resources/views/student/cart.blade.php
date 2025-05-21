@@ -31,7 +31,7 @@ $controller = new Controller();
                                 <tr>
                                     <th>Course Name</th>
                                     <th>Quantity</th>
-                                    <th>Unit Price</th>
+                                    <th>Course Price</th>
                                     <th>Sub Total</th>
                                     <th class="w-5"></th>
                                 </tr>
@@ -62,9 +62,20 @@ $controller = new Controller();
                                                 data-price="{{ (int) str_replace(',', '', $item['price']) }}">{{ $item['price'] }}</span>
                                         </td>
 
-                                        <td>UGX <span class="subtotal">
-                                                {{ number_format((int) str_replace(',', '', $item['price']) * $item['quantity']) }}
-                                            </span></td>
+                                        <td>
+
+                                            @php
+                                                $course = DB::table('courses')->where('id', $item['id'])->first();
+                                            @endphp
+
+                                            @if ($course->pricing_category == 0)
+                                                Free
+                                            @else
+                                                UGX <span class="subtotal">
+                                                    {{ number_format((int) str_replace(',', '', $item['price']) * $item['quantity']) }}
+                                                </span>
+                                            @endif
+                                        </td>
 
                                         <td class="text-center">
                                             <a href="{{ route('cart.remove', ['id' => $item['id']]) }}" class="remove_cart"

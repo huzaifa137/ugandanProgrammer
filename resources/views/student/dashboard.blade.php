@@ -12,17 +12,135 @@ $controller = new Controller();
     <!--Daterangepicker css-->
     <link href="{{ URL::asset('assets/plugins/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet" />
 @endsection
-@section('page-header')
-    <!--Page header-->
 
-    <!--End Page header-->
-@endsection
 @section('content')
+    <!-- Student Dashboard -->
+    <div class="side-app">
+
+        <div class="page-header">
+            <h1 class="page-title">Welcome, {{ $student->name }}</h1>
+        </div>
+
+        <div class="row">
+            <!-- Summary Cards -->
+            <div class="col-sm-6 col-xl-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <h5 class="card-title">Courses Enrolled</h5>
+                        <h2>{{ $coursesCount }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="card text-white bg-secondary">
+                    <div class="card-body">
+                        <h5 class="card-title">Modules</h5>
+                        <h2>{{ $modulesCount }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <h5 class="card-title">Lessons Completed</h5>
+                        <h2>{{ $completedLessons }}/{{ $totalLessons }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <h5 class="card-title">Quizzes Passed</h5>
+                        <h2>{{ $quizzesPassed }}/{{ $quizzesTaken }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row">
+            <!-- Pie Chart for Lessons -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Lesson Completion</div>
+                    <div class="card-body">
+                        <div id="lessonsPieChart" style="height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bar Chart for Assignments -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Assignments</div>
+                    <div class="card-body">
+                        <div id="assignmentsBarChart" style="height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     </div>
     </div>
     </div>
 @endsection
 @section('js')
+    <script>
+        var lessonsChart = echarts.init(document.getElementById('lessonsPieChart'));
+        var lessonsOption = {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                top: '5%',
+                left: 'center'
+            },
+            series: [{
+                name: 'Lessons',
+                type: 'pie',
+                radius: '50%',
+                data: [{
+                        value: {{ $completedLessons }},
+                        name: 'Completed'
+                    },
+                    {
+                        value: {{ $totalLessons - $completedLessons }},
+                        name: 'Remaining'
+                    }
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }]
+        };
+        lessonsChart.setOption(lessonsOption);
+
+        var assignmentsChart = echarts.init(document.getElementById('assignmentsBarChart'));
+        var assignmentsOption = {
+            xAxis: {
+                type: 'category',
+                data: ['Total', 'Submitted', 'Pending']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: [{{ $quizzesTaken }}, {{ $quizzesPassed }},
+                    {{ $quizzesTaken - $quizzesPassed }}
+                ],
+                type: 'bar',
+                color: '#007bff'
+            }]
+        };
+        assignmentsChart.setOption(assignmentsOption);
+    </script>
+
     <!-- ECharts js -->
     <script src="{{ URL::asset('assets/plugins/echarts/echarts.js') }}"></script>
     <!-- Peitychart js-->
