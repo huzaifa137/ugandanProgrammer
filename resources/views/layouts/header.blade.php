@@ -4,21 +4,18 @@ use App\Http\Controllers\Helper;
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!--app header-->
+
 <div class="app-header header top-header">
     <div class="container">
         <div class="d-flex">
             <a class="header-brand text-left" href="{{ url('/') }}">
-                <img src="{{ URL::asset('assets/images/brand/logo.png') }}" class="header-brand-img desktop-lgo"
-                    alt="UP logo">
-                <img src="{{ URL::asset('assets/images/brand/logo1.png') }}" class="header-brand-img dark-logo"
-                    alt="UP logo">
-                <img src="{{ URL::asset('assets/images/brand/favicon.png') }}" class="header-brand-img mobile-logo"
-                    alt="UP logo">
-                <img src="{{ URL::asset('assets/images/brand/favicon1.png') }}" class="header-brand-img darkmobile-logo"
-                    alt="UP logo">
+                <div class="logo-wrapper" style="width: 200px; height: 70px; overflow: hidden;">
+                    <img src="{{ URL::asset('assets/images/brand/logo.png') }}" class="header-brand-img desktop-lgo"
+                        alt="UP logo" style="width: 100%; height: 100%; object-fit:contain;">
+                </div>
             </a>
-            <a id="horizontal-navtoggle" class="animated-arrow hor-toggle"><span></span></a><!-- sidebar-toggle-->
+
+            <a id="horizontal-navtoggle" class="animated-arrow hor-toggle"><span></span></a>
 
             <div class="d-flex order-lg-2 ml-auto">
                 <a href="#" data-toggle="search" class="nav-link nav-link-lg d-md-none navsearch">

@@ -6,7 +6,6 @@ use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Module;
 use App\Models\Quiz;
-use App\Models\Student;
 use App\Models\User;
 use App\Models\UserQuizAnswer;
 use App\Models\UserQuizAttempt;
@@ -222,14 +221,59 @@ class StudentController extends Controller
         $quizzesTaken  = DB::table('quiz_user')->where('user_id', $studentId)->count();
         $quizzesPassed = DB::table('quiz_user')->where('user_id', $studentId)->where('score', '>=', 50)->count();
 
+        $student = User::find($studentId);
 
-        $student = user::find($studentId);
+        $totalCourses = \App\Models\Course::count();
+
+        $enrolledCourses = \App\Models\Enrollment::where('user_id', $studentId)
+            ->with('course.modules.lessons.usersCompleted')
+            ->get();
+
+        $chartData      = [];
+        $courseProgress = [];
+
+        foreach ($enrolledCourses as $enrollment) {
+            $course = $enrollment->course;
+
+            $allLessons         = $course->modules->flatMap->lessons;
+            $totalCourseLessons = $allLessons->count();
+
+            $completedCount = $allLessons->filter(function ($lesson) use ($studentId) {
+                return $lesson->usersCompleted->contains($studentId);
+            })->count();
+
+            $percentage  = $totalCourseLessons > 0 ? round(($completedCount / $totalCourseLessons) * 100) : 0;
+            $isCompleted = $percentage >= 100; // ✅ Fix here
+
+            $chartData[] = [$course->title, $percentage];
+
+            $courseProgress[] = [
+                'title'       => $course->title,
+                'percentage'  => $percentage,
+                'isCompleted' => $isCompleted,
+                'course'      => $course,
+            ];
+        }
+
+        $enrolledCourseCount = count($chartData);
+        $notEnrolled         = $totalCourses - $enrolledCourseCount;
+
+        $remainingPercent = 100 - collect($chartData)->sum(function ($item) {
+            return $item[1];
+        });
+
+        if ($remainingPercent > 0) {
+            $chartData[] = ['Not Enrolled', $remainingPercent];
+        }
 
         return view('student.dashboard', compact(
             'coursesCount', 'modulesCount', 'totalLessons',
             'completedLessons', 'quizzesTaken', 'quizzesPassed',
             'student'
-        ));
+        ))->with([
+            'chartData'      => $chartData,
+            'courseProgress' => $courseProgress,
+        ]);
     }
 
     public function studentProfile(Request $request)

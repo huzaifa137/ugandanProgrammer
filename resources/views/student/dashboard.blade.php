@@ -18,69 +18,243 @@ $controller = new Controller();
     <div class="side-app">
 
         <div class="page-header">
-            <h1 class="page-title">Welcome, {{ $student->name }}</h1>
+            <h1 class="page-title">
+                Welcome,
+                @if (!empty($student->firstname) && !empty($student->lastname))
+                    {{ $student->firstname }} {{ $student->lastname }}
+                @else
+                    {{ $student->username }}
+                @endif
+            </h1>
         </div>
+
+        <!-- Include Bootstrap Icons -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+        <style>
+            .dashboard-card {
+                position: relative;
+                overflow: hidden;
+                border-radius: 0.75rem;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                min-height: 120px;
+            }
+
+            .dashboard-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            }
+
+            .dashboard-icon {
+                font-size: 1.75rem;
+                padding: 0.5rem;
+                border-radius: 0.5rem;
+                background: rgba(255, 255, 255, 0.15);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .card-overlay {
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent 70%);
+                transform: rotate(45deg);
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            .dashboard-card .card-body {
+                position: relative;
+                z-index: 2;
+                padding: 1rem 1.25rem;
+            }
+
+            .card-metric {
+                font-weight: 600;
+                font-size: 1.5rem;
+                line-height: 1.2;
+            }
+
+            .label-sub {
+                font-size: 0.8rem;
+                opacity: 0.85;
+                margin-top: 0.25rem;
+            }
+
+            .card-title {
+                font-size: 0.9rem;
+                margin-bottom: 0.25rem;
+            }
+
+            #chart-pie2 {
+                height: 400px;
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+        </style>
+        <div class="row g-3">
+
+            <!-- Courses Enrolled -->
+            <div class="col-sm-6 col-xl-3">
+                <div class="card dashboard-card text-white" style="background: linear-gradient(135deg, #1e3c72, #2a5298);">
+                    <div class="card-overlay"></div>
+                    <div class="card-body d-flex align-items-center">
+                        <div class="dashboard-icon me-3">
+                            <i class="bi bi-mortarboard-fill"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">&nbsp;&nbsp;Courses &nbsp;&nbsp;Enrolled</div>
+                            <div class="card-metric">&nbsp;&nbsp;{{ $coursesCount }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modules -->
+            <div class="col-sm-6 col-xl-3">
+                <div class="card dashboard-card text-white" style="background: linear-gradient(135deg, #4e54c8, #8f94fb);">
+                    <div class="card-overlay"></div>
+                    <div class="card-body d-flex align-items-center">
+                        <div class="dashboard-icon me-3">
+                            <i class="bi bi-layers-fill"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">&nbsp;&nbsp;Modules</div>
+                            <div class="card-metric">&nbsp;&nbsp;{{ $modulesCount }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lessons Completed -->
+            <div class="col-sm-6 col-xl-3">
+                <div class="card dashboard-card text-white" style="background: linear-gradient(135deg, #11998e, #38ef7d);">
+                    <div class="card-overlay"></div>
+                    <div class="card-body d-flex align-items-center">
+                        <div class="dashboard-icon me-3">
+                            <i class="bi bi-bookmark-check-fill"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">&nbsp;&nbsp;Lessons &nbsp;&nbsp;Completed</div>
+                            <div class="card-metric">&nbsp;&nbsp;{{ $completedLessons }}/{{ $totalLessons }}</div>
+                            <div class="label-sub">
+                                &nbsp;&nbsp;Progress :
+                                @if ($totalLessons > 0)
+                                    {{ round(($completedLessons / $totalLessons) * 100, 1) }}%
+                                @else
+                                    0%
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quizzes Passed -->
+            <div class="col-sm-6 col-xl-3">
+                <div class="card dashboard-card text-dark" style="background: linear-gradient(135deg, #f7971e, #ffd200);">
+                    <div class="card-overlay"></div>
+                    <div class="card-body d-flex align-items-center">
+                        <div class="dashboard-icon me-3 bg-light text-dark">
+                            <i class="bi bi-award-fill"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">&nbsp;&nbsp;Quizzes Done</div>
+                            <div class="card-metric">&nbsp;&nbsp;{{ $quizzesTaken }}</div>
+                            <div class="label-sub">
+                                &nbsp;&nbsp;Performance : 100%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div class="row">
-            <!-- Summary Cards -->
-            <div class="col-sm-6 col-xl-3">
-                <div class="card text-white bg-primary">
-                    <div class="card-body">
-                        <h5 class="card-title">Courses Enrolled</h5>
-                        <h2>{{ $coursesCount }}</h2>
+            <div class="col-lg-12 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Enrolled Courses Status</h3>
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-xl-3">
-                <div class="card text-white bg-secondary">
                     <div class="card-body">
-                        <h5 class="card-title">Modules</h5>
-                        <h2>{{ $modulesCount }}</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-xl-3">
-                <div class="card text-white bg-success">
-                    <div class="card-body">
-                        <h5 class="card-title">Lessons Completed</h5>
-                        <h2>{{ $completedLessons }}/{{ $totalLessons }}</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-xl-3">
-                <div class="card text-white bg-warning">
-                    <div class="card-body">
-                        <h5 class="card-title">Quizzes Passed</h5>
-                        <h2>{{ $quizzesPassed }}/{{ $quizzesTaken }}</h2>
+                        <div id="chart-pie2" class="chartsh"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Charts Row -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.css" rel="stylesheet">
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var chart = c3.generate({
+                    bindto: '#chart-pie2',
+                    data: {
+                        columns: @json($chartData),
+                        type: 'pie',
+                        colors: {
+                            'Enrolled': '#5ed94c',
+                            'Not Enrolled': '#f72d66'
+                        }
+                    },
+                    legend: {
+                        show: true
+                    },
+                    padding: {
+                        top: 0,
+                        bottom: 0
+                    }
+                });
+            });
+        </script>
+
         <div class="row">
-            <!-- Pie Chart for Lessons -->
-            <div class="col-md-6">
+            <div class="col-lg-12 col-md-12">
                 <div class="card">
-                    <div class="card-header">Lesson Completion</div>
                     <div class="card-body">
-                        <div id="lessonsPieChart" style="height: 300px;"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bar Chart for Assignments -->
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">Assignments</div>
-                    <div class="card-body">
-                        <div id="assignmentsBarChart" style="height: 300px;"></div>
+                        <h4>Course Certifications</h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 1px;">No</th>
+                                    <th>Course Name</th>
+                                    <th>Completion</th>
+                                    <th>Certificate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($courseProgress as $key => $data)
+                                    <tr>
+                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ $data['title'] }}</td>
+                                        <td>{{ $data['percentage'] }}%</td>
+                                        <td>
+                                            @if ($data['isCompleted'])
+                                                <a href="{{ route('certificate.download', $data['course']->id) }}"
+                                                    class="btn btn-success btn-sm">
+                                                    <i class="fa fa-download me-1"></i> Download Certificate
+                                                </a>
+                                            @else
+                                                <button class="btn btn-secondary btn-sm" disabled>
+                                                    <i class="fa fa-lock me-1"></i> Incomplete
+                                                </button>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
 
     </div>
     </div>
@@ -140,6 +314,11 @@ $controller = new Controller();
         };
         assignmentsChart.setOption(assignmentsOption);
     </script>
+
+    <!-- c3.js Charts js-->
+    <script src="{{ URL::asset('assets/plugins/charts-c3/d3.v5.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/charts-c3/c3-chart.js') }}"></script>
+    <script src="{{ URL::asset('assets/js/charts.js') }}"></script>
 
     <!-- ECharts js -->
     <script src="{{ URL::asset('assets/plugins/echarts/echarts.js') }}"></script>

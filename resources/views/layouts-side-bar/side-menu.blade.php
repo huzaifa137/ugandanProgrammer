@@ -65,16 +65,17 @@
 
                 Swal.fire({
                     title: "Are you sure?",
-                    text: "Do you really want to log out?",
+                    text: "Do you really want to Logout ?",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonText: "Yes, log out",
+                    confirmButtonText: "Yes, Logout",
                     cancelButtonText: "Cancel",
                 }).then((result) => {
-                    // if (result.isConfirmed) {
-                    //     window.location.href = "/supplier-logout";
-                    // }
+                    if (result.isConfirmed) {
+                        window.location.href = '{{ route('student-logout') }}';
+                    }
                 });
+
             });
         </script>
 
