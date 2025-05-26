@@ -7,8 +7,8 @@
             <div class="page-content">
                 <div class="page-single-content">
                     <div class="card-body text-white py-5 px-8 text-center">
-                        <img src="{{ URL::asset('assets/images/png/3.png') }}" alt="img"
-                            class="text-center supplier-logo">
+                        <a href="{{ url('/users/home-page') }}"><img src="{{ URL::asset('assets/images/png/3.png') }}"
+                                alt="img" class="text-center supplier-logo"></a>
                     </div>
                 </div>
             </div>
@@ -91,7 +91,7 @@
         function confirmSubmission(button) {
             const emailInput = document.querySelector("input[name='email']");
 
-        
+
             if (!emailInput.value.trim()) {
 
                 $('#student_username').removeClass('is-invalid').removeClass('is-valid');

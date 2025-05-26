@@ -23,8 +23,9 @@ class AdminAuth
         if (! session()->has('LoggedAdmin') &&
             ($request->path() != 'users/login' &&
                 $request->path() != 'users/register' &&
+                $request->path() != 'users/home-page' &&
                 $request->path() != 'users/user-otp' &&
-                $request->path() != 'users/terms-and-conditions' &&
+                ! $request->routeIs('auth-user-check') &&
                 ! $request->routeIs('auth-user-check') &&
                 ! $request->routeIs('regenerate-otp') &&
                 ! $request->routeIs('password/reset') &&
@@ -32,16 +33,18 @@ class AdminAuth
         ) {
             Session::put('url.intended', $request->url());
 
-            return redirect('/users/login')->with('fail', 'You must be logged in');
+            // return redirect('/users/login')->with('fail', 'You must be logged in');
+            return redirect('/users/home-page')->with('fail', 'You must be logged in');
+
         }
 
         if (session()->has('LoggedStudent') &&
-            ($request->path() == 'users/login' || $request->path() == 'users/register' || $request->routeIs('auth-user-check'))) {
+            ($request->path() == 'users/login' || $request->path() == 'users/register' || $request->path() == 'users/home-page' || $request->routeIs('auth-user-check'))) {
             return redirect('/student/dashboard');
         }
 
-        if (session()->has('LoggedAdmin') && 
-            ($request->path() == 'users/login' || $request->path() == 'users/register' || $request->routeIs('auth-user-check'))) {
+        if (session()->has('LoggedAdmin') &&
+            ($request->path() == 'users/login' || $request->path() == 'users/register' || $request->path() == 'users/home-page' || $request->routeIs('auth-user-check'))) {
             return redirect('/');
         }
 

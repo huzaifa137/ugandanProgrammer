@@ -889,4 +889,62 @@ class StudentController extends Controller
             'message' => 'Your message has been submitted.',
         ]);
     }
+
+    public function contactMessageInformation(Request $request)
+    {
+
+        $studentInformation = user::find(Session('LoggedStudent'));
+
+        $data = [
+            'email'           => $request->email,
+            'username'        => $request->name,
+            'phonenumber'     => $request->phonenumber,
+            'subject'         => $request->subject,
+            'student_message' => $request->message,
+            'title'           => 'U.P HOMEPAGE MESSAGE FROM USER',
+        ];
+
+        Mail::send('emails.student-contact-us-home-page', $data, function ($message) use ($data) {
+            $message->to($data['email'], $data['email'])->subject($data['title']);
+        });
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Your message has been submitted.',
+        ]);
+    }
+
+
+        public function viewCourseInformation($courseId)
+    {
+        $studentId = session('LoggedStudent');
+
+        $course = \App\Models\Course::with(['modules.lessons'])->findOrFail($courseId);
+
+        $isEnrolled = \App\Models\Enrollment::where('course_id', $courseId)
+            ->where('user_id', $studentId)
+            ->exists();
+
+        $followersCount     = null;
+        $formattedFollowers = null;
+        if ($isEnrolled) {
+            $sessionKey = "followers_count_{$studentId}_{$courseId}";
+
+            if (! session()->has($sessionKey)) {
+                $randomNumber = rand(1000, 999999);
+                session([$sessionKey => $randomNumber]);
+            }
+
+            $followersCount     = session($sessionKey);
+            $formattedFollowers = $this->formatFollowers($followersCount);
+        }
+
+        $enrolledCourseIds = \App\Models\Enrollment::where('user_id', $studentId)
+            ->pluck('course_id')
+            ->toArray();
+
+        return view('student.courses-information-and-lessons-details', compact(
+            'course', 'formattedFollowers', 'enrolledCourseIds', 'isEnrolled'
+        ));
+    }
 }

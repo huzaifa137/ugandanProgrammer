@@ -94,14 +94,12 @@
                         <a class="text-primary d-block" href="{{ url('/' . ($page = '#')) }}">Adminstrator</a>
                         huzaifabukenya227@gmail.com</a>
                         <a class="text-primary d-block"
-                            href="{{ url('/' . ($page = '#')) }}">mentorhubtechnologies@gmail.com
+                            href="{{ url('/' . ($page = '#')) }}">ugandanprogrammer137@gmail.com
                         </a>
                     </div>
                     <div class="border-bottom pb-3 pt-3 mb-3">
                         <h5 class="font-weight-bold">Phone numbers</h5>
-                        <p class="mb-1">(+260) 0000000</p>
-                        <p class="mb-1">(+260) 0000000</p>
-                        <p class="mb-1">(+260) 0000000</p>
+                        <p class="mb-1">(+256) 702 082 209</p>
                     </div>
                 </div>
                 <div class="ml-auto">

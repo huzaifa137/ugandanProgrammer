@@ -7,8 +7,8 @@
             <div class="page-content">
                 <div class="page-single-content">
                     <div class="card-body text-white py-5 px-8 text-center">
-                        <a href="{{ url('/') }}"><img src="{{ URL::asset('assets/images/png/3.png') }}" alt="img"
-                                class=" text-center supplier-logo"></a>
+                        <a href="{{ url('/users/home-page') }}"><img src="{{ URL::asset('assets/images/png/3.png') }}"
+                                alt="img" class=" text-center supplier-logo"></a>
                     </div>
                 </div>
             </div>
@@ -69,7 +69,7 @@
                             </div>
 
                             @include('sweetalert::alert')
-                            
+
                             @if (Session::get('success'))
                                 <div class="alert alert-success">
                                     {{ Session::get('success') }}
@@ -123,8 +123,8 @@
                                                 opacity=".3" />
                                             <path
                                                 d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0
-                                                                                                                                                            2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1
-                                                                                                                                                            0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" />
+                                                                                                                                                                                    2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1
+                                                                                                                                                                                    0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" />
                                         </svg>
                                     </span>
 
@@ -134,11 +134,11 @@
                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                             <path
                                                 d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11
-                                                                                                                                                            11-7.5c-1.73-4.39-6-7.5-11-7.5zm0
-                                                                                                                                                            13c-2.76 0-5-2.24-5-5s2.24-5
-                                                                                                                                                            5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66
-                                                                                                                                                            0-3 1.34-3 3s1.34 3 3 3
-                                                                                                                                                            3-1.34 3-3-1.34-3-3-3z" />
+                                                                                                                                                                                    11-7.5c-1.73-4.39-6-7.5-11-7.5zm0
+                                                                                                                                                                                    13c-2.76 0-5-2.24-5-5s2.24-5
+                                                                                                                                                                                    5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66
+                                                                                                                                                                                    0-3 1.34-3 3s1.34 3 3 3
+                                                                                                                                                                                    3-1.34 3-3-1.34-3-3-3z" />
                                         </svg>
                                     </div>
                                 </div>
@@ -162,11 +162,13 @@
 
                                     </div>
 
-                                    <div class="col-12">
-                                        <div class="font-weight-normal mt-3 fs-15">You dont have an account,<a
-                                                class="btn-link font-weight-normal" href="{{ url('/users/register') }}">
-                                                Register
-                                                Here</a>
+                                    <div class="col-12 mt-4">
+                                        <div class="alert alert-info text-center" role="alert">
+                                            <strong>New here?</strong> Click below to create your account.
+                                            <br>
+                                            <a href="{{ url('/users/register') }}" class="btn btn-secondary mt-2">
+                                                <i class="fe fe-user-plus"></i> Register Here
+                                            </a>
                                         </div>
                                     </div>
 

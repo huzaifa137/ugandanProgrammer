@@ -22,9 +22,7 @@
         {{ $student_message }}
     </blockquote>
 
-    <p>Please log in to the admin panel to respond accordingly.</p>
-
-    <p style="color: #888;">This is an automated message from the UP system.</p>
+    <p style="color: #888;">This is message from the UP system student portal.</p>
 
 </body>
 </html>

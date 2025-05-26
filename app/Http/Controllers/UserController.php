@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\password_reset_table;
 use App\Models\User;
 use App\Models\user_role;
@@ -253,6 +254,11 @@ class UserController extends Controller
         return view('users.login');
     }
 
+    public function courseInformation(Request $request)
+    {
+        return view('users.login');
+    }
+
     public function dashboard()
     {
         return view('dashboard');
@@ -429,6 +435,14 @@ class UserController extends Controller
             ->get();
 
         return view('users.user-register', compact(['user_supervisors']));
+    }
+
+    public function homePage()
+    {
+
+        $allCourses = Course::orderBy('id', 'desc')->paginate(9);
+
+        return view('home-page', compact(['allCourses']));
     }
 
     public function editUserInformation()
@@ -731,7 +745,7 @@ class UserController extends Controller
         $password = trim($request->password);
 
         if ($request->password != null) {
-            
+
             User::updateOrCreate(
                 ['id' => $request->user_id],
                 [

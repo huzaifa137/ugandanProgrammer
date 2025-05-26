@@ -61,6 +61,7 @@ Route::controller(UserController::class)->group(function () {
             Route::get('/users-information', 'userInformation')->name('users.user-information');
             Route::get('user-account-information/{id}', 'userAccountInformation');
             Route::get('delete-user/{id}', 'deleteUser');
+            Route::get('/home-page', 'homePage')->name('home.page');
             Route::get('/register', 'register')->name('users.register');
             Route::get('/edit-user-information', 'editUserInformation');
             Route::get('/edit-specific-user/{userid}', 'editSpecificUser');
@@ -147,6 +148,8 @@ Route::controller(StudentController::class)->group(function () {
         });
 
         Route::post('user-account-creation', 'userAccountCreation')->name('user-account-creation');
+        Route::post('contact-message-information', 'contactMessageInformation')->name('contact-message-information');
+
     });
     Route::get('/clear-session', 'flushSession');
 });
@@ -309,4 +312,7 @@ Route::controller(StudentController::class)->group(function () {
         });
 
     });
+
+    Route::get('/student/view-course-information/{id}', 'viewCourseInformation')->name('view.course.information');
+
 });

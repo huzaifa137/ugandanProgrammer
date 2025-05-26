@@ -220,37 +220,46 @@ $controller = new Controller();
                 <div class="card">
                     <div class="card-body">
                         <h4>Course Certifications</h4>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th style="width: 1px;">No</th>
-                                    <th>Course Name</th>
-                                    <th>Completion</th>
-                                    <th>Certificate</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($courseProgress as $key => $data)
+
+                        @if (count($courseProgress) > 0)
+                            <table class="table table-bordered">
+                                <thead>
                                     <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>{{ $data['title'] }}</td>
-                                        <td>{{ $data['percentage'] }}%</td>
-                                        <td>
-                                            @if ($data['isCompleted'])
-                                                <a href="{{ route('certificate.download', $data['course']->id) }}"
-                                                    class="btn btn-success btn-sm">
-                                                    <i class="fa fa-download me-1"></i> Download Certificate
-                                                </a>
-                                            @else
-                                                <button class="btn btn-secondary btn-sm" disabled>
-                                                    <i class="fa fa-lock me-1"></i> Incomplete
-                                                </button>
-                                            @endif
-                                        </td>
+                                        <th style="width: 1px;">No</th>
+                                        <th>Course Name</th>
+                                        <th>Completion</th>
+                                        <th>Certificate</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($courseProgress as $key => $data)
+                                        <tr>
+                                            <td>{{ $key + 1 }}</td>
+                                            <td>{{ $data['title'] }}</td>
+                                            <td>{{ $data['percentage'] }}%</td>
+                                            <td>
+                                                @if ($data['isCompleted'])
+                                                    <a href="{{ route('certificate.download', $data['course']->id) }}"
+                                                        class="btn btn-success btn-sm">
+                                                        <i class="fa fa-download me-1"></i> Download Certificate
+                                                    </a>
+                                                @else
+                                                    <button class="btn btn-secondary btn-sm" disabled>
+                                                        <i class="fa fa-lock me-1"></i> Incomplete
+                                                    </button>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <div class="col-sm-12 col-md-12">
+                                <div class="alert alert-warning mt-3" role="alert">
+                                    No Enrolled course progress data available.
+                                </div>
+                        @endif
+
                     </div>
                 </div>
             </div>
