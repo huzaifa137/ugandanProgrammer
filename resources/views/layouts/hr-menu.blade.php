@@ -14,9 +14,9 @@
                         Dashboard <i class="fa fa-angle-down horizontal-icon"></i>
                     </a>
                     <ul class="sub-menu">
-                        <li><a href="{{ url('/tracking/tracking-overview') }}">Phone Tracking </a>
+                        <li><a href="#">Phone Tracking </a>
                         </li>
-                        <li><a href="{{ url('/tracking/activate-track-link') }}">Active Trackers</a></li>
+                        <li><a href="#">Active Trackers</a></li>
                     </ul>
                 </li>
 

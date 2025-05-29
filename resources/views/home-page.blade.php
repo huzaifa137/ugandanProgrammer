@@ -60,7 +60,6 @@
             background-position: center;
             flex-shrink: 0;
         }
-        
     </style>
 
 </head>
@@ -75,10 +74,10 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
-        
-            <a  href="{{ url('users/home-page') }}">
+
+            <a href="{{ url('users/home-page') }}">
                 <img src="{{ asset('assets007/images/logo_no_bg.png') }}" alt="Ugandan Programmer Logo"
-                    style="height: 10rem;">
+                    style="height: 5rem;">
             </a>
 
 
